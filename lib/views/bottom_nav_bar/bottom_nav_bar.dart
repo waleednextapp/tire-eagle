@@ -49,7 +49,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     StoreScreen(),
     InventoryScreen(),
     ReportScreen(),
-    ScanScreen(),
+    SettingScreen()
   ];
 
   @override

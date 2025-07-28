@@ -79,6 +79,9 @@ class AddNewWheel extends StatelessWidget {
                         "Serial Number",
                         "Enter serial number",
                         path: "assets/png/scan_icon.png",
+                        ontap: (){
+                          Get.toNamed("scan");
+                        }
                       ),
                       SizedBox(height: 0.5.h),
                       customTextFeild(

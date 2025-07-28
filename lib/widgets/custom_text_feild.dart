@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
@@ -42,13 +43,14 @@ Widget customTextFeild(
           hintText: hintText,
           hintStyle: TextStyle(
             fontSize: 15.sp,
-            color: Colors.grey.shade300,
-            fontFamily: 'Barlow',
+              color: textFeildInnerColor,
+              fontFamily: 'Barlow',
+              fontWeight: FontWeight.w500
           ),
           contentPadding:
           EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           filled: true,
-          fillColor: whiteColor,
+          fillColor: backgroundColor,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.sp),
             borderSide:
@@ -92,13 +94,14 @@ Widget customTextFeild(
           hintText: hintText,
           hintStyle: TextStyle(
             fontSize: 15.sp,
-            color: Colors.grey.shade300,
-            fontFamily: 'Barlow',
+              color: textFeildInnerColor,
+              fontFamily: 'Barlow',
+              fontWeight: FontWeight.w500
           ),
           contentPadding:
           EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           filled: true,
-          fillColor: whiteColor,
+          fillColor: backgroundColor,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.sp),
             borderSide:
@@ -116,4 +119,85 @@ Widget customTextFeild(
       ),
     ],
   );
+}
+Widget customPhoneTextField({
+  required String title,
+  required String hintText,
+  required TextEditingController controller,
+  void Function(String)? onChanged,
+  void Function(String)? onSubmitted,
+}) {
+  final authController = Get.find<AuthController>();
+
+  return Obx(() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      customText(
+        text: title,
+        fontSize: 15.sp,
+        fontWeight: FontWeight.w500,
+        color: greyTextColor,
+      ),
+      SizedBox(height: 1.h),
+
+      TextField(
+        controller: controller,
+        keyboardType: TextInputType.phone,
+        cursorColor: yellowColor,
+        style: TextStyle(
+          fontSize: 16.sp,
+          color: yellowColor,
+          fontFamily: "Barlow",
+          fontWeight: FontWeight.w700,
+        ),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            fontSize: 15.sp,
+            color: textFeildInnerColor,
+            fontFamily: 'Barlow',
+            fontWeight: FontWeight.w500
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+          filled: true,
+          fillColor: backgroundColor,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.sp),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 0.2.w),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.sp),
+            borderSide: BorderSide(color: yellowColor, width: 2),
+          ),
+          prefixIcon: GestureDetector(
+            onTap: () {
+              showCountryPicker(
+                context: Get.context!,
+                showPhoneCode: false,
+                onSelect: (Country country) {
+                  authController.selectedCountry.value = country;
+                },
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.only(left: 3.w, right: 2.w),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    authController.selectedCountry.value.flagEmoji,
+                    style: TextStyle(fontSize: 18.sp),
+                  ),
+                  Icon(Icons.keyboard_arrow_down_rounded, color: textFeildInnerColor,size: 17.sp,),
+                ],
+              ),
+            ),
+          ),
+          prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
+        ),
+        onChanged: onChanged,
+        onSubmitted: onSubmitted,
+      ),
+    ],
+  ));
 }

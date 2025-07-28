@@ -152,9 +152,7 @@ class _StoreScreenState extends State<StoreScreen> {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-                child: Image.asset(path,)
-            ),
+                Image.asset(path,),
             customText(
               text: title,
               fontSize: 13.sp,

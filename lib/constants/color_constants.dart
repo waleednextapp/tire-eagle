@@ -28,7 +28,19 @@ const homegreyColor = Color(0xFF363636);
 const inventoryGreyColor = Color(0xFF9D9D9D);
 const inventoryContainerColor = Color(0xFFBEBEBE);
 const remainderGreenColor = Color(0xFFD1FAE5);
+const containerGreenColor = Color(0xFFD1FAE5);
+const textGreenColor = Color(0xFF047857);
 const customButtonColor = Color(0xFF5C4A32);
+const wheelDetailOrangeColor = Color(0xFFFF972F);
+const buttonBlueColor = Color(0xFF2563EB);
+const buttonRedColor = Color(0xFFDC2626);
+const buttonPurpleColor = Color(0xFF7C3AED);
+const barOrangeColor = Color(0xFFF6AE12);
+const barredColor = Color(0xFFFF2C2C);
+const bargreenColor = Color(0xFF0DC490);
+const taglinegreyColor = Color(0xFFB2B2B2);
+const textFeildInnerColor = Color(0xFFCCCCCC);
+const socialButtonColor = Color(0xFFEEEEEE);
 
 final lightYellowWithOpacity = yellowColor.withOpacity(0.15); // 50% opacity
 

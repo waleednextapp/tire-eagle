@@ -37,17 +37,19 @@ dependencies:
   get: ^4.7.2
   shared_preferences: ^2.5.3
   sizer: ^3.0.5
+  country_picker: ^2.0.27
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/png/new_app_icon.png"
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -69,6 +71,7 @@ flutter:
      - assets/png/home_screen_images/
      - assets/png/store_image/
      - assets/png/inventory_screen/
+     - assets/png/wheel_detail/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

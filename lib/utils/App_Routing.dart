@@ -10,6 +10,7 @@ import 'package:tire_eagle/views/dashboard_screens/remainder.dart';
 import 'package:tire_eagle/views/dashboard_screens/report_damage.dart';
 import 'package:tire_eagle/views/dashboard_screens/scan_screen.dart';
 import 'package:tire_eagle/views/dashboard_screens/setting_screen.dart';
+import 'package:tire_eagle/views/dashboard_screens/tire_detail.dart';
 import 'package:tire_eagle/views/dashboard_screens/wheel_detail.dart';
 import 'package:tire_eagle/views/splash_screens/splash_one.dart';
 import 'package:tire_eagle/views/splash_screens/splash_two.dart';
@@ -28,6 +29,7 @@ class AppRoutes {
     GetPage(name: '/wheeldetails', page: () => WheelDetail()),
     GetPage(name: '/remainder', page: () => Remainder()),
     GetPage(name: '/scan', page: () => ScanScreen()),
+    GetPage(name: '/tire', page: () => TireDetail()),
 
     //
   ];

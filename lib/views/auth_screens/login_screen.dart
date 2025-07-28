@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/constants/color_constants.dart';
+import 'package:tire_eagle/controllers/auth_controller.dart';
 import 'package:tire_eagle/widgets/button_widget.dart';
 import 'package:tire_eagle/widgets/custom_text_feild.dart';
 import 'package:tire_eagle/widgets/social_icon_widget.dart';
@@ -9,8 +10,8 @@ import 'package:tire_eagle/widgets/social_icon_widget.dart';
 import '../../constants/constants_widgets.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
+  LoginScreen({super.key});
+final AuthController controller = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

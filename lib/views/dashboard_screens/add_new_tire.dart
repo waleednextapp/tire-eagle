@@ -81,6 +81,9 @@ class AddNewTire extends StatelessWidget {
                         "Serial Number",
                         "Enter serial number",
                         path: "assets/png/scan_icon.png",
+                          ontap: (){
+                            Get.toNamed("scan");
+                          }
                       ),
                       SizedBox(height: 0.5.h),
                       customTextFeild(
@@ -175,6 +178,8 @@ class AddNewTire extends StatelessWidget {
                           controller.selectedValue = value;
                         },
                       ),
+                      SizedBox(height: 1.h),
+                      buttonWidget("Save", blackColor,colors: yellowColor),
                       SizedBox(height: 5.h),
                     ],
                   ),

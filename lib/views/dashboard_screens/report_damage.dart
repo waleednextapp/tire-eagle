@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tire_eagle/widgets/damage_alert_dialog.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/constants_widgets.dart';
 import '../../controllers/dashboard_controller.dart';
 import '../../widgets/back_button.dart';
+import '../../widgets/button_widget.dart';
 import '../../widgets/customTextFeild.dart';
 
 class ReportDamage extends StatelessWidget {
@@ -28,23 +30,26 @@ class ReportDamage extends StatelessWidget {
         ),
         leading: backButton(),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 6.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 0.5.h),
-            customText(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 0.5.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6.w),
+            child: customText(
               text: "Your Damage Location",
               fontSize: 15.sp,
               fontFamily: "Barlow",
               fontWeight: FontWeight.w400,
             ),
-            Container(
-              width: double.infinity,
-              child: Image.asset("assets/png/map.png"),
-            ),
-            Column(
+          ),
+          Container(
+            width: double.infinity,
+            child: Image.asset("assets/png/map.png"),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6.w),
+            child: Column(
               spacing: 0.5.h,
               children: [
                 customDropdownField<String>(
@@ -92,16 +97,20 @@ class ReportDamage extends StatelessWidget {
                 ),
                 SizedBox(height: 0.5.h),
                 customTextFeild(
+                  maxlines: 3,
                   "Add Note ( Optional )",
                   "Write Something Here",
-                  path: "assets/png/calender_icon.png",
                 ),
+                SizedBox(height: 1.h),
+                buttonWidget("Submit Report", blackColor,colors: yellowColor,onTap: (){
+                  showDamageAlertDialog(context);
+                }),
               ],
             ),
+          ),
 
 
-          ],
-        ),
+        ],
       ),
     );
   }

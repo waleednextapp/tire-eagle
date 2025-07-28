@@ -1,11 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/constants/constants_widgets.dart';
 
 import '../constants/color_constants.dart';
 
-Widget customTextFeild(String title,String hintText,{IconData? icon,String? path}){
+Widget customTextFeild(String title,String hintText,{IconData? icon,String? path,int? maxlines,VoidCallback? ontap}){
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -17,6 +18,7 @@ Widget customTextFeild(String title,String hintText,{IconData? icon,String? path
      ),
       SizedBox(height: 0.5.h),
       TextField(
+        maxLines: maxlines,
         cursorColor: textFeildBorderColor,
         style: TextStyle(fontSize: 15.sp, fontFamily: "Barlow",fontWeight: FontWeight.w400),
 
@@ -42,10 +44,13 @@ Widget customTextFeild(String title,String hintText,{IconData? icon,String? path
           ),
           suffixIcon: Padding(
             padding: EdgeInsets.only(right: 4.w),
-            child: path!= null ? Image.asset(
-              path,
-              height: 2.h,
-              width: 2.h,
+            child: path!= null ? InkWell(
+              onTap: ontap,
+              child: Image.asset(
+                path,
+                height: 2.h,
+                width: 2.h,
+              ),
             ):
                 Icon(icon,color: blackColor,size: 18.sp)
           ),

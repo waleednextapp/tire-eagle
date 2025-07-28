@@ -171,7 +171,7 @@ class HomeScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 6.w),
                 child: directionWidget(),
               ),
-              SizedBox(height: 1.h),
+              SizedBox(height: 2.h),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -528,17 +528,22 @@ class HomeScreen extends StatelessWidget {
                     Positioned(
                       bottom: 0.5.h, // adjust as needed
                       right: 0.5.w,  // adjust as needed
-                      child: Container(
-                        width: 7.w,
-                        height: 7.w,
-                        decoration: BoxDecoration(
-                          color: yellowColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.arrow_forward,
-                          size: 18.sp,
-                          color: blackColor,
+                      child: InkWell(
+                        onTap: (){
+                          Get.toNamed("tire");
+                        },
+                        child: Container(
+                          width: 7.w,
+                          height: 7.w,
+                          decoration: BoxDecoration(
+                            color: yellowColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.arrow_forward,
+                            size: 18.sp,
+                            color: blackColor,
+                          ),
                         ),
                       ),
                     ),

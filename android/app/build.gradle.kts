@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.tire_eagle"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "29.0.13113456"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -41,4 +41,7 @@ android {
 
 flutter {
     source = "../.."
+}
+dependencies {
+  implementation("androidx.appcompat:appcompat:1.4.0")
 }

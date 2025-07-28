@@ -12,9 +12,11 @@ Widget buttonWidget(
       VoidCallback? onTap,
       IconData? icon,
       Color? borderColor,
-      double? fontsize,// 👈 Optional border color
+      double? fontsize,
       double? radius,
       FontWeight? fontweight,
+      String? fontfaimly,
+      String? path, // 👈 Path to asset image
     }) {
   return InkWell(
     onTap: onTap,
@@ -23,16 +25,24 @@ Widget buttonWidget(
       width: width ?? 100.w,
       decoration: BoxDecoration(
         color: colors,
-        borderRadius: BorderRadius.circular(radius!=null ? radius: 8.sp),
+        borderRadius: BorderRadius.circular(radius ?? 8.sp),
         border: borderColor != null
             ? Border.all(color: borderColor, width: 1.2)
-            : null, // 👈 Apply only if given
+            : null,
       ),
       child: Center(
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (icon != null) ...[
+            if (path != null && path.isNotEmpty) ...[
+              Image.asset(
+                path,
+                height: 16.sp,
+                width: 16.sp,
+                color: textColor,
+              ),
+              SizedBox(width: 2.w),
+            ] else if (icon != null) ...[
               Icon(
                 icon,
                 color: textColor,
@@ -42,10 +52,10 @@ Widget buttonWidget(
             ],
             customText(
               text: text,
-              fontSize: fontsize != null ? fontsize : 17.sp,
-              fontFamily: 'Barlow',
+              fontSize: fontsize ?? 17.sp,
+              fontFamily: fontfaimly ?? 'Barlow',
               color: textColor,
-              fontWeight: fontweight!=null ? fontweight : FontWeight.w600
+              fontWeight: fontweight ?? FontWeight.w600,
             ),
           ],
         ),

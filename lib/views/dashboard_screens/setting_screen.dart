@@ -132,7 +132,7 @@ class SettingScreen extends StatelessWidget {
                                   // Get.toNamed("reportdamage");
                                   break;
                                 case 4:
-                                  // Get.toNamed("inventory");
+                                  Get.toNamed("loginscreen");
                                   break;
                               }
                             },

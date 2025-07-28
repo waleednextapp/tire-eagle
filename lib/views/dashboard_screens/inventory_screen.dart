@@ -221,6 +221,9 @@ class InventoryScreen extends StatelessWidget {
                               "22 April 2025",
                               "F-Right",
                               "DOT 5478 DC89",
+                                (){
+                                  Get.toNamed("tire");
+                                }
                             ),
                           ),
                           SizedBox(width: 3.w),
@@ -234,6 +237,9 @@ class InventoryScreen extends StatelessWidget {
                               "22 April 2025",
                               "F-Right",
                               "DOT 5478 DC89",
+                                    (){
+                                  Get.toNamed("tire");
+                                }
                             ),
                           ),
                         ],
@@ -258,6 +264,9 @@ class InventoryScreen extends StatelessWidget {
                               "22 April 2025",
                               "F-Right",
                               "DOT 5478 DC89",
+                                    (){
+                                  Get.toNamed("wheeldetails");
+                                }
                             ),
                           ),
                           SizedBox(width: 3.w),
@@ -271,6 +280,9 @@ class InventoryScreen extends StatelessWidget {
                               "22 April 2025",
                               "F-Right",
                               "DOT 5478 DC89",
+                                    (){
+                                  Get.toNamed("wheeldetails");
+                                }
                             ),
                           ),
                         ],
@@ -295,6 +307,7 @@ Widget inventoryWidget(
     String date,
     String position,
     String serialNo,
+    VoidCallback ontap,
     ){
   return Container(
     width: 42.w,
@@ -430,6 +443,8 @@ Widget inventoryWidget(
             height: 3.5.h,
             width: double.infinity,
             fontsize: 13.sp,
+            onTap: ontap
+
           ),
           SizedBox(height: 1.h),
           buttonWidget(
@@ -439,6 +454,9 @@ Widget inventoryWidget(
             height: 3.5.h,
             width: double.infinity,
             fontsize: 13.sp,
+            onTap: (){
+
+            }
           ),
         ],
       ),
