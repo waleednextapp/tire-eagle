@@ -129,7 +129,9 @@ Widget reminderWidget(
       bool? buttoncheaque = true,
       double? customheight,
       String? damagetype,
-      String? lastupdate,
+      String? estimatedreturndate,
+      String? damagereport,
+      String? retreadcentername,
       String? spend,
       VoidCallback? ontap,
     }
@@ -267,14 +269,27 @@ Widget reminderWidget(
                         children: [
                           SizedBox(height: 1.h),
                           customText(
-                            text: "Last Update",
+                            text: "Estimated Return Date",
                             fontSize: tirewidgetfontsize ?? 14.sp,
                             fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
                             fontWeight: FontWeight.w400,
                           ),
                           customText(
                             fontSize: tirewidgetfontsize ?? 14.sp,
-                            text: lastupdate,
+                            text: estimatedreturndate,
+                            fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
+                            fontWeight: FontWeight.w400,
+                          ),
+                          SizedBox(height: 1.h),
+                          customText(
+                            text: "Retread Center Name",
+                            fontSize: tirewidgetfontsize ?? 14.sp,
+                            fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
+                            fontWeight: FontWeight.w400,
+                          ),
+                          customText(
+                            fontSize: tirewidgetfontsize ?? 14.sp,
+                            text: retreadcentername,
                             fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
                             fontWeight: FontWeight.w400,
                           ),
@@ -331,16 +346,30 @@ Widget reminderWidget(
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(height: 1.h),
+                          customText(
+                            text: "Damage Report",
+                            fontSize: tirewidgetfontsize ?? 14.sp,
+                            fontFamily: "Barlow",
+                            fontWeight: FontWeight.w400,
+                          ),
+                          customText(
+                            fontSize: tirewidgetfontsize ?? 14.sp,
+                            text: damagereport,
+                            fontFamily: "Roboto",
+                            fontWeight: FontWeight.w400,
+                          ),
+                          SizedBox(height: 1.h),
                           customText(
                             text: "Spend",
                             fontSize: tirewidgetfontsize ?? 14.sp,
-                            fontFamily: "Roboto",
+                            fontFamily: "Barlow",
                             fontWeight: FontWeight.w400,
                           ),
                           customText(
                             fontSize: tirewidgetfontsize ?? 14.sp,
                             text: spend,
-                            fontFamily: "Barlow",
+                            fontFamily: "Roboto",
                             fontWeight: FontWeight.w400,
                           ),
                         ],

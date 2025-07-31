@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/views/dashboard_screens/remainder.dart';
 import 'package:tire_eagle/views/dashboard_screens/wheel_detail.dart';
+import 'package:tire_eagle/widgets/confirm_dismount_dialog.dart';
+import 'package:tire_eagle/widgets/rotate_tire_dialog.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/constants_widgets.dart';
@@ -19,7 +21,7 @@ class TireDetail extends StatelessWidget {
     {"title": "Serial Number", "content": "DOT 5478 DC89"},
     {"title": "Last Update", "content": "April 25, 2025"},
     {"title": "Install Date", "content": "Feb 20, 2024"},
-    {"title": "Maintenance Report:", "content": "3 Punctures"},
+    {"title": "Retread History:", "content": "3 Punctures"},
     {"title": "Tire Health:", "content": "8/32 ---- 🟡 (Check Soon)"},
     {"title": "Current Mileage:", "content": "12,450 mi"},
     {"title": "Total Spending:", "content": "420 \$"},
@@ -168,12 +170,12 @@ class TireDetail extends StatelessWidget {
                             child: Column(
                               children: [
                                 SizedBox(
-                                  height: 66.7.h, // or any fixed/expanded height
+                                  height: 75.9.h, // or any fixed/expanded height
                                   child: timelineIndicator(),
 
                                 ),
                                 SizedBox(
-                                  height: 65.h, // or any fixed/expanded height
+                                  height: 78.h, // or any fixed/expanded height
                                   child: timelineIndicator(),
 
                                 ),
@@ -208,11 +210,14 @@ class TireDetail extends StatelessWidget {
                                 tirewidgetfontsize: 13.sp,
                                   buttoncheaque: false,
                                 damagetype: "Cut",
-                                spend: "105 \$",lastupdate: "22 April 2025",
+                                  retreadcentername: "ABC Retread Co.",
+                                  spend: "105 \$",
+                                  damagereport: "July 10,2025",estimatedreturndate: "July 15,2025",
                                   ontap: (){
                                     Get.toNamed("tire");
                                   }
                               ),
+
                               reminderWidget(
                                 "YXU - 3689",
                                 "Michelin XDE2+",
@@ -229,7 +234,9 @@ class TireDetail extends StatelessWidget {
                                   buttoncheaque: false,
                                 inusesize: 13.sp,
                                   damagetype: "Puncture",
-                                  spend: "105 \$",lastupdate: "22 April 2025",
+                                  retreadcentername: "ABC Retread Co.",
+                                  spend: "105 \$",
+                                  damagereport: "July 10,2025",estimatedreturndate: "July 15,2025",
                                   ontap: (){
                                     Get.toNamed("tire");
                                   }
@@ -258,7 +265,9 @@ class TireDetail extends StatelessWidget {
                                   tirewidgetfontsize: 13.sp,
                                   buttoncheaque: false,
                                   damagetype: "Cut",
-                                  spend: "105 \$",lastupdate: "22 April 2025",
+                                  retreadcentername: "ABC Retread Co.",
+                                  spend: "105 \$",
+                                  damagereport: "July 10,2025",estimatedreturndate: "July 15,2025",
                                   ontap: (){
                                     Get.toNamed("tire");
                                   }
@@ -279,7 +288,9 @@ class TireDetail extends StatelessWidget {
                                   inusesize: 13.sp,
                                 buttoncheaque: false,
                                   damagetype: "Puncture",
-                                  spend: "105 \$",lastupdate: "22 April 2025",
+                                  retreadcentername: "ABC Retread Co.",
+                                  spend: "105 \$",
+                                  damagereport: "July 10,2025",estimatedreturndate: "July 15,2025",
                                   ontap: (){
                                     Get.toNamed("tire");
                                   }
@@ -318,6 +329,9 @@ class TireDetail extends StatelessWidget {
                           fontfaimly: 'Roboto',
                           fontweight: FontWeight.w600,
                           path: "assets/png/wheel_detail/rotate.png",
+                          onTap: (){
+                            showRotateTireDialog(context);
+                          }
                         ),
                       ),
                       SizedBox(width: 4.w),
@@ -332,6 +346,9 @@ class TireDetail extends StatelessWidget {
                           fontfaimly: 'Roboto',
                           fontweight: FontWeight.w600,
                           path: "assets/png/wheel_detail/dismount.png",
+                          onTap: (){
+                            confirmDismountDialog(context);
+                          }
                         ),
                       ),
                     ],
@@ -351,6 +368,9 @@ class TireDetail extends StatelessWidget {
                       fontfaimly: 'Roboto',
                       fontweight: FontWeight.w600,
                       path: "assets/png/wheel_detail/rethread.png",
+                      onTap: (){
+                        Get.toNamed("rethread");
+                      }
                     ),
                   ),
                   SizedBox(height: 1.5.h),

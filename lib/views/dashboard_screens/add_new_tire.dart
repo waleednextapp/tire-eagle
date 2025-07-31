@@ -23,7 +23,7 @@ class AddNewTire extends StatelessWidget {
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: customText(
-            text: "Add New Tire",
+            text: "Add New",
             fontSize: 19.sp,
             fontFamily: "Roboto",
             fontWeight: FontWeight.w600,
@@ -39,81 +39,275 @@ class AddNewTire extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  customText(
-                    text: "General Info",
-                    fontSize: 15.sp,
-                    fontFamily: "Barlow",
-                    fontWeight: FontWeight.w300,
-                  ),
-                  SizedBox(height: 0.5.h),
-                  Container(
-                    height: 15.h,
-                    decoration: BoxDecoration(
-                      color: whiteColor,
-                      border: Border.all(
-                        color: textFeildBorderColor,
-                        width: 0.2.w,
+                  Obx(
+                        () => SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.symmetric(vertical: 1.h),
+                      child: Row(
+                        children: List.generate(controller.addTab.length, (
+                            index,
+                            ) {
+                          bool isSelected = controller.addNewTab.value == index;
+
+                          return Padding(
+                            padding: EdgeInsets.only(right: 2.w),
+                            child: GestureDetector(
+                              onTap: () => controller.addNewToggle(index),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w,
+                                  vertical: 1.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color:
+                                  isSelected
+                                      ? brownColor
+                                      : brownColor.withAlpha(40),
+                                  borderRadius: BorderRadius.circular(30.sp),
+                                ),
+                                child: Row(
+                                  children: [
+                                    customText(
+                                      text: controller.addTab[index],
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: isSelected ? whiteColor : brownColor,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
                       ),
-                      borderRadius: BorderRadius.circular(12.sp),
                     ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset("assets/png/gallery_icon.png", width: 8.w),
-                          SizedBox(height: 0.5.h),
-                          customText(
-                            text: "Add Photo",
-                            fontSize: 15.sp,
-                            fontFamily: "Barlow",
-                            fontWeight: FontWeight.w400,
+                  ),
+                  Obx(() =>
+                    controller.addNewTab.value == 0 ?
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        customText(
+                          text: "General Info",
+                          fontSize: 15.sp,
+                          fontFamily: "Barlow",
+                          fontWeight: FontWeight.w300,
+                        ),
+                        SizedBox(height: 0.5.h),
+                        Container(
+                          height: 15.h,
+                          decoration: BoxDecoration(
+                            color: whiteColor,
+                            border: Border.all(
+                              color: textFeildBorderColor,
+                              width: 0.2.w,
+                            ),
+                            borderRadius: BorderRadius.circular(12.sp),
                           ),
-                        ],
-                      ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset("assets/png/gallery_icon.png", width: 8.w),
+                                SizedBox(height: 0.5.h),
+                                customText(
+                                  text: "Add Photo",
+                                  fontSize: 15.sp,
+                                  fontFamily: "Barlow",
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 1.h),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 0.5.h,
+                          children: [
+                            customTextFeild(
+                                "Serial Number",
+                                "Enter serial number",
+                                path: "assets/png/scan_icon.png",
+                                ontap: (){
+                                  Get.toNamed("scan");
+                                }
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customTextFeild(
+                              "Date of Entry",
+                              "MM/DD/YYYY",
+                              path: "assets/png/calender_icon.png",
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customText(
+                              text: "General Info",
+                              fontSize: 15.sp,
+                              fontFamily: "Barlow",
+                              fontWeight: FontWeight.w300,
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customDropdownField<String>(
+                              title: "Select Brand",
+                              hintText: "Bridgestone",
+                              items: [],
+                              selectedItem: controller.selectedValue,
+                              onChanged: (value) {
+                                controller.selectedValue = value;
+                              },
+                            ),
+                            SizedBox(height: 0.5.h),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: customDropdownField<String>(
+                                    title: "Tire Size",
+                                    hintText: "Select Size",
+                                    items: [],
+                                    selectedItem: controller.selectedValue,
+                                    onChanged: (value) {
+                                      controller.selectedValue = value;
+                                    },
+                                  ),
+                                ),
+                                SizedBox(width: 4.w), // spacing between the dropdowns
+                                Expanded(
+                                  child: customDropdownField<String>(
+                                    title: "Ply Rating",
+                                    hintText: "Select Ply",
+                                    items: [],
+                                    selectedItem: controller.selectedValue,
+                                    onChanged: (value) {
+                                      controller.selectedValue = value;
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customDropdownField<String>(
+                              title: "Tire Health",
+                              hintText: "12/32 ---- 🟢 (New)",
+                              items: [],
+                              selectedItem: controller.selectedValue,
+                              onChanged: (value) {
+                                controller.selectedValue = value;
+                              },
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customText(
+                              text: "Tire Placement",
+                              fontSize: 15.sp,
+                              fontFamily: "Barlow",
+                              fontWeight: FontWeight.w300,
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customDropdownField<String>(
+                              title: "Status",
+                              hintText: "On Vehical",
+                              items: [],
+                              selectedItem: controller.selectedValue,
+                              onChanged: (value) {
+                                controller.selectedValue = value;
+                              },
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customTextFeild(
+                              "Vehical Number Plate",
+                              "YXU - 5689",
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customDropdownField<String>(
+                              title: "Mounted Position",
+                              hintText: "D2-Left-Outer",
+                              items: [],
+                              selectedItem: controller.selectedValue,
+                              onChanged: (value) {
+                                controller.selectedValue = value;
+                              },
+                            ),
+                            SizedBox(height: 1.h),
+                            buttonWidget("Save", blackColor,colors: yellowColor),
+                            SizedBox(height: 5.h),
+                      ],
                     ),
-                  ),
-                  SizedBox(height: 1.h),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 0.5.h,
-                    children: [
-                      customTextFeild(
-                        "Serial Number",
-                        "Enter serial number",
-                        path: "assets/png/scan_icon.png",
-                          ontap: (){
-                            Get.toNamed("scan");
-                          }
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customTextFeild(
-                        "Date of Entry",
-                        "MM/DD/YYYY",
-                        path: "assets/png/calender_icon.png",
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customText(
-                        text: "General Info",
-                        fontSize: 15.sp,
-                        fontFamily: "Barlow",
-                        fontWeight: FontWeight.w300,
-                      ),
-                      SizedBox(height: 0.5.h),
-                       customDropdownField<String>(
-                        title: "Select Brand",
-                        hintText: "Bridgestone",
-                        items: [],
-                        selectedItem: controller.selectedValue,
-                        onChanged: (value) {
-                          controller.selectedValue = value;
-                        },
-                      ),
-                      SizedBox(height: 0.5.h),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: customDropdownField<String>(
-                              title: "Tire Size",
+
+                      ],
+                    ): Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        customText(
+                          text: "General Info",
+                          fontSize: 15.sp,
+                          fontFamily: "Barlow",
+                          fontWeight: FontWeight.w300,
+                        ),
+                        SizedBox(height: 0.5.h),
+                        Container(
+                          height: 15.h,
+                          decoration: BoxDecoration(
+                            color: whiteColor,
+                            border: Border.all(
+                              color: textFeildBorderColor,
+                              width: 0.2.w,
+                            ),
+                            borderRadius: BorderRadius.circular(12.sp),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset("assets/png/gallery_icon.png", width: 8.w),
+                                SizedBox(height: 0.5.h),
+                                customText(
+                                  text: "Add Photo",
+                                  fontSize: 15.sp,
+                                  fontFamily: "Barlow",
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 1.h),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 0.5.h,
+                          children: [
+                            customTextFeild(
+                                "Serial Number",
+                                "Enter serial number",
+                                path: "assets/png/scan_icon.png",
+                                ontap: (){
+                                  Get.toNamed("scan");
+                                }
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customTextFeild(
+                              "Date of Entry",
+                              "MM/DD/YYYY",
+                              path: "assets/png/calender_icon.png",
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customText(
+                              text: "Wheel Details",
+                              fontSize: 15.sp,
+                              fontFamily: "Barlow",
+                              fontWeight: FontWeight.w300,
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customDropdownField<String>(
+                              title: "Select Material",
+                              hintText: "Aluminum",
+                              items: [],
+                              selectedItem: controller.selectedValue,
+                              onChanged: (value) {
+                                controller.selectedValue = value;
+                              },
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customDropdownField<String>(
+                              title: "Wheel Size",
                               hintText: "Select Size",
                               items: [],
                               selectedItem: controller.selectedValue,
@@ -121,68 +315,56 @@ class AddNewTire extends StatelessWidget {
                                 controller.selectedValue = value;
                               },
                             ),
-                          ),
-                          SizedBox(width: 4.w), // spacing between the dropdowns
-                          Expanded(
-                            child: customDropdownField<String>(
-                              title: "Ply Rating",
-                              hintText: "Select Ply",
+                            SizedBox(height: 0.5.h),
+                            customDropdownField<String>(
+                              title: "Wheel Condition  (0/10)",
+                              hintText: "9.8",
                               items: [],
                               selectedItem: controller.selectedValue,
                               onChanged: (value) {
                                 controller.selectedValue = value;
                               },
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customDropdownField<String>(
-                        title: "Tire Health",
-                        hintText: "12/32 ---- 🟢 (New)",
-                        items: [],
-                        selectedItem: controller.selectedValue,
-                        onChanged: (value) {
-                          controller.selectedValue = value;
-                        },
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customText(
-                        text: "Tire Placement",
-                        fontSize: 15.sp,
-                        fontFamily: "Barlow",
-                        fontWeight: FontWeight.w300,
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customDropdownField<String>(
-                        title: "Status",
-                        hintText: "On Vehical",
-                        items: [],
-                        selectedItem: controller.selectedValue,
-                        onChanged: (value) {
-                          controller.selectedValue = value;
-                        },
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customTextFeild(
-                        "Vehical Number Plate",
-                        "YXU - 5689",
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customDropdownField<String>(
-                        title: "Mounted Position",
-                        hintText: "D2-Left-Outer",
-                        items: [],
-                        selectedItem: controller.selectedValue,
-                        onChanged: (value) {
-                          controller.selectedValue = value;
-                        },
-                      ),
-                      SizedBox(height: 1.h),
-                      buttonWidget("Save", blackColor,colors: yellowColor),
-                      SizedBox(height: 5.h),
-                    ],
-                  ),
+                            SizedBox(height: 0.5.h),
+                            customText(
+                              text: "Wheel Placement",
+                              fontSize: 15.sp,
+                              fontFamily: "Barlow",
+                              fontWeight: FontWeight.w300,
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customDropdownField<String>(
+                              title: "Status",
+                              hintText: "On Vehical",
+                              items: [],
+                              selectedItem: controller.selectedValue,
+                              onChanged: (value) {
+                                controller.selectedValue = value;
+                              },
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customTextFeild(
+                              "Vehical Number Plate",
+                              "YXU - 5689",
+                            ),
+                            SizedBox(height: 0.5.h),
+                            customDropdownField<String>(
+                              title: "Mounted Position",
+                              hintText: "D2-Left-Outer",
+                              items: [],
+                              selectedItem: controller.selectedValue,
+                              onChanged: (value) {
+                                controller.selectedValue = value;
+                              },
+                            ),
+                            SizedBox(height: 1.h),
+                            buttonWidget("Save", blackColor,colors: yellowColor),
+                            SizedBox(height: 5.h),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

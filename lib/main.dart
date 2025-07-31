@@ -5,6 +5,7 @@ import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/constants/color_constants.dart';
 import 'package:tire_eagle/controllers/auth_controller.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
+import 'package:tire_eagle/controllers/dismount_controller.dart';
 import 'package:tire_eagle/controllers/splash_controller.dart';
 import 'package:tire_eagle/utils/App_Routing.dart';
 import 'package:tire_eagle/utils/init_binding.dart';
@@ -13,6 +14,7 @@ void main() {
 Get.put(SplashController());
 Get.put(AuthController());
 Get.put(DashboardController());
+Get.put(DismountController());
   runApp(const MyApp());
 }
 

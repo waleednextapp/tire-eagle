@@ -41,6 +41,23 @@ const bargreenColor = Color(0xFF0DC490);
 const taglinegreyColor = Color(0xFFB2B2B2);
 const textFeildInnerColor = Color(0xFFCCCCCC);
 const socialButtonColor = Color(0xFFEEEEEE);
+const lightBlueColor = Color(0xFFEFF7FF);
+const rotateTireGreyColor = Color(0xFF636262);
+const rotateTireTextFeildColor = Color(0xFFD1D5DB);
+const rotateTireLightOrangeColor = Color(0xFFF9F3E0);
+const rotateTireOrangeTextColor = Color(0xFFA0572A);
+const lightRedColor = Color(0xFFFEE2E2);
+const rotationBorderColor = Color(0xFFD1D5DB);
+const rotationGreyColor1 = Color(0xFF918F8F);
+const rotationGreyColor2 = Color(0xFFAFAFAF);
+const dividerColor = Color(0xFFE5E7EB);
+const dismountGreyColor = Color(0xFFA2A2A2);
+const dismountContainerColor = Color(0xFFF3F4F6);
+const blueBorderColor = Color(0xFF1677FF);
+const lightblueBorderColor = Color(0xFFEFF6FF);
+const lightYellowBorderColor = Color(0xFFF9F3E0);
+const lightgreenContainerColor = Color(0xFFF0FDF4);
+const mediumgreenContainerColor = Color(0xFFDCFCE7);
 
 final lightYellowWithOpacity = yellowColor.withOpacity(0.15); // 50% opacity
 

@@ -205,18 +205,18 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     quickAction(
                       color: blueColor,
-                      imagePath: 'assets/png/home_screen_images/add_icon.png',
-                      text: 'Add Tire',
+                      imagePath: 'assets/png/wheel_detail/rethread.png',
+                      text: 'Send for Retread',
                       onTap: () {
-                        Get.toNamed("addnewtire");
+                        Get.toNamed("rethread");
                       },
                     ),
                     quickAction(
                       color: greenColor,
                       imagePath: 'assets/png/home_screen_images/tire_icon.png',
-                      text: 'Add New Wheel',
+                      text: 'Add Wheel/Tire',
                       onTap: () {
-                        Get.toNamed("addnewwheel");
+                        Get.toNamed("addnewtire");
                       },
                     ),
                   ],
@@ -568,7 +568,7 @@ Widget quickAction({
     onTap: onTap,
     borderRadius: BorderRadius.circular(10.sp),
     child: Container(
-      width: 41.w, // Adjust width as needed
+      width: 44.3.w, // Adjust width as needed
       height: 5.h, // Fixed height for uniform buttons
       decoration: BoxDecoration(
         color: color,

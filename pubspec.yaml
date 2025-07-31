@@ -72,6 +72,7 @@ flutter:
      - assets/png/store_image/
      - assets/png/inventory_screen/
      - assets/png/wheel_detail/
+     - assets/png/dismount_images/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
