@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/constants/color_constants.dart';
 import 'package:tire_eagle/controllers/auth_controller.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
 import 'package:tire_eagle/controllers/dismount_controller.dart';
-import 'package:tire_eagle/controllers/splash_controller.dart';
+import 'package:tire_eagle/controllers/forgot_password_controller.dart';
+import 'package:tire_eagle/controllers/setting_controller.dart';
 import 'package:tire_eagle/utils/App_Routing.dart';
 import 'package:tire_eagle/utils/init_binding.dart';
 
-void main() {
-Get.put(SplashController());
+Future<void> main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  Get.put<SharedPreferences>(prefs, permanent: true);
 Get.put(AuthController());
+Get.put(ForgotPasswordController());
 Get.put(DashboardController());
 Get.put(DismountController());
+Get.put(SettingController());
   runApp(const MyApp());
 }
 
@@ -30,6 +38,7 @@ class MyApp extends StatelessWidget {
             initialBinding: Binding(),
             initialRoute: '/',
             getPages: AppRoutes.routes,
+            builder: EasyLoading.init(),
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(

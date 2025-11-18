@@ -8,8 +8,7 @@ class SplashOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SplashController controller = Get.find<SplashController>();
-    controller.startNavigationTimer("splashtwo");
+    Get.put(SplashController("splashtwo"));
     return Scaffold(
       body: Center(
         child: Column(

@@ -19,10 +19,11 @@ class ReportDamage extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: whiteColor,
+        centerTitle: true,
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: customText(
-            text: "Add New Wheel",
+            text: "Report Damage",
             fontSize: 19.sp,
             fontFamily: "Roboto",
             fontWeight: FontWeight.w600,
@@ -90,13 +91,13 @@ class ReportDamage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 0.5.h),
-                customTextFeild(
+                customTextFeildM(
                   "Date of Entry",
                   "MM/DD/YYYY",
                   path: "assets/png/calender_icon.png",
                 ),
                 SizedBox(height: 0.5.h),
-                customTextFeild(
+                customTextFeildM(
                   maxlines: 3,
                   "Add Note ( Optional )",
                   "Write Something Here",

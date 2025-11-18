@@ -20,6 +20,7 @@ class AddNewTire extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: whiteColor,
+        centerTitle: true,
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: customText(
@@ -125,7 +126,7 @@ class AddNewTire extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           spacing: 0.5.h,
                           children: [
-                            customTextFeild(
+                            customTextFeildM(
                                 "Serial Number",
                                 "Enter serial number",
                                 path: "assets/png/scan_icon.png",
@@ -134,14 +135,14 @@ class AddNewTire extends StatelessWidget {
                                 }
                             ),
                             SizedBox(height: 0.5.h),
-                            customTextFeild(
+                            customTextFeildM(
                               "Date of Entry",
                               "MM/DD/YYYY",
                               path: "assets/png/calender_icon.png",
                             ),
                             SizedBox(height: 0.5.h),
                             customText(
-                              text: "General Info",
+                              text: "Tire Details",
                               fontSize: 15.sp,
                               fontFamily: "Barlow",
                               fontWeight: FontWeight.w300,
@@ -212,7 +213,7 @@ class AddNewTire extends StatelessWidget {
                               },
                             ),
                             SizedBox(height: 0.5.h),
-                            customTextFeild(
+                            customTextFeildM(
                               "Vehical Number Plate",
                               "YXU - 5689",
                             ),
@@ -227,7 +228,9 @@ class AddNewTire extends StatelessWidget {
                               },
                             ),
                             SizedBox(height: 1.h),
-                            buttonWidget("Save", blackColor,colors: yellowColor),
+                            buttonWidget("Save", blackColor,colors: yellowColor,onTap: (){
+                              Get.back();
+                            }),
                             SizedBox(height: 5.h),
                       ],
                     ),
@@ -274,7 +277,7 @@ class AddNewTire extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           spacing: 0.5.h,
                           children: [
-                            customTextFeild(
+                            customTextFeildM(
                                 "Serial Number",
                                 "Enter serial number",
                                 path: "assets/png/scan_icon.png",
@@ -283,7 +286,7 @@ class AddNewTire extends StatelessWidget {
                                 }
                             ),
                             SizedBox(height: 0.5.h),
-                            customTextFeild(
+                            customTextFeildM(
                               "Date of Entry",
                               "MM/DD/YYYY",
                               path: "assets/png/calender_icon.png",
@@ -343,7 +346,7 @@ class AddNewTire extends StatelessWidget {
                               },
                             ),
                             SizedBox(height: 0.5.h),
-                            customTextFeild(
+                            customTextFeildM(
                               "Vehical Number Plate",
                               "YXU - 5689",
                             ),
@@ -358,7 +361,9 @@ class AddNewTire extends StatelessWidget {
                               },
                             ),
                             SizedBox(height: 1.h),
-                            buttonWidget("Save", blackColor,colors: yellowColor),
+                            buttonWidget("Save", blackColor,colors: yellowColor,onTap: (){
+                              Get.back();
+                            }),
                             SizedBox(height: 5.h),
                           ],
                         ),

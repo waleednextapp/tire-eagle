@@ -18,6 +18,7 @@ class AssignStorageLocation extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: whiteColor,
+        centerTitle: true,
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: customText(
@@ -155,7 +156,7 @@ class AssignStorageLocation extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: buttonWidget(
-                    "Confirm Location",
+                    "Continue",
                     whiteColor,
                     fontsize: 15.sp,
                     colors: brownColor,
@@ -166,21 +167,6 @@ class AssignStorageLocation extends StatelessWidget {
                     onTap: (){
                       Get.toNamed("assignstoragelocationone");
                     }
-                  ),
-                ),
-                SizedBox(height: 1.5.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: buttonWidget(
-                    "Skip This Step",
-                    blackColor,
-                    fontsize: 15.sp,
-                    colors: whiteColor,
-                    height: 4.7.h,
-                    radius: 12.sp,
-                    fontfaimly: 'Roboto',
-                    fontweight: FontWeight.w600,
-                    borderColor: textFeildBorderColor
                   ),
                 ),
                 SizedBox(height: 1.5.h),

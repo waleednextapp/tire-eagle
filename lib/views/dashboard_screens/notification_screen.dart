@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tire_eagle/controllers/auth_controller.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
+import 'package:tire_eagle/views/setting_screens/billing_and_invoices.dart';
 import 'package:tire_eagle/widgets/back_button.dart';
 
 import '../../constants/color_constants.dart';
@@ -11,6 +13,7 @@ class NotificationScreen extends StatelessWidget {
   NotificationScreen({super.key});
 
   final DashboardController controller = Get.find<DashboardController>();
+  final AuthController authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,7 @@ class NotificationScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: whiteColor,
+        centerTitle: true,
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: customText(
@@ -29,7 +33,7 @@ class NotificationScreen extends StatelessWidget {
         ),
         leading: backButton(),
       ),
-      body: SingleChildScrollView(
+      body: Obx(() => authController.isUser.value == true ? SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(height: 1.5.h),
@@ -60,7 +64,7 @@ class NotificationScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20.sp),
                     borderSide: BorderSide(color: borderColor, width: 0.2.w),
                   ),
-        
+
                   // 👇 Prefix icon instead of suffix
                   prefixIcon: Padding(
                     padding: EdgeInsets.only(left: 4.w, right: 2.w),
@@ -78,17 +82,17 @@ class NotificationScreen extends StatelessWidget {
               ),
             ),
             Obx(
-              () => SingleChildScrollView(
+                  () => SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
                 child: Row(
                   children: List.generate(controller.notificationTabs.length, (
-                    index,
-                  ) {
+                      index,
+                      ) {
                     bool isSelected = controller.selectedIndexTab.value == index;
                     bool isLastIndex =
                         index == controller.notificationTabs.length - 1;
-        
+
                     return Padding(
                       padding: EdgeInsets.only(right: 2.w),
                       child: GestureDetector(
@@ -100,9 +104,9 @@ class NotificationScreen extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             color:
-                                isSelected
-                                    ? brownColor
-                                    : brownColor.withAlpha(40),
+                            isSelected
+                                ? brownColor
+                                : brownColor.withAlpha(40),
                             borderRadius: BorderRadius.circular(30.sp),
                           ),
                           child: Row(
@@ -204,7 +208,7 @@ class NotificationScreen extends StatelessWidget {
                       "Retreading Tire DOT 5478 DC89 could save\n\$380 vs. new purchase. Deadline: Mar 15",
                       "12:19 PM"
                   ),
-        
+
                 ],
               ),
             ),
@@ -242,13 +246,51 @@ class NotificationScreen extends StatelessWidget {
                       "Retreading Tire DOT 5478 DC89 could save\n\$380 vs. new purchase. Deadline: Mar 15",
                       "12:19 PM"
                   ),
-        SizedBox(height: 5.h,)
+                  SizedBox(height: 5.h,)
                 ],
               ),
             ),
           ],
         ),
-      ),
+      ): SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 1.h,),
+              Row(
+                children: [
+                  Expanded(child: topContainer('assets/png/dollar.png', '\$0', 'Today\'s Payment')),
+                  SizedBox(width: 2.w,),
+                  Expanded(child: topContainer('assets/png/arrow.png', '2', 'Total Paid')),
+                ],
+              ),
+              SizedBox(height: 2.h,),
+              customText(
+                text: 'Payment Notification',
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600
+              ),
+              SizedBox(height: 2.h,),
+              middleContainer('assets/png/check.png', 'Oct 25, 2:30 PM'),
+              SizedBox(height: 1.h,),
+              middleContainer('assets/png/check.png', 'Oct 25, 2:30 PM'),
+
+              SizedBox(height: 2.h,),
+              customText(
+                  text: 'Recent Payments',
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600
+              ),
+              SizedBox(height: 2.h,),
+              bills(status: true),
+              SizedBox(height: 1.h,),
+              bills(status: true)
+            ],
+          ),
+        ),
+      ))
     );
   }
 
@@ -297,4 +339,100 @@ class NotificationScreen extends StatelessWidget {
       ],
     );
   }
+}
+Widget topContainer(String path, String title, String desc){
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12.sp),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Image.asset(path, width: 8.w,),
+        SizedBox(height: 0.6.h,),
+        customText(
+          text: title,
+          fontWeight: FontWeight.w700,
+          fontSize: 16.sp
+        ),
+        SizedBox(height: 0.1.h,),
+        customText(
+          text: desc,
+          color: textBrownColor
+        )
+      ],
+    ),
+  );
+}
+Widget middleContainer(String path, String date) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.5.h),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12.sp),
+    ),
+    child: Row(
+      children: [
+
+        SizedBox(
+          width: 12.w,
+          height: 8.h,
+          child: Image.asset(
+            path,
+            fit: BoxFit.contain,   // ⭐ forces image to scale properly
+          ),
+        ),
+
+        SizedBox(width: 3.w),
+
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  customText(
+                    text: 'Payment Received',
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  Spacer(),
+                  customText(
+                    text: date,
+                    color: textBrownColor,
+                    fontSize: 14.5.sp,
+                  ),
+                ],
+              ),
+              SizedBox(height: 0.6.h),
+              customText(
+                text:
+                'Driver Sarah Johnson  paid invoice  INV-1198',
+                fontSize: 14.sp,
+              ),
+              SizedBox(height: 0.6.h),
+              Row(
+                children: [
+                  customText(
+                    text: '\$892.50',
+                    fontWeight: FontWeight.w600,
+                  ),
+                  SizedBox(width: 2.w),
+                  Icon(Icons.circle, size: 10.sp, color: textBrownColor),
+                  SizedBox(width: 2.w),
+                  customText(
+                    text: 'Wheel Alignment',
+                    fontSize: 14.sp,
+                  ),
+                ],
+              )
+            ],
+          ),
+        )
+      ],
+    ),
+  );
 }

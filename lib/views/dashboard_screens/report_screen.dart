@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/views/dashboard_screens/remainder.dart';
 import 'package:tire_eagle/views/dashboard_screens/tire_detail.dart';
+import 'package:tire_eagle/widgets/report_dialog.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/constants_widgets.dart';
@@ -53,7 +54,7 @@ class ReportScreen extends StatelessWidget {
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 6.3.w,
-                                      vertical: 1.h,
+                                      vertical: 0.7.h,
                                     ),
                                     decoration: BoxDecoration(
                                       color: isSelected
@@ -146,7 +147,7 @@ class ReportScreen extends StatelessWidget {
                         tirewidgetfontsize: 13.sp,
                         customheight: 26.h,
                           ontap: (){
-                            Get.toNamed("tire");
+                           reportDialog(context);
                           }
                       ),
                       reminderWidget(
@@ -165,7 +166,7 @@ class ReportScreen extends StatelessWidget {
                         inusesize: 13.sp,
                         customheight: 29.h,
                           ontap: (){
-                            Get.toNamed("tire");
+                            reportDialog(context);
                           }
                       ),
                       Padding(
@@ -193,7 +194,7 @@ class ReportScreen extends StatelessWidget {
                         tirewidgetfontsize: 13.sp,
                         customheight: 29.h,
                           ontap: (){
-                            Get.toNamed("tire");
+                            reportDialog(context);
                           }
                       ),
                       reminderWidget(
@@ -212,7 +213,7 @@ class ReportScreen extends StatelessWidget {
                         inusesize: 13.sp,
                         customheight: 29.h,
                           ontap: (){
-                            Get.toNamed("tire");
+                            reportDialog(context);
                           }
                       ),
                     ],

@@ -58,6 +58,16 @@ const lightblueBorderColor = Color(0xFFEFF6FF);
 const lightYellowBorderColor = Color(0xFFF9F3E0);
 const lightgreenContainerColor = Color(0xFFF0FDF4);
 const mediumgreenContainerColor = Color(0xFFDCFCE7);
+const forgotGreyColor = Color(0xFF666666);
+const verificationGreyColor = Color(0xFF9796A1);
+const reportGreyColor = Color(0xFF494949);
+const billingGreenColor = Color(0xFF016630);
+const billingLightGreenColor = Color(0xFFDCFCE7);
+const billingBorderGreenColor = Color(0xFFB9F8CF);
+const billingBorderGreyColor = Color(0xFF6B7280);
+const billingYellowColor = Color(0xFF6B7280);
+const billingLightYellowColor = Color(0xFFFEF9C2);
+const billingBorderYellowColor = Color(0xFFFFF085);
 
 final lightYellowWithOpacity = yellowColor.withOpacity(0.15); // 50% opacity
 

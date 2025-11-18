@@ -6,26 +6,40 @@ import 'package:tire_eagle/constants/constants_widgets.dart';
 
 import '../constants/color_constants.dart';
 
-Widget customTextFeild(String title,String hintText,{IconData? icon,String? path,int? maxlines,VoidCallback? ontap}){
+Widget customTextFeildM(
+    String title,
+    String hintText, {
+      IconData? icon,
+      String? path,
+      int? maxlines,
+      VoidCallback? ontap,
+      bool isPassword = false,
+    }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-     customText(
-       text: title,
-       fontSize: 15.sp,
-       fontFamily: "Barlow",
-       fontWeight: FontWeight.w500,
-     ),
+      customText(
+        text: title,
+        fontSize: 15.sp,
+        fontFamily: "Barlow",
+        fontWeight: FontWeight.w500,
+      ),
       SizedBox(height: 0.5.h),
       TextField(
-        maxLines: maxlines,
+        obscureText: isPassword,   // 👈 PASSWORD HERE
+        maxLines: isPassword ? 1 : maxlines,
         cursorColor: textFeildBorderColor,
-        style: TextStyle(fontSize: 15.sp, fontFamily: "Barlow",fontWeight: FontWeight.w400),
-
+        style: TextStyle(
+          fontSize: 15.sp,
+          fontFamily: "Barlow",
+          fontWeight: FontWeight.w400,
+        ),
         decoration: InputDecoration(
           isDense: true,
-          contentPadding: EdgeInsets.symmetric(vertical: 1.2.h,
-            horizontal: 4.w,),
+          contentPadding: EdgeInsets.symmetric(
+            vertical: 1.2.h,
+            horizontal: 4.w,
+          ),
           hintText: hintText,
           hintStyle: TextStyle(
             fontSize: 15.sp,
@@ -42,17 +56,22 @@ Widget customTextFeild(String title,String hintText,{IconData? icon,String? path
             borderRadius: BorderRadius.circular(12.sp),
             borderSide: BorderSide(color: textFeildBorderColor, width: 0.4.w),
           ),
-          suffixIcon: Padding(
+
+          // 👇 No suffix icon if isPassword = true
+          suffixIcon: isPassword
+              ? null
+              : Padding(
             padding: EdgeInsets.only(right: 4.w),
-            child: path!= null ? InkWell(
+            child: path != null
+                ? InkWell(
               onTap: ontap,
               child: Image.asset(
                 path,
                 height: 2.h,
                 width: 2.h,
               ),
-            ):
-                Icon(icon,color: blackColor,size: 18.sp)
+            )
+                : Icon(icon, color: blackColor, size: 18.sp),
           ),
           suffixIconConstraints: BoxConstraints(
             minHeight: 2.h,
@@ -63,7 +82,6 @@ Widget customTextFeild(String title,String hintText,{IconData? icon,String? path
     ],
   );
 }
-
 Widget customDropdownField<T>({
   required String title,
   required String hintText,

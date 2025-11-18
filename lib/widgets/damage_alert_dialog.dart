@@ -33,16 +33,19 @@ void showDamageAlertDialog(BuildContext context) {
             SizedBox(height: 1.h),
 
             /// Circle icon with 'i'
-            CircleAvatar(
-              radius: 6.h,
-              backgroundColor: Colors.orange,
-              child: Text(
-                'i',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30.sp,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Barlow',
+            Container(
+              height: 22.w,
+              width: 22.w,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Image.asset(
+                  "assets/png/report_rethread.png", // Replace with actual image path
+                  width: 18.w,
+                  height: 18.w,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),

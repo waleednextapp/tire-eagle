@@ -7,7 +7,7 @@ import 'package:tire_eagle/views/dashboard_screens/home_screen.dart';
 import 'package:tire_eagle/views/dashboard_screens/inventory_screen.dart';
 import 'package:tire_eagle/views/dashboard_screens/report_screen.dart';
 import 'package:tire_eagle/views/dashboard_screens/scan_screen.dart';
-import 'package:tire_eagle/views/dashboard_screens/setting_screen.dart';
+import 'package:tire_eagle/views/setting_screens/setting_screen.dart';
 import 'package:tire_eagle/views/dashboard_screens/store_screen.dart';
 
 import '../../constants/constants_widgets.dart';
@@ -46,10 +46,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   final List<Widget> pages = [
     HomeScreen(),
-    StoreScreen(),
+    // StoreScreen(),
     InventoryScreen(),
     ReportScreen(),
     SettingScreen()
+
   ];
 
   @override
@@ -67,10 +68,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             navItem("assets/png/dashboard_icon/home.png", 0, 'Home'),
-            navItem("assets/png/dashboard_icon/store.png", 1, 'Store'),
-            navItem("assets/png/dashboard_icon/inventory.png", 2, 'Inventory'),
-            navItem("assets/png/dashboard_icon/report.png", 3, 'Report'),
-            navItem("assets/png/dashboard_icon/setting.png", 4, 'Setting'),
+            // navItem("assets/png/dashboard_icon/store.png", 1, 'Store'),
+            navItem("assets/png/dashboard_icon/inventory.png", 1, 'Inventory'),
+            navItem("assets/png/dashboard_icon/report.png", 2, 'Report'),
+            navItem("assets/png/dashboard_icon/setting.png", 3, 'Setting'),
           ],
         )),
       ),
@@ -89,14 +90,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(iconPath, height: 20.sp, color: isSelected ? blackColor : navBarColor),
+            Image.asset(iconPath, height: 20.sp, color: isSelected ? yellowColor : navBarColor),
             SizedBox(height: 0.5.h),
             customText(
               text: label,
               fontSize: 13.sp,
               fontFamily: "Barlow",
               fontWeight: FontWeight.w600,
-              color: isSelected ? blackColor : navBarColor
+              color: isSelected ? yellowColor : navBarColor
 
             ),
           ],

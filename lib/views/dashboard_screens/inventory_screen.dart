@@ -35,69 +35,69 @@ class InventoryScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 1.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6.w),
-              child: customText(
-                text: "Quick Actions",
-                fontSize: 17.sp,
-                fontFamily: "Roboto",
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: 1.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 3.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  quickAction(
-                    color: blueColor,
-                    imagePath: 'assets/png/wheel_detail/rethread.png',
-                    text: 'Send for Retread',
-                    onTap: () {
-                      Get.toNamed("rethread");
-                    },
-                  ),
-                  quickAction(
-                    color: greenColor,
-                    imagePath: 'assets/png/home_screen_images/tire_icon.png',
-                    text: 'Add Wheel/Tire',
-                    onTap: () {
-                      Get.toNamed("addnewtire");
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 1.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 3.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  quickAction(
-                    color: purpleColor,
-                    imagePath: 'assets/png/home_screen_images/remainder_icon.png',
-                    text: 'Reminders',
-                    onTap: () {
-                      Get.toNamed("remainder");
-
-                    },
-                  ),
-                  quickAction(
-                    color: redColor,
-                    imagePath: 'assets/png/home_screen_images/alert_icon.png',
-                    text: 'Report Damage',
-                    onTap: () {
-                      Get.toNamed("reportdamage");
-
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 2.h),
+            // SizedBox(height: 1.h),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 6.w),
+            //   child: customText(
+            //     text: "Quick Actions",
+            //     fontSize: 17.sp,
+            //     fontFamily: "Roboto",
+            //     fontWeight: FontWeight.w600,
+            //   ),
+            // ),
+            // SizedBox(height: 1.h),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 3.w),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //     children: [
+            //       quickAction(
+            //         color: blueColor,
+            //         imagePath: 'assets/png/wheel_detail/rethread.png',
+            //         text: 'Send for Retread',
+            //         onTap: () {
+            //           Get.toNamed("rethread");
+            //         },
+            //       ),
+            //       quickAction(
+            //         color: greenColor,
+            //         imagePath: 'assets/png/home_screen_images/tire_icon.png',
+            //         text: 'Add Wheel/Tire',
+            //         onTap: () {
+            //           Get.toNamed("addnewtire");
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // SizedBox(height: 1.h),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 3.w),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //     children: [
+            //       quickAction(
+            //         color: purpleColor,
+            //         imagePath: 'assets/png/home_screen_images/remainder_icon.png',
+            //         text: 'Reminders',
+            //         onTap: () {
+            //           Get.toNamed("remainder");
+            //
+            //         },
+            //       ),
+            //       quickAction(
+            //         color: redColor,
+            //         imagePath: 'assets/png/home_screen_images/alert_icon.png',
+            //         text: 'Report Damage',
+            //         onTap: () {
+            //           Get.toNamed("reportdamage");
+            //
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // SizedBox(height: 2.h),
             Row(
               children: [
                 Padding(
@@ -166,33 +166,39 @@ class InventoryScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 6.w),
               child: Obx(
                     () => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(controller.inventoryTabs.length, (index) {
                     bool isSelected = controller.inventoryIndexTab.value == index;
-                    return Padding(
-                      padding: EdgeInsets.only(right: 2.1.w),
-                      child: GestureDetector(
-                        onTap: () => controller.selectInventoryValue(index),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 7.w,
-                            vertical: 1.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? brownColor
-                                : brownColor.withAlpha(40),
-                            borderRadius: BorderRadius.circular(30.sp),
-                          ),
-                          child: Row(
-                            children: [
-                              customText(
-                                text: controller.inventoryTabs[index],
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                                color: isSelected ? whiteColor : brownColor,
-                              ),
-                            ],
+                    return Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            right: index == controller.inventoryTabs.length - 1 ? 0 : 2.w),
+                        child: InkWell(
+                          onTap: () async {
+                            // Update selected index
+                            controller.selectInventoryValue(index);
+
+                            if (index == 1) {
+                              // Navigate and wait until page is popped/back
+                              await Get.toNamed("disposedhistory");
+
+                              // Reset index after coming back
+                              controller.inventoryIndexTab.value = 0;
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(30.sp),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 0.9.h),
+                            decoration: BoxDecoration(
+                              color: isSelected ? brownColor : brownColor.withAlpha(40),
+                              borderRadius: BorderRadius.circular(30.sp),
+                            ),
+                            alignment: Alignment.center,
+                            child: customText(
+                              text: controller.inventoryTabs[index],
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: isSelected ? whiteColor : brownColor,
+                            ),
                           ),
                         ),
                       ),
@@ -201,6 +207,8 @@ class InventoryScreen extends StatelessWidget {
                 ),
               ),
             ),
+
+
 
             SizedBox(height: 2.h),
             Obx(() {

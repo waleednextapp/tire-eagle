@@ -10,6 +10,7 @@ import '../../controllers/dashboard_controller.dart';
 import '../../controllers/dismount_controller.dart';
 import '../../widgets/back_button.dart';
 import '../../widgets/button_widget.dart';
+import '../../widgets/success_dialog.dart';
 import 'assign_storage_location.dart';
 
 class AssignStorageLocationOne extends StatelessWidget {
@@ -21,6 +22,7 @@ class AssignStorageLocationOne extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: whiteColor,
+        centerTitle: true,
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: customText(
@@ -258,7 +260,7 @@ class AssignStorageLocationOne extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: buttonWidget(
-                    "View Tracking Details",
+                    "Done",
                     whiteColor,
                     fontsize: 15.sp,
                     colors: brownColor,
@@ -267,31 +269,38 @@ class AssignStorageLocationOne extends StatelessWidget {
                     fontfaimly: 'Roboto',
                     fontweight: FontWeight.w600,
                     onTap: (){
-                      Get.toNamed("tire");
+                      successDialog(
+                      context,
+                      "Your request has been processed successfully",
+                      "Ok",
+                          () {
+                        Get.offNamed("tire");
+                      },
+                    );
                     }
                   ),
                 ),
-                SizedBox(height: 1.5.h),
-                SizedBox(
-
-                  width: double.infinity,
-                  child: buttonWidget(
-                      "Done",
-                      blackColor,
-                      fontsize: 15.sp,
-                      colors: whiteColor,
-                      height: 4.7.h,
-                      radius: 12.sp,
-                      fontfaimly: 'Roboto',
-                      fontweight: FontWeight.w600,
-                      borderColor: textFeildBorderColor,
-                    onTap: (){
-                      final controller = Get.find<DashboardController>();
-                      controller.changePage(1); // Navigate to Store tab
-                      Get.offAll(() => BottomNavBar());
-                    }
-                  ),
-                ),
+                // SizedBox(height: 1.5.h),
+                // SizedBox(
+                //
+                //   width: double.infinity,
+                //   child: buttonWidget(
+                //       "Done",
+                //       blackColor,
+                //       fontsize: 15.sp,
+                //       colors: whiteColor,
+                //       height: 4.7.h,
+                //       radius: 12.sp,
+                //       fontfaimly: 'Roboto',
+                //       fontweight: FontWeight.w600,
+                //       borderColor: textFeildBorderColor,
+                //     onTap: (){
+                //       final controller = Get.find<DashboardController>();
+                //       controller.changePage(1); // Navigate to Store tab
+                //       Get.offAll(() => BottomNavBar());
+                //     }
+                //   ),
+                // ),
                 SizedBox(height: 1.5.h),
               ],
             ),

@@ -1,70 +1,91 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../outh_file/local_db_key.dart';
 
-
 class SharedPreferencesMethod {
-  static var storage = Get.find<SharedPreferences>();
+  static SharedPreferences storage = Get.find<SharedPreferences>();
 
+  /// ========================= CLEAR STORAGE ========================= ///
   static Future<void> clearLocalStorage() async {
-    storage.clear();
+    await storage.clear();
   }
 
-  static Future<bool> setBool({required String key, required bool value}) async {
+  /// ========================= BOOL ========================= ///
+  static Future<bool> setBool({
+    required String key,
+    required bool value,
+  }) async {
     return storage.setBool(key, value);
   }
 
-  static bool getBool({required String key, bool defaultValue = false}) {
+  static bool getBool({
+    required String key,
+    bool defaultValue = false,
+  }) {
     return storage.getBool(key) ?? defaultValue;
   }
 
-  static Future<void> setString(key, value) async {
-    storage.setString(key, value);
+  /// ========================= STRING ========================= ///
+  static Future<bool> setString({
+    required String key,
+    required String value,
+  }) async {
+    return storage.setString(key, value);
   }
 
-  static String getString(key) {
-    String? a = storage.getString(key);
-    return a!;
+  static String getString(
+      String key, {
+        String defaultValue = "",
+      }) {
+    return storage.getString(key) ?? defaultValue;
   }
 
-  static Map getUserInfo() {
-    Map data = {
-      "token": storage.getString(LocalDBKeys.TOKEN),
-      "id": storage.getString(LocalDBKeys.USERID),
-      "email": storage.getString(LocalDBKeys.USEREMAIL),
+  /// ========================= USER INFO (SIMPLE MAP) ========================= ///
+  static Map<String, String> getUserInfo() {
+    return {
+      "token": storage.getString(LocalDBKeys.TOKEN) ?? "",
+      "id": storage.getString(LocalDBKeys.USERID) ?? "",
+      "email": storage.getString(LocalDBKeys.USEREMAIL) ?? "",
     };
-    return data;
   }
 
-  static Future getUserInfo1() async {
-    if (SharedPreferencesMethod.storage.getString(LocalDBKeys.USERDETAIL) != null) {
-      var a = SharedPreferencesMethod.storage.getString(LocalDBKeys.USERDETAIL);
-      return Data.fromJson(jsonDecode(a!));
-    } else {
-      return null;
-    }
-  }
+  /// ========================= USER INFO (DATA MODEL) ========================= ///
+  static Future<Data?> getUserInfo1() async {
+    final raw = storage.getString(LocalDBKeys.USERDETAIL);
+    if (raw == null) return null;
 
-  static String? getUserId() {
-    return storage.getString(LocalDBKeys.USERID);
+    return Data.fromJson(jsonDecode(raw));
   }
 
   static Future<bool> setUserInfo1(Data user) async {
-    return await SharedPreferencesMethod.storage.setString(LocalDBKeys.USERDETAIL, jsonEncode(user));
+    return storage.setString(
+      LocalDBKeys.USERDETAIL,
+      jsonEncode(user.toJson()),
+    );
+  }
+
+  /// ========================= USER ID ONLY ========================= ///
+  static String? getUserId() {
+    return storage.getString(LocalDBKeys.USERID);
   }
 }
+
+/// **********************************************************************
+/// *                             DATA MODEL                             *
+/// **********************************************************************
 class Data {
-  String? id;
-  String? email;
-  String? token;
+  final String? id;
+  final String? email;
+  final String? token;
 
-  Data({this.id, this.email, this.token});
+  Data({
+    this.id,
+    this.email,
+    this.token,
+  });
 
-  // A factory constructor to create a Data object from JSON
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
       id: json['id'],
@@ -73,12 +94,11 @@ class Data {
     );
   }
 
-  // A method to convert a Data object into a JSON map
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'email': email,
-      'token': token,
+      "id": id,
+      "email": email,
+      "token": token,
     };
   }
 }

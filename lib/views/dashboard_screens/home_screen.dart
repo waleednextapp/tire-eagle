@@ -2,263 +2,274 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/constants/color_constants.dart';
+import 'package:tire_eagle/controllers/auth_controller.dart';
 import 'package:tire_eagle/widgets/button_widget.dart';
 import '../../constants/constants_widgets.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+  final AuthController controller = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Stack(
-            children: [
-              // Background container with bottom rounded corners
-              Container(
-                height: 23.h,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: buttonColor,
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(20.sp),
-                    bottomLeft: Radius.circular(20.sp),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                // Background container with bottom rounded corners
+                Container(
+                  height: 23.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: buttonColor,
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(20.sp),
+                      bottomLeft: Radius.circular(20.sp),
+                    ),
+                  ),
+                  child: Image.asset(
+                    "assets/png/home_screen_images/home_design.png",
+                    fit: BoxFit.cover,
                   ),
                 ),
-                child: Image.asset(
-                  "assets/png/home_screen_images/home_design.png",
-                  fit: BoxFit.cover,
-                ),
-              ),
 
-              // Row with profile image and fleet number
-              Positioned(
-                top: 7.h,
-                left: 6.w,
-                right: 6.w,
-                child: Row(
-                  children: [
-                    Image.asset("assets/png/profile_pic.png", width: 13.w),
-                    SizedBox(width: 4.w),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              customText(
-                                text: "Fleet Number",
-                                fontSize: 14.sp,
-                                fontFamily: "Barlow",
-                                fontWeight: FontWeight.w500,
-                                color: homeTextColor,
-                              ),
-                              Row(
-                                children: [
-                                  customText(
-                                    text: "YXU - 5689",
-                                    fontSize: 18.sp,
-                                    fontFamily: "Barlow",
-                                    fontWeight: FontWeight.w600,
-                                    color: whiteColor,
-                                  ),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                    size: 18.sp,
-                                    color: whiteColor,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          InkWell(
-                            onTap: (){
-                              Get.toNamed("notification");
-                            },
-                            child: Image.asset(
-                              "assets/png/home_screen_images/notification_bell.png",
-                              width: 5.w,
+                // Row with profile image and fleet number
+                Positioned(
+                  top: 7.h,
+                  left: 6.w,
+                  right: 6.w,
+                  child: Row(
+                    children: [
+                      Image.asset("assets/png/profile_pic.png", width: 13.w),
+                      SizedBox(width: 4.w),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                customText(
+                                  text: "Fleet Number",
+                                  fontSize: 14.sp,
+                                  fontFamily: "Barlow",
+                                  fontWeight: FontWeight.w500,
+                                  color: homeTextColor,
+                                ),
+                                Row(
+                                  children: [
+                                    customText(
+                                      text: "YXU - 5689",
+                                      fontSize: 18.sp,
+                                      fontFamily: "Barlow",
+                                      fontWeight: FontWeight.w600,
+                                      color: whiteColor,
+                                    ),
+                                    Icon(
+                                      Icons.keyboard_arrow_down,
+                                      size: 18.sp,
+                                      color: whiteColor,
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                            InkWell(
+                              onTap: (){
+                                Get.toNamed("notification");
+                                print(controller.isUser.value);
+                              },
+                              child: Image.asset(
+                                "assets/png/home_screen_images/notification_bell.png",
+                                width: 5.w,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
 
-              // Search bar placed below the row
-              Positioned(
-                top: 15.h,
-                left: 6.w,
-                right: 6.w,
-                child: TextField(
-                  style: TextStyle(fontSize: 13.sp, fontFamily: "Barlow"),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 1.2.h,
-                      horizontal: 4.w,
-                    ),
-                    hintText: 'Track Tire By Seriel Number',
-                    hintStyle: TextStyle(
-                      fontSize: 15.sp,
-                      fontFamily: "Barlow",
-                      color: textFeildTextColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    filled: true,
-                    fillColor: whiteColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.sp),
-                      borderSide: BorderSide(color: borderColor, width: 0.2.w),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.sp),
-                      borderSide: BorderSide(color: borderColor, width: 0.2.w),
-                    ),
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.only(left: 4.w, right: 2.w),
-                      child: Image.asset(
-                        "assets/png/search_icon.png",
-                        height: 2.h,
-                        width: 2.h,
+                // Search bar placed below the row
+                Positioned(
+                  top: 15.h,
+                  left: 6.w,
+                  right: 6.w,
+                  child: TextField(
+                    style: TextStyle(fontSize: 13.sp, fontFamily: "Barlow"),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 1.2.h,
+                        horizontal: 4.w,
                       ),
-                    ),
-                    prefixIconConstraints: BoxConstraints(
-                      minHeight: 2.h,
-                      minWidth: 2.h,
+                      hintText: 'Track Tire By Seriel Number',
+                      hintStyle: TextStyle(
+                        fontSize: 15.sp,
+                        fontFamily: "Barlow",
+                        color: textFeildTextColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      filled: true,
+                      fillColor: whiteColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.sp),
+                        borderSide: BorderSide(color: borderColor, width: 0.2.w),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.sp),
+                        borderSide: BorderSide(color: borderColor, width: 0.2.w),
+                      ),
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 4.w, right: 2.w),
+                        child: Image.asset(
+                          "assets/png/search_icon.png",
+                          height: 2.h,
+                          width: 2.h,
+                        ),
+                      ),
+                      prefixIconConstraints: BoxConstraints(
+                        minHeight: 2.h,
+                        minWidth: 2.h,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.5.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    homeWidget(
-                      "Total Tires",
-                      "assets/png/home_screen_images/tire.png",
-                      24,
-                    ),
-                    homeWidget(
-                      "Total Tires",
-                      "assets/png/home_screen_images/wheel.png",
-                      18,
-                    ),
-                    homeWidget(
-                      "Total Tires",
-                      "assets/png/home_screen_images/tool.png",
-                      9,
-                    ),
-                    homeWidget(
-                      "Total Tires",
-                      "assets/png/home_screen_images/delde.png",
-                      6,
-                    ),
-                  ],
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.5.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap:(){
+                          Get.toNamed("totaltires");
+    },
+                        child: homeWidget(
+                          "Total Tires",
+                          "assets/png/tire_img.png",
+                          24,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          Get.toNamed("totalwheel");
+                        },
+                        child: homeWidget(
+                          "Total Wheels",
+                          "assets/png/home_screen_images/wheel.png",
+                          18,imgWidth: 7.5.w
+
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6.w),
-                child: directionWidget(),
-              ),
-              SizedBox(height: 2.h),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    SizedBox(width: 6.w), // Left padding
-                    tireDetailWidget("DOT 5478 DC89", "Last Check 14 - 4 - 2025", Colors.red),
-                    SizedBox(width: 1.w),
-                    tireDetailWidget("DOT 1234 AB56", "Last Check 10 - 3 - 2025", Colors.green),
-                    SizedBox(width: 1.w),
-                    tireDetailWidget("DOT 9999 ZZ99", "Last Check 05 - 2 - 2025", Colors.orange),
-                    SizedBox(width: 6.w), // Right padding (optional)
-                  ],
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 6.w),
+                //   child: directionWidget(),
+                // ),
+                SizedBox(height: 2.h),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      SizedBox(width: 6.w), // Left padding
+                      tireDetailWidget("DOT 5478 DC89", "Last Check 14 - 4 - 2025", Colors.red),
+                      SizedBox(width: 1.w),
+                      tireDetailWidget("DOT 1234 AB56", "Last Check 10 - 3 - 2025", Colors.green),
+                      SizedBox(width: 1.w),
+                      tireDetailWidget("DOT 9999 ZZ99", "Last Check 05 - 2 - 2025", Colors.orange),
+                      SizedBox(width: 6.w), // Right padding (optional)
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 1.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6.w),
-                child: customText(
-                  text: "Quick Actions",
-                  fontSize: 17.sp,
-                  fontFamily: "Roboto",
-                  fontWeight: FontWeight.w600,
+                SizedBox(height: 1.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6.w),
+                  child: customText(
+                    text: "Quick Actions",
+                    fontSize: 17.sp,
+                    fontFamily: "Roboto",
+                    fontWeight: FontWeight.w600,
+                  ),
+
+                ),
+                SizedBox(height: 1.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 3.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      quickAction(
+                        color: purpleColor,
+                        imagePath: 'assets/png/wheel_detail/rethread.png',
+                        text: 'Send for Retread',
+                        onTap: () {
+                          Get.toNamed("rethread");
+                        },
+                      ),
+                      quickAction(
+                        color: greenColor,
+                        imagePath: 'assets/png/home_screen_images/tire_black.png',
+                        text: 'Add Wheel/Tire',
+                        onTap: () {
+                          Get.toNamed("addnewtire");
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 1.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 3.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      quickAction(
+                        color: blueColor,
+                        imagePath: 'assets/png/home_screen_images/remainder_icon.png',
+                        text: 'Reminders',
+                        width: 5.w,
+                        containerWidth: 11,
+                        onTap: () {
+                          Get.toNamed("remainder");
+
+                        },
+                      ),
+                      quickAction(
+                        color: redColor,
+                        imagePath: 'assets/png/home_screen_images/alert.png',
+                        text: 'Report Damage',
+                        width: 5.w,
+                        containerWidth: 11,
+                        onTap: () {
+                          Get.toNamed("reportdamage");
+
+                        },
+                      ),
+                    ],
+                  ),
                 ),
 
-              ),
-              SizedBox(height: 1.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    quickAction(
-                      color: blueColor,
-                      imagePath: 'assets/png/wheel_detail/rethread.png',
-                      text: 'Send for Retread',
-                      onTap: () {
-                        Get.toNamed("rethread");
-                      },
-                    ),
-                    quickAction(
-                      color: greenColor,
-                      imagePath: 'assets/png/home_screen_images/tire_icon.png',
-                      text: 'Add Wheel/Tire',
-                      onTap: () {
-                        Get.toNamed("addnewtire");
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 1.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    quickAction(
-                      color: purpleColor,
-                      imagePath: 'assets/png/home_screen_images/remainder_icon.png',
-                      text: 'Reminders',
-                      onTap: () {
-                        Get.toNamed("remainder");
-
-                      },
-                    ),
-                    quickAction(
-                      color: redColor,
-                      imagePath: 'assets/png/home_screen_images/alert_icon.png',
-                      text: 'Report Damage',
-                      onTap: () {
-                        Get.toNamed("reportdamage");
-
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget homeWidget(String title, String path, int amount) {
+  Widget homeWidget(String title, String path, int amount,{double? imgWidth}) {
     return Container(
+      width: 40.w,
       decoration: BoxDecoration(
         color: whiteColor,
         borderRadius: BorderRadius.circular(12.sp),
@@ -272,24 +283,34 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.4.h),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(path, width: 4.5.w),
-            SizedBox(height: 0.3.h),
-            customText(
-              text: title,
-              fontSize: 12.sp,
-              fontFamily: "Barlow",
-              fontWeight: FontWeight.w500,
-              color: homeBlueTextColor,
+            Image.asset(
+              path,
+              width: imgWidth ?? 7.w,
             ),
-            customText(
-              text: "$amount",
-              fontSize: 16.sp,
-              fontFamily: "Roboto",
-              fontWeight: FontWeight.w700,
+            SizedBox(width: 2.w),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                customText(
+                  text: title,
+                  fontSize: 12.sp,
+                  fontFamily: "Barlow",
+                  fontWeight: FontWeight.w500,
+                  color: homeBlueTextColor,
+                  height: 0.12.h
+                ),
+                customText(
+                  text: "$amount",
+                  fontSize: 16.sp,
+                  fontFamily: "Roboto",
+                  fontWeight: FontWeight.w700,
+                ),
+              ],
             ),
           ],
         ),
@@ -297,52 +318,52 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget directionWidget() {
-    return Container(
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(15.sp),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            spreadRadius: 1,
-            blurRadius: 8,
-            offset: Offset(0, 2), // horizontal, vertical
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 4.w,vertical: 1.5.h),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                customText(
-                  text: "Nearest Tire Station",
-                  fontSize: 17.sp,
-                  fontFamily: "Roboto",
-                  fontWeight: FontWeight.w600,
-                ),
-                SizedBox(height: 0.1.h),
-                customText(
-                  text: "Fast and reliable tire services, just\naround the corner",
-                  fontSize: 13.sp,
-                  fontFamily: "Barlow",
-                  fontWeight: FontWeight.w500,
-                  color: textBrownColor
-                ),
-                SizedBox(height: 1.h),
-                buttonWidget("Get Direction", whiteColor,colors: buttonColor,height: 3.h,width: 20.w,radius: 20.sp,fontsize: 13.sp)
-              ],
-            ),
-            Image.asset("assets/png/home_screen_images/home_map.png",width: 32.w,)
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget directionWidget() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       color: whiteColor,
+  //       borderRadius: BorderRadius.circular(15.sp),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withOpacity(0.08),
+  //           spreadRadius: 1,
+  //           blurRadius: 8,
+  //           offset: Offset(0, 2), // horizontal, vertical
+  //         ),
+  //       ],
+  //     ),
+  //     child: Padding(
+  //       padding: EdgeInsets.symmetric(horizontal: 4.w,vertical: 1.5.h),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               customText(
+  //                 text: "Nearest Tire Station",
+  //                 fontSize: 17.sp,
+  //                 fontFamily: "Roboto",
+  //                 fontWeight: FontWeight.w600,
+  //               ),
+  //               SizedBox(height: 0.1.h),
+  //               customText(
+  //                 text: "Fast and reliable tire services, just\naround the corner",
+  //                 fontSize: 13.sp,
+  //                 fontFamily: "Barlow",
+  //                 fontWeight: FontWeight.w500,
+  //                 color: textBrownColor
+  //               ),
+  //               SizedBox(height: 1.h),
+  //               buttonWidget("Get Direction", whiteColor,colors: buttonColor,height: 3.h,width: 20.w,radius: 20.sp,fontsize: 13.sp)
+  //             ],
+  //           ),
+  //           Image.asset("assets/png/home_screen_images/home_map.png",width: 32.w,)
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget tireDetailWidget(String tno,String lastcheckdate,Color color){
     return Container(
@@ -563,27 +584,37 @@ Widget quickAction({
   required String imagePath,
   required String text,
   required VoidCallback onTap,
+  double? width,
+  double? containerWidth
 }) {
   return InkWell(
     onTap: onTap,
     borderRadius: BorderRadius.circular(10.sp),
     child: Container(
-      width: 44.3.w, // Adjust width as needed
-      height: 5.h, // Fixed height for uniform buttons
+      width: 41.w, // Adjust width as needed
+      height: 13.h, // Fixed height for uniform buttons
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(15.sp),
       ),
       padding: EdgeInsets.symmetric(horizontal: 3.w),
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            imagePath,
-            width: 16.sp,
-            height: 16.sp,
-            fit: BoxFit.contain,
-            color: Colors.white,
+          Container(
+            decoration: BoxDecoration(
+              color: whiteColor.withAlpha(50),
+              shape: BoxShape.circle
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(containerWidth ?? 8.0),
+              child: Image.asset(
+                imagePath,
+                width: width ?? 6.w,
+                fit: BoxFit.contain,
+                color: Colors.white,
+              ),
+            ),
           ),
           SizedBox(width: 2.w),
           customText(

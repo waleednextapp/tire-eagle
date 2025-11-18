@@ -16,6 +16,7 @@ class Remainder extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: whiteColor,
+        centerTitle: true,
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: customText(
@@ -139,7 +140,7 @@ Widget reminderWidget(
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
     child: Container(
-      height: buttoncheaque == true ? 31.h : customheight,
+      height: buttoncheaque == true ? 32.h : customheight,
       width: width != null ? width : 120.w,
 
       decoration: BoxDecoration(

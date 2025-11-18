@@ -21,6 +21,7 @@ class SendForRethread extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: whiteColor,
+        centerTitle: true,
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: customText(
@@ -44,7 +45,7 @@ class SendForRethread extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 0.5.h,
                     children: [
-                      customTextFeild(
+                      customTextFeildM(
                           "Serial Number",
                           "Enter serial number",
                           path: "assets/png/scan_icon.png",
@@ -90,12 +91,12 @@ class SendForRethread extends StatelessWidget {
                         fontWeight: FontWeight.w300,
                       ),
                       SizedBox(height: 0.5.h),
-                      customTextFeild(
+                      customTextFeildM(
                         "Center Name",
                         "ABC Retread Co.",
                       ),
                       SizedBox(height: 0.5.h),
-                      customTextFeild(
+                      customTextFeildM(
                         "Avg. Cost",
                         "\$180",
                       ),

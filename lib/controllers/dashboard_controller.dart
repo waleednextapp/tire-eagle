@@ -16,6 +16,7 @@ class DashboardController extends GetxController{
     currentIndex.value = index;
     if (_pageController?.hasClients ?? false) {
       _pageController!.jumpToPage(index);
+      print("iam here");
     } else {
       debugPrint("⚠️ PageController not set or not attached");
     }
@@ -52,9 +53,9 @@ class DashboardController extends GetxController{
   ];
   final List<String> inventoryTabs = [
     "In Use",
-    "In Stock",
-    "In Disposed",
+    "Disposed",
   ];
+
   final List<String> reportTabs = [
     "Last Week",
     "Last Month",

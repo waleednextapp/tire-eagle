@@ -16,6 +16,7 @@ class SelectDismountReason extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: whiteColor,
+        centerTitle: true,
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: customText(
@@ -118,7 +119,6 @@ class SelectDismountReason extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 5.h),
                 SizedBox(
                   width: double.infinity,
                   child: buttonWidget(

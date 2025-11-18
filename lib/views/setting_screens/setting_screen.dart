@@ -3,19 +3,23 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/constants/color_constants.dart';
 import 'package:tire_eagle/constants/constants_widgets.dart';
+import 'package:tire_eagle/utils/helper_functions.dart';
+
+import '../../controllers/dashboard_controller.dart';
+import '../../widgets/success_dialog.dart';
 
 class SettingScreen extends StatelessWidget {
   SettingScreen({super.key});
 
   final List<Map<String, String>> rowOption = [
-    {"path": "assets/png/setting_icon/contact.png", "name": "Contact Details"},
+    {"path": "assets/png/setting_icon/contact.png", "name": "My Details"},
     {
       "path": "assets/png/setting_icon/notification.png",
       "name": "Notifications",
     },
     {
-      "path": "assets/png/setting_icon/preference.png",
-      "name": "App Preferences",
+      "path": "assets/png/setting_icon/billing.png",
+      "name": "Billings & Invoices",
     },
     {
       "path": "assets/png/setting_icon/security.png",
@@ -23,7 +27,7 @@ class SettingScreen extends StatelessWidget {
     },
     {"path": "assets/png/setting_icon/logout.png", "name": "Log Out"},
   ];
-
+  final DashboardController dashboardController = Get.find<DashboardController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,19 +124,37 @@ class SettingScreen extends StatelessWidget {
                             () {
                               switch (index) {
                                 case 0:
-                                  Get.toNamed("scan");
+                                  Get.toNamed("mydetails");
                                   break;
                                 case 1:
-                                  // Get.toNamed("notification");
+                                  Get.toNamed("allownotifications");
                                   break;
                                 case 2:
-                                  // Get.toNamed("addnewwheel");
+                                  Get.toNamed("billing");
                                   break;
                                 case 3:
-                                  // Get.toNamed("reportdamage");
+                                  Get.toNamed("password");
                                   break;
                                 case 4:
-                                  Get.toNamed("loginscreen");
+                                  successDialog(
+                                    context,
+                                    "Are you sure you want to logout?",
+                                    buttonText2: 'Yes',
+                                    "No",
+                                    isLogout: true,
+                                        () {
+                                      dashboardController.currentIndex.value = 0;
+                                      HelperFunction.clearLocalStorage();
+                                          successDialog(
+                                            context,
+                                            "You’ve been logged out successfully.",
+                                            "Ok",
+                                                () {
+                                                 Get.offAllNamed("loginscreen");
+                                            },
+                                          );
+                                    },
+                                  );
                                   break;
                               }
                             },

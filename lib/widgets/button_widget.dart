@@ -39,6 +39,7 @@ Widget buttonWidget(
                 path,
                 height: 16.sp,
                 width: 16.sp,
+
                 color: textColor,
               ),
               SizedBox(width: 2.w),

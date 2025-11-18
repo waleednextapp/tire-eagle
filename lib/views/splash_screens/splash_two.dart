@@ -98,7 +98,7 @@ class SplashTwo extends StatelessWidget {
                 child: Center(
                   child: GestureDetector(
                     onTap: (){
-                      Get.toNamed("loginscreen");
+                      Get.toNamed("signupscreen");
                     },
                     child: Container(
                       height: 7.5.h,
