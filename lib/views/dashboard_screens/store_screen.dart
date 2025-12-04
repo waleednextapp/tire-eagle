@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/constants/color_constants.dart';
 import 'package:tire_eagle/widgets/header_widget.dart';
+import 'package:tire_eagle/widgets/nearest_supplier_bottomsheet.dart';
 
 import '../../constants/constants_widgets.dart';
 
@@ -106,37 +108,70 @@ class _StoreScreenState extends State<StoreScreen> {
             SizedBox(height: 2.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 6.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                customText(
+                  text: "Nearest Suppliers",
+                  fontSize: 18.sp,
+                  fontFamily: "Barlow",
+                  fontWeight: FontWeight.w700,
+                ),
+                InkWell(
+                  onTap: (){
+                    Get.toNamed("near");
+                  },
+                  child: Row(
+                    children: [
+                      customText(
+                        text: "View All",
+                        fontSize: 15.sp,
+                        fontFamily: "Barlow",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      SizedBox(width: 1.w),
+
+                      Icon(Icons.arrow_forward,color: blackColor,size: 16.sp,)
+                    ],
+                  ),
+                )
+              ],),
+            ),
+
+            SizedBox(height: 2.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6.w),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      listSupplier("assets/png/store_image/tire1.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM"),
-                      listSupplier("assets/png/store_image/tire2.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM"),
+                      listSupplier("assets/png/store_image/tire1.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM",ontap: (){nearestSupplierBottomSheet(context);}),
+                      listSupplier("assets/png/store_image/tire2.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM",ontap: (){nearestSupplierBottomSheet(context);}),
                     ],
                   ),
                   SizedBox(height: 2.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      listSupplier("assets/png/store_image/tire1.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM"),
-                      listSupplier("assets/png/store_image/tire2.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM"),
+                      listSupplier("assets/png/store_image/tire1.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM",ontap: (){nearestSupplierBottomSheet(context);}),
+                      listSupplier("assets/png/store_image/tire2.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM",ontap: (){nearestSupplierBottomSheet(context);}),
                     ],
                   ),
                   SizedBox(height: 2.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      listSupplier("assets/png/store_image/tire1.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM"),
-                      listSupplier("assets/png/store_image/tire2.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM"),
+                      listSupplier("assets/png/store_image/tire1.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM",ontap: (){nearestSupplierBottomSheet(context);}),
+                      listSupplier("assets/png/store_image/tire2.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM",ontap: (){nearestSupplierBottomSheet(context);}),
                     ],
                   ),
                   SizedBox(height: 2.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      listSupplier("assets/png/store_image/tire1.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM"),
-                      listSupplier("assets/png/store_image/tire2.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM"),
+                      listSupplier("assets/png/store_image/tire1.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM",ontap: (){nearestSupplierBottomSheet(context);}),
+                      listSupplier("assets/png/store_image/tire2.png", "Tire Supplier Name", "14km Away", "11:00 AM - 12:00 PM",ontap: (){nearestSupplierBottomSheet(context);}),
                     ],
                   ),
                 ],
@@ -147,23 +182,12 @@ class _StoreScreenState extends State<StoreScreen> {
       ),
     );
   }
-  Widget lastExplore(String path,String title) {
-    return
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-                Image.asset(path,),
-            customText(
-              text: title,
-              fontSize: 13.sp,
-              fontFamily: "Barlow",
-              fontWeight: FontWeight.w400,
-            ),
-          ],
-        );
-  }
-  Widget listSupplier(String path, String name, String distance, String time) {
-    return Column(
+
+}
+Widget listSupplier(String path, String name, String distance, String time,{VoidCallback? ontap}) {
+  return InkWell(
+    onTap: ontap,
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Stack(
@@ -246,8 +270,23 @@ class _StoreScreenState extends State<StoreScreen> {
           color: homegreyColor,
         ),
       ],
-    );
-  }
-
-
+    ),
+  );
 }
+Widget lastExplore(String path,String title) {
+  return
+    Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(path,),
+        customText(
+          text: title,
+          fontSize: 13.sp,
+          fontFamily: "Barlow",
+          fontWeight: FontWeight.w400,
+        ),
+      ],
+    );
+}
+
+

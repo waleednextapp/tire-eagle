@@ -12,7 +12,7 @@ void successDialog(
     String description,
     String buttonText,
     VoidCallback onTap,
-{String? title,bool? isLogout = false,String? buttonText2}
+{String? title,bool? isLogout = false,String? buttonText2,VoidCallback? onTap2}
     ) {
   showDialog(
     context: context,
@@ -89,7 +89,7 @@ void successDialog(
                             borderColor: brownColor,
                             height: 5.h,
                             radius: 12.sp,
-                            onTap: onTap,
+                            onTap: onTap2,
                           )
                         ),
                         SizedBox(width: 2.w,),

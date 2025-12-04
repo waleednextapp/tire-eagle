@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tire_eagle/controllers/auth_controller.dart';
+import 'package:tire_eagle/utils/shared_prefrences_methods.dart';
 import 'package:tire_eagle/views/dashboard_screens/remainder.dart';
-import 'package:tire_eagle/views/dashboard_screens/wheel_detail.dart';
+import 'package:tire_eagle/views/dashboard_screens/wheel_screens/wheel_detail.dart';
 import 'package:tire_eagle/widgets/confirm_dismount_dialog.dart';
 import 'package:tire_eagle/widgets/rotate_tire_dialog.dart';
 
-import '../../constants/color_constants.dart';
-import '../../constants/constants_widgets.dart';
-import '../../widgets/back_button.dart';
-import '../../widgets/button_widget.dart';
+import '../../../constants/color_constants.dart';
+import '../../../constants/constants_widgets.dart';
+import '../../../widgets/back_button.dart';
+import '../../../widgets/button_widget.dart';
 
 class TireDetail extends StatelessWidget {
   TireDetail({super.key});
-
+  final AuthController controller = Get.find<AuthController>();
+  final prefs = SharedPreferencesMethod.storage;
   final List<Map<String, String>> remainder = [
     {"title": "Vehical", "content": "Truck #YXU - 5689"},
     {"title": "Size", "content": "22.5"},
@@ -29,6 +32,7 @@ class TireDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var isUser = prefs.getBool('isUser');
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -307,6 +311,7 @@ class TireDetail extends StatelessWidget {
             ),
 
             // Bottom fixed Container inside body
+            isUser == false ?
             Container(
               padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
               decoration: BoxDecoration(
@@ -377,7 +382,7 @@ class TireDetail extends StatelessWidget {
                   SizedBox(height: 1.5.h),
                 ],
               ),
-            ),
+            ):SizedBox.shrink()
           ],
         ),
       ),
@@ -438,7 +443,7 @@ class TireDetail extends StatelessWidget {
     );
   }
 }
-Widget timelineIndicator({Color color = taglinegreyColor}) {
+Widget timelineIndicator({int itemCount = 1,Color color = taglinegreyColor}) {
   return Column(
     children: [
       // Circle at the top
@@ -456,6 +461,7 @@ Widget timelineIndicator({Color color = taglinegreyColor}) {
       Expanded(
         child: Container(
           width: 0.3.w,
+          height: itemCount * 8.h,
           color: color.withOpacity(0.5),
         ),
       ),

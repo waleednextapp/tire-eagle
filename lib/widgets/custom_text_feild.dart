@@ -381,10 +381,11 @@ Widget customPhoneTextField({
         cursorColor: yellowColor,
         style: TextStyle(
           fontSize: 16.sp,
-          color: yellowColor,
+          color: blackColor,
           fontFamily: "Barlow",
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w300,
         ),
+
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
@@ -397,18 +398,18 @@ Widget customPhoneTextField({
           filled: true,
           fillColor: whiteColor,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.sp),
+            borderRadius: BorderRadius.circular(12.sp),
             borderSide: BorderSide(color: textFeildBorderColor, width: 0.2.w),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.sp),
-            borderSide: BorderSide(color: yellowColor, width: 2),
+            borderRadius: BorderRadius.circular(12.sp),
+            borderSide: BorderSide(color: textFeildBorderColor, width: 0.4.w),
           ),
           prefixIcon: GestureDetector(
             onTap: () {
               showCountryPicker(
                 context: Get.context!,
-                showPhoneCode: false,
+                showPhoneCode: true,
                 onSelect: (Country country) {
                   authController.selectedCountry.value = country;
                 },

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/widgets/button_widget.dart';
 
-import '../../constants/color_constants.dart';
-import '../../constants/constants_widgets.dart';
-import '../../widgets/back_button.dart';
+import '../../../constants/color_constants.dart';
+import '../../../constants/constants_widgets.dart';
+import '../../../controllers/auth_controller.dart';
+import '../../../utils/shared_prefrences_methods.dart';
+import '../../../widgets/back_button.dart';
 
 class WheelDetail extends StatelessWidget {
   WheelDetail({super.key});
-
+  final AuthController controller = Get.find<AuthController>();
+  final prefs = SharedPreferencesMethod.storage;
   final List<Map<String, String>> remainder = [
     {"title": "Vehical", "content": "Truck #YXU - 5689"},
     {"title": "Wheel Size", "content": "22.5"},
@@ -21,6 +25,7 @@ class WheelDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var isUser = prefs.getBool('isUser');
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -136,6 +141,7 @@ class WheelDetail extends StatelessWidget {
             ),
 
             // Bottom fixed Container inside body
+            isUser == false ?
             Container(
               padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
               decoration: BoxDecoration(
@@ -167,7 +173,7 @@ class WheelDetail extends StatelessWidget {
                   SizedBox(height: 1.5.h),
                 ],
               ),
-            ),
+            ):SizedBox.shrink(),
           ],
         ),
       ),

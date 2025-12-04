@@ -1,307 +1,333 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tire_eagle/components/common_image_view.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
+import 'package:tire_eagle/controllers/total_tire_controller.dart';
+import 'package:tire_eagle/views/dashboard_screens/wheel_screens/total_wheels.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/constants_widgets.dart';
 import '../../widgets/button_widget.dart';
 import '../../widgets/header_widget.dart';
-import 'home_screen.dart';
+import 'fleet_home_screen.dart';
 
 class InventoryScreen extends StatelessWidget {
   InventoryScreen({super.key});
   final DashboardController controller = Get.find<DashboardController>();
+  final TotalTireController totalTireController = Get.find<TotalTireController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              color: whiteColor,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: 7.h,
-                  left: 6.w,
-                  right: 6.w,
-                  bottom: 2.h,
-                ),
-                child: headerWidget(
-                  "Manage Inventory",
-                      () {},
-                  "Search By Serial Number",
+      body: CustomRefreshIndicator(
+        onRefresh: () async {
+          await totalTireController.GetAllTireInventory();
+          await totalTireController.GetAllWheelInventory();
+        },
+        builder: (BuildContext context, Widget child, IndicatorController controller) {
+            return child;
+          },
+
+          // return Stack(
+          //   children: [
+          //     child, // Your scrollable content
+          //     // Optional: show custom loader only if you want
+          //     if (controller.isLoading || controller.value > 0)
+          //       Positioned(
+          //         top: 16,
+          //         left: 0,
+          //         right: 0,
+          //         child: Opacity(
+          //           opacity: controller.value.clamp(0.0, 1.0),
+          //           // Fade in effect
+          //           child: Container(
+          //             alignment: Alignment.center,
+          //             height: 30,
+          //             child: SizedBox.shrink(), // Hide spinner completely
+          //           ),
+          //         ),
+          //       ),
+          //   ],
+          // );
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(), // Allow pull even if content < screen
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ---------------- Your existing widgets ----------------
+              Container(
+                color: whiteColor,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: 7.h,
+                    left: 6.w,
+                    right: 6.w,
+                    bottom: 2.h,
+                  ),
+                  child: headerWidget(
+                    "Manage Inventory",
+                        () {},
+                    "Search By Serial Number",
+                    controller: totalTireController.searchController,
+                    onChanged: (value) async {
+                      if(controller.inventorySelectedIndex.value == 1) {
+                        if (value
+                            .trim()
+                            .isEmpty) {
+                          // agar empty hai to full list reload
+                          await totalTireController.GetAllTireInventory();
+                        } else {
+                          // filter by search value
+                          await totalTireController.GetAllTireInventory(
+                              search: value.trim());
+                        }
+                      }
+                      else{
+                        if (value
+                            .trim()
+                            .isEmpty) {
+                          // agar empty hai to full list reload
+                          await totalTireController.GetAllWheelInventory();
+                        } else {
+                          // filter by search value
+                          await totalTireController.GetAllWheelInventory(
+                              search: value.trim());
+                        }
+                      }
+                    },
+                  ),
                 ),
               ),
-            ),
-            // SizedBox(height: 1.h),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: 6.w),
-            //   child: customText(
-            //     text: "Quick Actions",
-            //     fontSize: 17.sp,
-            //     fontFamily: "Roboto",
-            //     fontWeight: FontWeight.w600,
-            //   ),
-            // ),
-            // SizedBox(height: 1.h),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: 3.w),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [
-            //       quickAction(
-            //         color: blueColor,
-            //         imagePath: 'assets/png/wheel_detail/rethread.png',
-            //         text: 'Send for Retread',
-            //         onTap: () {
-            //           Get.toNamed("rethread");
-            //         },
-            //       ),
-            //       quickAction(
-            //         color: greenColor,
-            //         imagePath: 'assets/png/home_screen_images/tire_icon.png',
-            //         text: 'Add Wheel/Tire',
-            //         onTap: () {
-            //           Get.toNamed("addnewtire");
-            //         },
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(height: 1.h),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: 3.w),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [
-            //       quickAction(
-            //         color: purpleColor,
-            //         imagePath: 'assets/png/home_screen_images/remainder_icon.png',
-            //         text: 'Reminders',
-            //         onTap: () {
-            //           Get.toNamed("remainder");
-            //
-            //         },
-            //       ),
-            //       quickAction(
-            //         color: redColor,
-            //         imagePath: 'assets/png/home_screen_images/alert_icon.png',
-            //         text: 'Report Damage',
-            //         onTap: () {
-            //           Get.toNamed("reportdamage");
-            //
-            //         },
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(height: 2.h),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 6.w),
-                  child: InkWell(
-                    onTap: () {
-                      controller.inventorySelectedIndex.value = 1; // ✅ Fixed
-                    },
-                    child: Obx(() => Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        customText(
-                          text: "Tires",
-                          fontSize: 17.sp,
-                          fontFamily: "Roboto",
-                          fontWeight: FontWeight.w600,
-                          color: controller.inventorySelectedIndex.value == 1
-                              ? blackColor
-                              : inventoryGreyColor,
-                        ),
-                        Container(
-                          height: controller.inventorySelectedIndex.value == 1 ? 0.4.h : 0.2.h,
-                          width: 43.w,
-                          color: controller.inventorySelectedIndex.value == 1
-                              ? yellowColor
-                              : inventoryContainerColor,
-                        ),
-                      ],
-                    )),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 6.w),
+                    child: InkWell(
+                      onTap: () async {
+                        controller.inventorySelectedIndex.value = 1;
+                      },
+                      child: Obx(() => Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          customText(
+                            text: "Tires",
+                            fontSize: 17.sp,
+                            fontFamily: "Roboto",
+                            fontWeight: FontWeight.w600,
+                            color: controller.inventorySelectedIndex.value == 1
+                                ? blackColor
+                                : inventoryGreyColor,
+                          ),
+                          Container(
+                            height: controller.inventorySelectedIndex.value == 1 ? 0.4.h : 0.2.h,
+                            width: 43.w,
+                            color: controller.inventorySelectedIndex.value == 1
+                                ? yellowColor
+                                : inventoryContainerColor,
+                          ),
+                        ],
+                      )),
+                    ),
                   ),
-                ),
-                SizedBox(width: 2.w),
-                Padding(
-                  padding: EdgeInsets.only(right: 6.w),
-                  child: InkWell(
-                    onTap: () {
-                      controller.inventorySelectedIndex.value = 2; // ✅ Fixed
-                    },
-                    child: Obx(() => Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        customText(
-                          text: "Wheels",
-                          fontSize: 17.sp,
-                          fontFamily: "Roboto",
-                          fontWeight: FontWeight.w600,
-                          color: controller.inventorySelectedIndex.value == 2
-                              ? blackColor
-                              : inventoryGreyColor,
-                        ),
-                        Container(
-                          height: controller.inventorySelectedIndex.value == 2 ? 0.4.h : 0.2.h,
-                          width: 43.w,
-                          color: controller.inventorySelectedIndex.value == 2
-                              ? yellowColor
-                              : inventoryContainerColor,
-                        ),
-                      ],
-                    )),
+                  SizedBox(width: 2.w),
+                  Padding(
+                    padding: EdgeInsets.only(right: 6.w),
+                    child: InkWell(
+                      onTap: () async {
+                        controller.inventorySelectedIndex.value = 2;
+                      },
+                      child: Obx(() => Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          customText(
+                            text: "Wheels",
+                            fontSize: 17.sp,
+                            fontFamily: "Roboto",
+                            fontWeight: FontWeight.w600,
+                            color: controller.inventorySelectedIndex.value == 2
+                                ? blackColor
+                                : inventoryGreyColor,
+                          ),
+                          Container(
+                            height: controller.inventorySelectedIndex.value == 2 ? 0.4.h : 0.2.h,
+                            width: 43.w,
+                            color: controller.inventorySelectedIndex.value == 2
+                                ? yellowColor
+                                : inventoryContainerColor,
+                          ),
+                        ],
+                      )),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 2.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6.w),
-              child: Obx(
-                    () => Row(
-                  children: List.generate(controller.inventoryTabs.length, (index) {
-                    bool isSelected = controller.inventoryIndexTab.value == index;
-                    return Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            right: index == controller.inventoryTabs.length - 1 ? 0 : 2.w),
-                        child: InkWell(
-                          onTap: () async {
-                            // Update selected index
-                            controller.selectInventoryValue(index);
+                ],
+              ),
+              SizedBox(height: 2.h),
 
-                            if (index == 1) {
-                              // Navigate and wait until page is popped/back
-                              await Get.toNamed("disposedhistory");
+              // ---------------- Tabs & Grid content ----------------
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6.w),
+                child: Obx(
+                      () => Row(
+                    children: List.generate(controller.inventoryTabs.length, (index) {
+                      bool isSelected = controller.inventoryIndexTab.value == index;
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              right: index == controller.inventoryTabs.length - 1 ? 0 : 2.w),
+                          child: InkWell(
+                            onTap: () async {
+                              controller.selectInventoryValue(index);
 
-                              // Reset index after coming back
-                              controller.inventoryIndexTab.value = 0;
-                            }
-                          },
-                          borderRadius: BorderRadius.circular(30.sp),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 0.9.h),
-                            decoration: BoxDecoration(
-                              color: isSelected ? brownColor : brownColor.withAlpha(40),
-                              borderRadius: BorderRadius.circular(30.sp),
-                            ),
-                            alignment: Alignment.center,
-                            child: customText(
-                              text: controller.inventoryTabs[index],
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                              color: isSelected ? whiteColor : brownColor,
+                              if (index == 1) {
+                                await Get.toNamed("disposedhistory");
+                                controller.inventoryIndexTab.value = 0;
+                              }
+                            },
+                            borderRadius: BorderRadius.circular(30.sp),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 0.9.h),
+                              decoration: BoxDecoration(
+                                color: isSelected ? brownColor : brownColor.withAlpha(40),
+                                borderRadius: BorderRadius.circular(30.sp),
+                              ),
+                              alignment: Alignment.center,
+                              child: customText(
+                                text: controller.inventoryTabs[index],
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: isSelected ? whiteColor : brownColor,
+                              ),
                             ),
                           ),
                         ),
+                      );
+                    }),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 2.h),
+              Obx(() {
+                if (controller.inventorySelectedIndex.value == 1) {
+                  // ---------- TIRE GRID ----------
+                  if (totalTireController.isLoadingTireInventory.value) {
+                    return SizedBox(
+                      height: 60.h,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: CircularProgressIndicator(color: yellowColor),
+                            ),
+                          ),
+                        ],
                       ),
                     );
-                  }),
-                ),
-              ),
-            ),
+                  }
 
-
-
-            SizedBox(height: 2.h),
-            Obx(() {
-              if (controller.inventorySelectedIndex.value == 1) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6.w),
-                  child: Column(
-                    children: List.generate(4, (rowIndex) {
-                      return Row(
+                  return totalTireController.getTireInventory.value?.data?.items?.isEmpty ?? true
+                      ? Center(
+                    child: customText(
+                      text: "No Tires In Inventory",
+                      fontSize: 15.sp,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                      : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: totalTireController.getTireInventory.value?.data?.items?.length ?? 0,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 3.w,
+                        childAspectRatio: 0.5,
+                      ),
+                      itemBuilder: (context, index) {
+                        final item = totalTireController.getTireInventory.value?.data?.items?[index];
+                        return inventoryWidget(
+                          item?.imageUrl ?? '',
+                          item?.vehicalNumber ?? '',
+                          item?.brand ?? '',
+                          item?.tireSize ?? '',
+                          formatDate(item?.updatedAt ?? ''),
+                          item?.mountedPosition ?? '',
+                          item?.serialNumber ?? '',
+                          item?.status ?? '',
+                              () {
+                            Get.toNamed("tire");
+                          },
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  // ---------- WHEEL GRID ----------
+                  if (totalTireController.isLoadingWheelInventory.value) {
+                    return SizedBox(
+                      height: 60.h,
+                      child: Column(
                         children: [
-                          Flexible(
-                            fit: FlexFit.tight,
-                            child: inventoryWidget(
-                              "assets/png/inventory_screen/inventory_tire1.png",
-                              "YXU - 5689",
-                              "Michelin XDE2+",
-                              "11R22.5",
-                              "22 April 2025",
-                              "F-Right",
-                              "DOT 5478 DC89",
-                                (){
-                                  Get.toNamed("tire");
-                                }
-                            ),
-                          ),
-                          SizedBox(width: 3.w),
-                          Flexible(
-                            fit: FlexFit.tight,
-                            child: inventoryWidget(
-                              "assets/png/inventory_screen/inventory_tire1.png",
-                              "YXU - 5689",
-                              "Michelin XDE2+",
-                              "11R22.5",
-                              "22 April 2025",
-                              "F-Right",
-                              "DOT 5478 DC89",
-                                    (){
-                                  Get.toNamed("tire");
-                                }
+                          Expanded(
+                            child: Center(
+                              child: CircularProgressIndicator(color: yellowColor),
                             ),
                           ),
                         ],
-                      );
-                    }),
-                  ),
-                );
-              } else {
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6.w),
-                  child: Column(
-                    children: List.generate(4, (rowIndex) {
-                      return Row(
-                        children: [
-                          Flexible(
-                            fit: FlexFit.tight,
-                            child: inventoryWidget(
-                              "assets/png/inventory_screen/inventory_tire1.png",
-                              "YXU - 5689",
-                              "Michelin XDE2+",
-                              "11R22.5",
-                              "22 April 2025",
-                              "F-Right",
-                              "DOT 5478 DC89",
-                                    (){
-                                  Get.toNamed("wheeldetails");
-                                }
-                            ),
-                          ),
-                          SizedBox(width: 3.w),
-                          Flexible(
-                            fit: FlexFit.tight,
-                            child: inventoryWidget(
-                              "assets/png/inventory_screen/inventory_tire1.png",
-                              "YXU - 5689",
-                              "Michelin XDE2+",
-                              "11R22.5",
-                              "22 April 2025",
-                              "F-Right",
-                              "DOT 5478 DC89",
-                                    (){
-                                  Get.toNamed("wheeldetails");
-                                }
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
-                );
-              }
-            }),
+                      ),
+                    );
+                  }
 
-          ],
+                  return totalTireController.getWheelInventory.value?.data?.items?.isEmpty ?? true
+                      ? Center(
+                    child: customText(
+                      text: "No Wheel In Inventory",
+                      fontSize: 15.sp,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                      : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: totalTireController.getWheelInventory.value?.data?.items?.length ?? 0,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 3.w,
+                        childAspectRatio: 0.5,
+                      ),
+                      itemBuilder: (context, index) {
+                        final item = totalTireController.getWheelInventory.value?.data?.items?[index];
+                        return inventoryWidget(
+                          item?.imageUrl ?? '',
+                          item?.vehicalNumber ?? '',
+                          item?.material ?? '',
+                          item?.wheelSize ?? '',
+                          formatDate(item?.updatedAt ?? ''),
+                          item?.mountedPosition ?? '',
+                          item?.serialNumber ?? '',
+                          item?.status ?? '',
+                              () {
+                            Get.toNamed("wheeldetails");
+                          },
+                        );
+                      },
+                    ),
+                  );
+                }
+              }),
+            ],
+          ),
         ),
       ),
     );
@@ -315,6 +341,7 @@ Widget inventoryWidget(
     String date,
     String position,
     String serialNo,
+    String status,
     VoidCallback ontap,
     ){
   return Container(
@@ -328,10 +355,12 @@ Widget inventoryWidget(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            path,
-            fit: BoxFit.contain,
-          ),
+          imageWidget(path),
+          // CommonImageView(
+          //   url: path,
+          //   height: 10.h,
+          //   fit: BoxFit.contain,
+          // ),
           SizedBox(height: 0.4.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -345,6 +374,7 @@ Widget inventoryWidget(
                     fontFamily: "Roboto",
                     fontWeight: FontWeight.w600,
                   ),
+
                   customText(
                     text: model,
                     fontSize: 13.sp,
@@ -365,7 +395,7 @@ Widget inventoryWidget(
                     vertical: 0.5.h,
                   ),
                   child: customText(
-                    text: "In Use",
+                    text: status,
                     fontSize: 12.sp,
                     fontFamily: "Roboto",
                     fontWeight: FontWeight.w400,
@@ -467,6 +497,34 @@ Widget inventoryWidget(
             }
           ),
         ],
+      ),
+    ),
+  );
+}
+
+Widget imageWidget(String? path) {
+  return SizedBox(
+    height: 13.h,
+    width: double.infinity,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(10.sp),
+      child: path != null && path.isNotEmpty
+          ? CachedNetworkImage(
+        imageUrl: path,
+        fit: BoxFit.contain,
+        placeholder: (context, url) => Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(color: Colors.white),
+        ),
+        errorWidget: (context, url, error) => Image.asset(
+          'assets/png/placeholder.png',
+          fit: BoxFit.contain,
+        ),
+      )
+          : Image.asset(
+        'assets/png/placeholder.png',
+        fit: BoxFit.contain,
       ),
     ),
   );

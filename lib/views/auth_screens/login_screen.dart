@@ -9,12 +9,14 @@ import 'package:tire_eagle/widgets/social_icon_widget.dart';
 
 import '../../constants/constants_widgets.dart';
 import '../../utils/helper_functions.dart';
+import '../../utils/shared_prefrences_methods.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   final AuthController controller = Get.find<AuthController>();
   final RxBool isSelected = false.obs;
+  final prefs = SharedPreferencesMethod.storage;
 
   // ✅ Global key for the form
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -60,6 +62,11 @@ class LoginScreen extends StatelessWidget {
                   InkWell(
                     onTap: () {
                       controller.loginUserIndex.value = 1;
+                      controller.isUser.value = true;
+                      prefs.setBool("isUser", controller.isUser.value);
+                      var isUser = prefs.getBool('isUser');
+                      print(isUser);
+                      print(controller.isUser.value);
                     },
                     child: Obx(() => Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,6 +95,9 @@ class LoginScreen extends StatelessWidget {
                   InkWell(
                     onTap: () {
                       controller.loginUserIndex.value = 2;
+                      controller.isUser.value = false;
+                      prefs.setBool("isUser", controller.isUser.value);
+                      print(controller.isUser.value);
                     },
                     child: Obx(() => Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,7 +211,7 @@ class LoginScreen extends StatelessWidget {
                     colors: buttonColor,
                     height: 6.h,
                     onTap: () {
-
+                      Get.offAllNamed('/bottomnavbar');
                     },
                   ),
                   SizedBox(height: 3.h),

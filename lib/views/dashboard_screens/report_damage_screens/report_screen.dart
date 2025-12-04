@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/views/dashboard_screens/remainder.dart';
-import 'package:tire_eagle/views/dashboard_screens/tire_detail.dart';
+import 'package:tire_eagle/views/dashboard_screens/tire_screens/tire_detail.dart';
 import 'package:tire_eagle/widgets/report_dialog.dart';
 
-import '../../constants/color_constants.dart';
-import '../../constants/constants_widgets.dart';
-import '../../controllers/dashboard_controller.dart';
-import '../../widgets/header_widget.dart';
+import '../../../constants/color_constants.dart';
+import '../../../constants/constants_widgets.dart';
+import '../../../controllers/dashboard_controller.dart';
+import '../../../widgets/header_widget.dart';
 
 class ReportScreen extends StatelessWidget {
   ReportScreen({super.key});

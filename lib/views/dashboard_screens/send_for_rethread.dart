@@ -34,111 +34,150 @@ class SendForRethread extends StatelessWidget {
         leading: backButton(),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 0.5.h,
-                    children: [
-                      customTextFeildM(
-                          "Serial Number",
-                          "Enter serial number",
-                          path: "assets/png/scan_icon.png",
-                          ontap: (){
-                            Get.toNamed("scan");
-                          }
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customDropdownField<String>(
-                        title: "Mounted Position",
-                        hintText: "D2-Left-Outer",
-                        items: [],
-                        selectedItem: controller.selectedValue,
-                        onChanged: (value) {
-                          controller.selectedValue = value;
-                        },
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customDropdownField<String>(
-                        title: "Tire Health",
-                        hintText: "12/32 ---- 🟢 (New)",
-                        items: [],
-                        selectedItem: controller.selectedValue,
-                        onChanged: (value) {
-                          controller.selectedValue = value;
-                        },
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customDropdownField<String>(
-                        title: "Retread History",
-                        hintText: "1st retread",
-                        items: [],
-                        selectedItem: controller.selectedValue,
-                        onChanged: (value) {
-                          controller.selectedValue = value;
-                        },
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customText(
-                        text: "Retread Center",
-                        fontSize: 15.sp,
-                        fontFamily: "Barlow",
-                        fontWeight: FontWeight.w300,
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customTextFeildM(
-                        "Center Name",
-                        "ABC Retread Co.",
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customTextFeildM(
-                        "Avg. Cost",
-                        "\$180",
-                      ),
-                      SizedBox(height: 0.5.h),
-                      customDropdownField<String>(
-                        title: "Pickup Logistics",
-                        hintText: "Include wheel",
-                        items: [],
-                        selectedItem: controller.selectedValue,
-                        onChanged: (value) {
-                          controller.selectedValue = value;
-                        },
-                      ),SizedBox(height: 0.5.h),
-                      customDropdownField<String>(
-                        title: "Date Of Damage",
-                        hintText: "July 10, 2025",
-                        items: [],
-                        selectedItem: controller.selectedValue,
-                        onChanged: (value) {
-                          controller.selectedValue = value;
-                        },
-                      ),SizedBox(height: 0.5.h),
-                      customDropdownField<String>(
-                        title: "Estimated Return Date",
-                        hintText: "July 15, 2025",
-                        items: [],
-                        selectedItem: controller.selectedValue,
-                        onChanged: (value) {
-                          controller.selectedValue = value;
-                        },
-                      ),
-                      SizedBox(height: 1.h),
-                      buttonWidget("Save", blackColor,colors: yellowColor,onTap: (){
-                        showRetreadDialog(context);
-                      }),
-                      SizedBox(height: 5.h),
-                    ],
-                  ),
-                ],
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              customTextFeildM(
+                "Serial Number",
+                "Enter serial number",
+               controller: controller.rethreadSerialNo
               ),
-            ),
-          ],
+              SizedBox(height: 0.5.h,),
+              customDropdownField<String>(
+                title: "Mounted Position",
+                hintText: "F-Right",
+                items: controller.mountedPositionList7,
+                selectedItem: controller.mountedPositionList7.contains(controller.mountedPosition6.value)
+                    ? controller.mountedPosition7.value
+                    : null,
+                onChanged: (value) {
+                  controller.mountedPosition7.value = value ?? "";
+                },
+              ),
+              SizedBox(height: 0.5.h,),
+
+              // Mounted Position Dropdown
+              // Obx(() => customDropdownField<String>(
+              //   title: "Mounted Position",
+              //   hintText: "D2-Left-Outer",
+              //   items: controller.mountedPositionList,
+              //   selectedItem: controller.mountedPositionList
+              //       .contains(controller.mountedPosition.value)
+              //       ? controller.mountedPosition.value
+              //       : null,
+              //   onChanged: (value) {
+              //     controller.mountedPosition.value = value ?? "";
+              //   },
+              // )),
+
+              // Tire Health Dropdown
+              // Obx(() => customDropdownField<String>(
+              //   title: "Tire Health",
+              //   hintText: "12/32 ---- 🟢 (New)",
+              //   items: controller.tireHealthList,
+              //   selectedItem: controller.tireHealthList
+              //       .contains(controller.TireHealth.value)
+              //       ? controller.TireHealth.value
+              //       : null,
+              //   onChanged: (value) {
+              //     controller.TireHealth.value = value ?? "";
+              //   },
+              // )),
+
+              // Rethread History Dropdown
+              // Obx(() => customDropdownField<String>(
+              //   title: "Rethread History",
+              //   hintText: "1st retread",
+              //   items: controller.rethreadHistoryList,
+              //   selectedItem: controller.rethreadHistoryList
+              //       .contains(controller.RethreadHistory.value)
+              //       ? controller.RethreadHistory.value
+              //       : null,
+              //   onChanged: (value) {
+              //     controller.RethreadHistory.value = value ?? "";
+              //   },
+              // )),
+              SizedBox(height: 0.5.h),
+
+              customText(
+                text: "Rethread Center",
+                fontSize: 15.sp,
+                fontFamily: "Barlow",
+                fontWeight: FontWeight.w300,
+
+              ),
+              SizedBox(height: 0.5.h),
+
+              customTextFeildM("Center Name", "ABC Retread Co.", controller: controller.rethreadCenterName),
+              SizedBox(height: 0.5.h),
+              customTextFeildM("Avg. Cost", "\$180", controller: controller.rethreadAvgCost),
+              SizedBox(height: 0.5.h),
+
+              // Pickup Logistics Dropdown
+              customTextFeildM(
+                "Pickup Logistics",
+                "Description",
+                controller: controller.rethreadPickupLogistics
+              ),
+              SizedBox(height: 0.5.h),
+
+              // Date Of Damage Dropdown
+              customTextFeildM(
+                "Date of Damage",
+                "MM/DD/YYYY",
+                path: "assets/png/calender_icon.png",
+                readonly: true,
+                controller: controller.rethreadDateofDamage,
+                ontap: () {
+                  controller.pickDate(context, controller.rethreadDateofDamage);
+                },
+              ),
+              SizedBox(height: 0.5.h),
+
+              // Estimated Return Date Dropdown
+              customTextFeildM(
+                "Estimated Return Date",
+                "MM/DD/YYYY",
+                path: "assets/png/calender_icon.png",
+                readonly: true,
+                controller: controller.rethreadReturnDate,
+                ontap: () {
+                  controller.pickDate(context, controller.rethreadReturnDate);
+                },
+              ),
+              SizedBox(height: 1.h),
+
+              buttonWidget(
+                "Save",
+                blackColor,
+                colors: yellowColor,
+                onTap: () async {
+                  if (controller.rethreadSerialNo.text.isEmpty ||
+                      controller.rethreadCenterName.text.isEmpty ||
+                      controller.rethreadAvgCost.text.isEmpty ||
+                      controller.rethreadPickupLogistics.text.isEmpty ||
+                      controller.rethreadDateofDamage.text.isEmpty ||
+                      controller.rethreadReturnDate.text.isEmpty) {
+
+                    Get.snackbar(
+                      "Error",
+                      "Please fill all form fields",
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.redAccent,
+                      colorText: Colors.white,
+                    );
+                    return;
+                  }
+
+                  await controller.sendForRethread(context);
+                },
+              ),
+
+              SizedBox(height: 5.h),
+            ],
+          ),
         ),
       ),
     );

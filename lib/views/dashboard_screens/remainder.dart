@@ -122,7 +122,9 @@ Widget reminderWidget(
     String position,
     String SerialNo,
     String tirehealth,
-    {double? width,
+    {
+      int? index,
+      double? width,
       double? namesize,
       double? modelsize,
       double? tirewidgetfontsize,
@@ -135,264 +137,274 @@ Widget reminderWidget(
       String? retreadcentername,
       String? spend,
       VoidCallback? ontap,
+      VoidCallback? onNextTap,
+      String? status,
+      double? sizedBoxWidth,
     }
     ) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
-    child: Container(
-      height: buttoncheaque == true ? 32.h : customheight,
-      width: width != null ? width : 120.w,
+    child: InkWell(
+      onTap: onNextTap,
+      child: Container(
+        height: buttoncheaque == true ? 32.h : customheight,
+        width: width != null ? width : 120.w,
 
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(12.sp),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            spreadRadius: 1,
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(
-                      text: name,
-                      fontSize: namesize != null ? namesize : 19.sp,
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.w600,
-                    ),
-                    customText(
-                      text: model,
-                      fontSize: modelsize!=null ? modelsize : 14.sp,
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ],
-                ),
-
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.sp),
-                    color: remainderGreenColor,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 2.w,
-                      vertical: 0.5.h,
-                    ),
-                    child: customText(
-                      text: "In Use",
-                      fontSize: inusesize!=null ? inusesize : 14.sp,
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ],
+        decoration: BoxDecoration(
+          color: whiteColor,
+          borderRadius: BorderRadius.circular(12.sp),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: Offset(0, 2),
             ),
-
-            SizedBox(height: 2.h),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(
-                      text: "Size",
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    customText(
-                      text: size,
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    SizedBox(height: 1.h),
-                    customText(
-                      text: "Maintenance",
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    customText(
-                      text: maintenance,
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    SizedBox(height: 1.h),
-                    damagetype !=null ?
-                    customText(
-                      text: "Damage Type",
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
-                      fontWeight: FontWeight.w400,
-                    ):
-                    customText(
-                      text: "Last Date",
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    damagetype != null ?
-                    customText(
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      text: damagetype,
-                      fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
-                      fontWeight: FontWeight.w400,
-                    ):
-                    customText(
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      text: date,
-                      fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    if (buttoncheaque == true)
-                      SizedBox.shrink()
-                    else
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 1.h),
-                          customText(
-                            text: "Estimated Return Date",
-                            fontSize: tirewidgetfontsize ?? 14.sp,
-                            fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
-                            fontWeight: FontWeight.w400,
-                          ),
-                          customText(
-                            fontSize: tirewidgetfontsize ?? 14.sp,
-                            text: estimatedreturndate,
-                            fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
-                            fontWeight: FontWeight.w400,
-                          ),
-                          SizedBox(height: 1.h),
-                          customText(
-                            text: "Retread Center Name",
-                            fontSize: tirewidgetfontsize ?? 14.sp,
-                            fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
-                            fontWeight: FontWeight.w400,
-                          ),
-                          customText(
-                            fontSize: tirewidgetfontsize ?? 14.sp,
-                            text: retreadcentername,
-                            fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(
-                      text: "Position",
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    customText(
-                      text: position,
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    SizedBox(height: 1.h),
-                    customText(
-                      text: "Serial Number",
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    customText(
-                      text: SerialNo,
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    SizedBox(height: 1.h),
-                    customText(
-                      text: "Tire Health",
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    customText(
-                      fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
-                      text: tirehealth,
-                      color: redColor,
-                      fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
-                      fontWeight: FontWeight.w400,
-                    ),
-                    if (buttoncheaque == true)
-                      SizedBox.shrink()
-                    else
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 1.h),
-                          customText(
-                            text: "Damage Report",
-                            fontSize: tirewidgetfontsize ?? 14.sp,
-                            fontFamily: "Barlow",
-                            fontWeight: FontWeight.w400,
-                          ),
-                          customText(
-                            fontSize: tirewidgetfontsize ?? 14.sp,
-                            text: damagereport,
-                            fontFamily: "Roboto",
-                            fontWeight: FontWeight.w400,
-                          ),
-                          SizedBox(height: 1.h),
-                          customText(
-                            text: "Spend",
-                            fontSize: tirewidgetfontsize ?? 14.sp,
-                            fontFamily: "Barlow",
-                            fontWeight: FontWeight.w400,
-                          ),
-                          customText(
-                            fontSize: tirewidgetfontsize ?? 14.sp,
-                            text: spend,
-                            fontFamily: "Roboto",
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ],
-                      ),
-
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 2.h),
-            buttoncheaque == true
-                ? buttonWidget(
-              "View Detail",
-              blackColor,
-              colors: yellowColor,
-              height: 3.5.h,
-              width: double.infinity,
-              fontsize: 14.sp,
-              onTap: ontap
-            )
-                : SizedBox.shrink(),
           ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      customText(
+                        text: name,
+                        fontSize: namesize != null ? namesize : 19.sp,
+                        fontFamily: "Roboto",
+                        fontWeight: FontWeight.w600,
+                      ),
+                      customText(
+                        text: model,
+                        fontSize: modelsize!=null ? modelsize : 14.sp,
+                        fontFamily: "Roboto",
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ],
+                  ),
+
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.sp),
+                      color: remainderGreenColor,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 2.w,
+                        vertical: 0.5.h,
+                      ),
+                      child: customText(
+                        text: "$status",
+                        fontSize: inusesize!=null ? inusesize : 14.sp,
+                        fontFamily: "Roboto",
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 2.h),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      customText(
+                        text: "Size",
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      customText(
+                        text: size,
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      // SizedBox(height: 1.h),
+                      // customText(
+                      //   text: "Maintenance",
+                      //   fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                      //   fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
+                      //   fontWeight: FontWeight.w400,
+                      // ),
+                      // customText(
+                      //   text: maintenance,
+                      //   fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                      //   fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
+                      //   fontWeight: FontWeight.w400,
+                      // ),
+                      SizedBox(height: 1.h),
+                      damagetype !=null ?
+                      customText(
+                        text: "Damage Type",
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
+                        fontWeight: FontWeight.w400,
+                      ):
+                      customText(
+                        text: "Last Date",
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      damagetype != null ?
+                      customText(
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        text: damagetype,
+                        fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
+                        fontWeight: FontWeight.w400,
+                      ):
+                      customText(
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        text: date,
+                        fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      if (buttoncheaque == true)
+                        SizedBox.shrink()
+                      else
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 1.h),
+                            customText(
+                              text: "Estimated Return Date",
+                              fontSize: tirewidgetfontsize ?? 14.sp,
+                              fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
+                              fontWeight: FontWeight.w400,
+                            ),
+                            customText(
+                              fontSize: tirewidgetfontsize ?? 14.sp,
+                              text: estimatedreturndate??"-",
+                              fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
+                              fontWeight: FontWeight.w400,
+                            ),
+                            SizedBox(height: 1.h),
+                            customText(
+                              text: "Retread Center Name",
+                              fontSize: tirewidgetfontsize ?? 14.sp,
+                              fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
+                              fontWeight: FontWeight.w400,
+                            ),
+                            customText(
+                              fontSize: tirewidgetfontsize ?? 14.sp,
+                              text: retreadcentername ?? "-",
+                              fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+SizedBox(width: sizedBoxWidth ?? 10.w,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      customText(
+                        text: "Position",
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      customText(
+                        text: position,
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      SizedBox(height: 1.h),
+                      customText(
+                        text: "Serial Number",
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      customText(
+                        text: SerialNo,
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      SizedBox(height: 1.h),
+                      customText(
+                        text: "Health",
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        fontFamily: buttoncheaque == true ? "Roboto" : "Barlow",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      customText(
+                        fontSize: tirewidgetfontsize!=null?tirewidgetfontsize:14.sp,
+                        text: tirehealth,
+                        color: redColor,
+                        fontFamily: buttoncheaque == true ? "Barlow": "Roboto",
+                        fontWeight: FontWeight.w400,
+                      ),
+                      if (buttoncheaque == true)
+                        SizedBox.shrink()
+                      else
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 1.h),
+                            customText(
+                              text: "Damage Report",
+                              fontSize: tirewidgetfontsize ?? 14.sp,
+                              fontFamily: "Barlow",
+                              fontWeight: FontWeight.w400,
+                            ),
+                            customText(
+                              fontSize: tirewidgetfontsize ?? 14.sp,
+                              text: damagereport,
+                              fontFamily: "Roboto",
+                              fontWeight: FontWeight.w400,
+                            ),
+                            SizedBox(height: 1.h),
+                            customText(
+                              text: "Spend",
+                              fontSize: tirewidgetfontsize ?? 14.sp,
+                              fontFamily: "Barlow",
+                              fontWeight: FontWeight.w400,
+                            ),
+                            customText(
+                              fontSize: tirewidgetfontsize ?? 14.sp,
+                              text: spend ?? "0",
+                              fontFamily: "Roboto",
+                              fontWeight: FontWeight.w400,
+                            ),
+
+                          ],
+                        ),
+
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 2.h),
+              buttoncheaque == true
+                  ? buttonWidget(
+                "View Detail",
+                blackColor,
+                colors: yellowColor,
+                height: 3.5.h,
+                width: double.infinity,
+                fontsize: 14.sp,
+                onTap: ontap
+              )
+                  : SizedBox.shrink(),
+            ],
+          ),
         ),
       ),
     ),

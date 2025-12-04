@@ -44,57 +44,90 @@ class PunctureForm extends StatelessWidget {
                 customTextFeildM(
                     "Serial Number",
                     "Enter serial number",
-                    path: "assets/png/scan_icon.png",
-                    ontap: (){
-                      Get.toNamed("scan");
-                    }
+                  controller: controller.punctureSerialController
+
                 ),
                 SizedBox(height: 0.5.h),
-                customDropdownField<String>(
+                Obx(() => customDropdownField<String>(
                   title: "Mounted Position",
-                  hintText: "D2-Outer-Left",
-                  items: [],
-                  selectedItem: controller.selectedValue,
+                  hintText: "F-Right",
+                  items: controller.mountedPositionList4,
+                  selectedItem: controller.mountedPositionList4.contains(controller.mountedPosition4.value)
+                      ? controller.mountedPosition4.value
+                      : null,
                   onChanged: (value) {
-                    controller.selectedValue = value;
+                    controller.mountedPosition4.value = value ?? "";
                   },
-                ),
-                SizedBox(height: 0.5.h),
-                customTextFeildM(
-                  "Vehical Number Plate",
-                  "YXU - 5689",
-                ),
+                )),
+
+                // SizedBox(height: 0.5.h),
+                // customTextFeildM(
+                //   "Vehical Number Plate",
+                //   "YXU - 5689",
+                // ),
                 SizedBox(height: 0.5.h),
                 customTextFeildM(
                   "Puncture",
                   "Puncture",
+                    controller: controller.noOfPuncture
                 ),
                 SizedBox(height: 0.5.h),
                 customTextFeildM(
                   "Cuts",
                   "Cuts",
+                    controller: controller.noOfCuts
                 ),
                 SizedBox(height: 0.5.h),
                 customTextFeildM(
                   "Bulge",
                   "Bulge",
+                  controller: controller.noOfBulge
                 ),
                 SizedBox(height: 0.5.h),
                 customTextFeildM(
                   "Date of Puncture",
-                  "Select date",
+                  "MM/DD/YYYY",
+                  path: "assets/png/calender_icon.png",
+                  readonly: true,
+                  controller: controller.punctureDateController,
+                  ontap: () {
+                    controller.pickDate(context, controller.punctureDateController);
+                  },
                 ),
 
                 SizedBox(height: 0.5.h),
                 customTextFeildM(
                   "Cost",
                   "\$00.00",
+                  controller: controller.costController
                 ),
                 SizedBox(height: 1.h),
-                buttonWidget("Save", blackColor,colors: yellowColor,onTap: (){
-                  reportDialog(context,isPuncture: true);
-                }),
-                SizedBox(height: 5.h),
+          buttonWidget(
+            "Save",
+            blackColor,
+            colors: yellowColor,
+            onTap: () async {
+              if (controller.punctureSerialController.text.isEmpty ||
+                  controller.noOfPuncture.text.isEmpty ||
+                  controller.noOfCuts.text.isEmpty ||
+                  controller.noOfBulge.text.isEmpty ||
+                  controller.punctureDateController.text.isEmpty ||
+                  controller.costController.text.isEmpty) {
+
+                Get.snackbar(
+                  "Error",
+                  "Please fill all form fields",
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.redAccent,
+                  colorText: Colors.white,
+                );
+                return;
+              }
+
+              await controller.addPuncture(context);
+            },
+          ),
+          SizedBox(height: 5.h),
               ],
             ),
 

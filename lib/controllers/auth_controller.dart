@@ -16,7 +16,7 @@ class AuthController extends GetxController {
   var isObscure = true.obs;
   final RxBool isSelected = false.obs;
   var loginUserIndex = 1.obs;
-  RxBool isUser = false.obs;
+  RxBool isUser = true.obs;
   TextEditingController phoneController = TextEditingController();
   BaseService baseService = BaseService();
   Rx<FleetModel> response = FleetModel().obs;
@@ -95,50 +95,16 @@ class AuthController extends GetxController {
     // ---------------------------------------
 
     final data = responseMap["data"];  // user object
-    if (data == null) return;          // Safety guard
-
+    if (data == null) return; // Safety guard
+    final prefs = SharedPreferencesMethod.storage;
+    await prefs.setString(LocalDBKeys.USERFULLNAME, nameController.text);
     // 🚀 AB DASHBOARD PE JAO
     Get.offAllNamed('/loginscreen');
     clearSignupValues();
 
     print("🎉 SIGNUP SUCCESS → ${data["email"]}");
   }
-  // Future<void> login() async {
-  //   final body = {
-  //     'email': loginEmailController.text.trim().toLowerCase(),
-  //     'password': loginPasswordController.text.trim(),
-  //   };
-  //
-  //   final responseMap = await baseService.basePostAPI(
-  //     ApiEndPoints.loginFleetManager,
-  //     body,
-  //     loading: true,
-  //   );
-  //
-  //   // 👉 SABSE IMPORTANT CHECK
-  //   if (responseMap["success"] != true) {
-  //     // ❗Toast pehle BaseService mein show ho chuka hai
-  //     return;
-  //   }
-  //
-  //   // 👉 YAHAN TAK KA MATLAB API SUCCESS THI
-  //   // ---------------------------------------
-  //
-  //   final data = responseMap["data"];  // user object
-  //   if (data == null) return;          // Safety guard
-  //
-  //   final prefs = SharedPreferencesMethod.storage;
-  //
-  //   await prefs.setString(LocalDBKeys.USERDETAIL, jsonEncode(data));
-  //   await prefs.setString(LocalDBKeys.USERID, data["id"] ?? "");
-  //   await prefs.setString(LocalDBKeys.USERNAME, data["name"] ?? "");
-  //
-  //   // 🚀 AB DASHBOARD PE JAO
-  //   Get.offAllNamed('/loginscreen');
-  //   clearSignupValues();
-  //
-  //   print("🎉 SIGNUP SUCCESS → ${data["email"]}");
-  // }
+
 
   Future<void> login() async {
     final body = {
@@ -182,6 +148,9 @@ class AuthController extends GetxController {
       final prefs = SharedPreferencesMethod.storage;
       await prefs.setString(LocalDBKeys.USERDETAIL, jsonEncode(user));
       await prefs.setString(LocalDBKeys.KHANTAR, loginPasswordController.text);
+      await prefs.setString(LocalDBKeys.USERFULLNAME, user['name'] ?? "");
+      await prefs.setString(LocalDBKeys.USERPROFILEPIC, user['profilePicture'] ?? "");
+      await prefs.setString(LocalDBKeys.PHONENUMBER, user['phone'] ?? "");
       await prefs.setString(LocalDBKeys.USEREMAIL, user['email'] ?? "");
       await prefs.setString(LocalDBKeys.TOKEN, token ?? "");
 

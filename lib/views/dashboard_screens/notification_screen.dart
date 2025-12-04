@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/controllers/auth_controller.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
+import 'package:tire_eagle/utils/shared_prefrences_methods.dart';
 import 'package:tire_eagle/views/setting_screens/billing_and_invoices.dart';
 import 'package:tire_eagle/widgets/back_button.dart';
 
@@ -14,9 +15,11 @@ class NotificationScreen extends StatelessWidget {
 
   final DashboardController controller = Get.find<DashboardController>();
   final AuthController authController = Get.find<AuthController>();
+  final prefs = SharedPreferencesMethod.storage;
 
   @override
   Widget build(BuildContext context) {
+    var isUser = prefs.getBool("isUser");
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -33,7 +36,7 @@ class NotificationScreen extends StatelessWidget {
         ),
         leading: backButton(),
       ),
-      body: Obx(() => authController.isUser.value == true ? SingleChildScrollView(
+      body: isUser == true ? SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(height: 1.5.h),
@@ -100,7 +103,7 @@ class NotificationScreen extends StatelessWidget {
                         child: Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 6.w,
-                            vertical: 1.h,
+                            vertical: 0.7.h,
                           ),
                           decoration: BoxDecoration(
                             color:
@@ -148,28 +151,40 @@ class NotificationScreen extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                   notificationWidget(
-                    "assets/png/notifications_images/d2lo_img.png",
-                    "Tread Below Legal Limit",
-                    "Tire DOT 5478 DC89 (D2-Left-Outer) tread is\n 2/32\" – DOT violation risk. PARK NOW.",
+                    "assets/png/notifications_images/invoice.png",
+                    "Retread Invoice",
+                    "Retread invoice #INV-1203 for Tire DOT\n5478 generated. View invoice.",
                     "12:19 PM",
+                    ontap: (){
+                      Get.toNamed("invoice");
+                    }
                   ),
                   notificationWidget(
-                    "assets/png/notifications_images/alert_image.png",
-                    "Aging Tire Alert",
-                    "Tire #9015 is 5 years old. Rubber degrades\nover time – inspect for cracks.",
+                    "assets/png/notifications_images/invoice.png",
+                    "Puncture Invoice",
+                    "Retread invoice #INV-1203 for Tire DOT\n5478 generated. View invoice.",
                     "12:19 PM",
+                      ontap: (){
+                        Get.toNamed("invoice");
+                      }
                   ),
                   notificationWidget(
-                    "assets/png/notifications_images/alert_image.png",
-                    "Position-Specific Failure Trend",
-                    "3+ punctures on Trailer Right tires in 2\nmonths – inspect axle/wheel well.",
+                    "assets/png/notifications_images/invoice.png",
+                    "Installation Invoice",
+                    "Retread invoice #INV-1203 for Tire DOT\n5478 generated. View invoice.",
                     "12:19 PM",
+                      ontap: (){
+                        Get.toNamed("invoice");
+                      }
                   ),
                   notificationWidget(
-                    "assets/png/notifications_images/d2lo_img.png",
-                    "Cost-Saving Opportunity",
-                    "Retreading Tire DOT 5478 DC89 could save\n\$380 vs. new purchase. Deadline: Mar 15",
+                    "assets/png/notifications_images/delde_bin.png",
+                    "Disposed Tire/Wheel",
+                    "Tire DOT 9015 has been disposed.\nRecord updated.",
                     "12:19 PM",
+                      ontap: (){
+                        Get.toNamed("invoice");
+                      }
                   ),
                 ],
               ),
@@ -187,7 +202,7 @@ class NotificationScreen extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                   notificationWidget(
-                      "assets/png/notifications_images/d2lo_img.png",
+                      "assets/png/notifications_images/alert_image.png",
                       "Tread Below Legal Limit",
                       "Tire DOT 5478 DC89 (D2-Left-Outer) tread is\n 2/32\" – DOT violation risk. PARK NOW.",
                       "12:19 PM"
@@ -196,60 +211,61 @@ class NotificationScreen extends StatelessWidget {
                       "Aging Tire Alert",
                       "Tire #9015 is 5 years old. Rubber degrades\nover time – inspect for cracks.",
                       "12:19 PM"
-                  ),notificationWidget(
-                      "assets/png/notifications_images/alert_image.png",
-                      "Position-Specific Failure Trend",
-                      "3+ punctures on Trailer Right tires in 2\nmonths – inspect axle/wheel well.",
-                      "12:19 PM"
                   ),
-                  notificationWidget(
-                      "assets/png/notifications_images/d2lo_img.png",
-                      "Cost-Saving Opportunity",
-                      "Retreading Tire DOT 5478 DC89 could save\n\$380 vs. new purchase. Deadline: Mar 15",
-                      "12:19 PM"
-                  ),
+                  // notificationWidget(
+                  //     "assets/png/notifications_images/alert_image.png",
+                  //     "Position-Specific Failure Trend",
+                  //     "3+ punctures on Trailer Right tires in 2\nmonths – inspect axle/wheel well.",
+                  //     "12:19 PM"
+                  // ),
+                  // notificationWidget(
+                  //     "assets/png/notifications_images/d2lo_img.png",
+                  //     "Cost-Saving Opportunity",
+                  //     "Retreading Tire DOT 5478 DC89 could save\n\$380 vs. new purchase. Deadline: Mar 15",
+                  //     "12:19 PM"
+                  // ),
 
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6.w,vertical: 1.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 1.5.h,
-                children: [
-                  customText(
-                    text: "April 22, 2025",
-                    fontSize: 16.sp,
-                    fontFamily: "Roboto",
-                    fontWeight: FontWeight.w600,
-                  ),
-                  notificationWidget(
-                      "assets/png/notifications_images/d2lo_img.png",
-                      "Tread Below Legal Limit",
-                      "Tire DOT 5478 DC89 (D2-Left-Outer) tread is\n 2/32\" – DOT violation risk. PARK NOW.",
-                      "12:19 PM"
-                  ),notificationWidget(
-                      "assets/png/notifications_images/alert_image.png",
-                      "Aging Tire Alert",
-                      "Tire #9015 is 5 years old. Rubber degrades\nover time – inspect for cracks.",
-                      "12:19 PM"
-                  ),notificationWidget(
-                      "assets/png/notifications_images/alert_image.png",
-                      "Position-Specific Failure Trend",
-                      "3+ punctures on Trailer Right tires in 2\nmonths – inspect axle/wheel well.",
-                      "12:19 PM"
-                  ),
-                  notificationWidget(
-                      "assets/png/notifications_images/d2lo_img.png",
-                      "Cost-Saving Opportunity",
-                      "Retreading Tire DOT 5478 DC89 could save\n\$380 vs. new purchase. Deadline: Mar 15",
-                      "12:19 PM"
-                  ),
-                  SizedBox(height: 5.h,)
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 6.w,vertical: 1.h),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     spacing: 1.5.h,
+            //     children: [
+            //       customText(
+            //         text: "April 22, 2025",
+            //         fontSize: 16.sp,
+            //         fontFamily: "Roboto",
+            //         fontWeight: FontWeight.w600,
+            //       ),
+            //       notificationWidget(
+            //           "assets/png/notifications_images/d2lo_img.png",
+            //           "Tread Below Legal Limit",
+            //           "Tire DOT 5478 DC89 (D2-Left-Outer) tread is\n 2/32\" – DOT violation risk. PARK NOW.",
+            //           "12:19 PM"
+            //       ),notificationWidget(
+            //           "assets/png/notifications_images/alert_image.png",
+            //           "Aging Tire Alert",
+            //           "Tire #9015 is 5 years old. Rubber degrades\nover time – inspect for cracks.",
+            //           "12:19 PM"
+            //       ),notificationWidget(
+            //           "assets/png/notifications_images/alert_image.png",
+            //           "Position-Specific Failure Trend",
+            //           "3+ punctures on Trailer Right tires in 2\nmonths – inspect axle/wheel well.",
+            //           "12:19 PM"
+            //       ),
+            //       notificationWidget(
+            //           "assets/png/notifications_images/d2lo_img.png",
+            //           "Cost-Saving Opportunity",
+            //           "Retreading Tire DOT 5478 DC89 could save\n\$380 vs. new purchase. Deadline: Mar 15",
+            //           "12:19 PM"
+            //       ),
+            //       SizedBox(height: 5.h,)
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ): SingleChildScrollView(
@@ -290,7 +306,7 @@ class NotificationScreen extends StatelessWidget {
             ],
           ),
         ),
-      ))
+      )
     );
   }
 
@@ -299,44 +315,48 @@ class NotificationScreen extends StatelessWidget {
     String title,
     String message,
     String time,
+  {VoidCallback? ontap}
   ) {
-    return Row(
-      children: [
-        Image.asset(path, width: 14.w),
-        SizedBox(width: 2.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: customText(
-                      text: title,
-                      fontSize: 15.sp,
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.w600,
+    return InkWell(
+      onTap: ontap,
+      child: Row(
+        children: [
+          Image.asset(path, width: 14.w),
+          SizedBox(width: 2.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: customText(
+                        text: title,
+                        fontSize: 15.sp,
+                        fontFamily: "Roboto",
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  customText(
-                    text: time,
-                    fontSize: 14.sp,
-                    fontFamily: "Barlow",
-                    fontWeight: FontWeight.w400,
-                  ),
-                ],
-              ),
-              SizedBox(height: 0.5.h),
-              customText(
-                text: message,
-                fontSize: 14.sp,
-                fontFamily: "Barlow",
-                fontWeight: FontWeight.w400,
-              ),
-            ],
+                    customText(
+                      text: time,
+                      fontSize: 14.sp,
+                      fontFamily: "Barlow",
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 0.5.h),
+                customText(
+                  text: message,
+                  fontSize: 14.sp,
+                  fontFamily: "Barlow",
+                  fontWeight: FontWeight.w400,
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -344,8 +364,17 @@ Widget topContainer(String path, String title, String desc){
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
     decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12.sp),
+      color: whiteColor,
+      borderRadius: BorderRadius.circular(15.sp),
+      border: Border.all(color: textFeildBorderColor, width: 0.2.w),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05), // subtle shadow
+          spreadRadius: 1,
+          blurRadius: 5,
+          offset: Offset(0, 2), // vertical offset
+        ),
+      ],
     ),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -371,8 +400,17 @@ Widget middleContainer(String path, String date) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.5.h),
     decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12.sp),
+      color: whiteColor,
+      borderRadius: BorderRadius.circular(15.sp),
+      border: Border.all(color: textFeildBorderColor, width: 0.2.w),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05), // subtle shadow
+          spreadRadius: 1,
+          blurRadius: 5,
+          offset: Offset(0, 2), // vertical offset
+        ),
+      ],
     ),
     child: Row(
       children: [

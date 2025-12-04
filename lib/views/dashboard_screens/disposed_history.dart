@@ -41,7 +41,7 @@ class DisposedHistory extends StatelessWidget {
               ),
             ),
                disposedWidget("Serial Number", "5478 DC89", "D2-Left-Outer", "2nd Puncture", "2nd Cuts", "DOT 5478 DC89","22 April 2025","\$00.00", (){
-                 Get.toNamed("punctureform");
+                 //Get.toNamed("punctureform");
                }),
             disposedWidget("Serial Number", "5478 DC89", "D2-Left-Outer", "2nd Puncture", "2nd Cuts", "DOT 5478 DC89","22 April 2025","\$00.00", (){
             }),

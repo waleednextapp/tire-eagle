@@ -39,63 +39,103 @@ class PasswordAndSecurity extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 1.h),
-            customTextFeildM("Password", "••••••••", isPassword: true),
+            customTextFeildM("Password", "••••••••",
+                isPassword: true,
+              controller: controller.oldPassword,
+              obscureController: controller.isOldPasswordObscure,
+              toggleObscure: controller.toggleOldPassword,
+            ),
             SizedBox(height: 1.h),
-            customTextFeildM("New Password", "••••••••", isPassword: true),
+            customTextFeildM("New Password",
+                "••••••••",
+                isPassword: true,
+              controller: controller.newPassword,
+              obscureController: controller.isNewPasswordObscure,
+              toggleObscure: controller.toggleNewPassword
+            ),
             SizedBox(height: 1.h),
-            customTextFeildM("Confirm Password", "••••••••", isPassword: true),
+            customTextFeildM("Confirm Password",
+                "••••••••", isPassword: true,
+              controller: controller.confirmPassword,
+                obscureController: controller.isConfirmObscure,
+                toggleObscure: controller.toggleConfirmPassword
+            ),
 
             // =============================
             // TWO FACTOR AUTH SECTION
             // =============================
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Image.asset(
-                      "assets/png/setting_icon/2fa.png",
-                      width: 6.w,
-                    ),
-                    SizedBox(width: 2.w),
-
-                    customText(
-                      text: "Two-Factor Verification",
-                      fontSize: 15.5.sp,
-                      fontFamily: "Barlow",
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ],
-                ),
-
-                // SWITCH
-                Obx(() => Transform.scale(
-                  scale: 0.7,
-                  child: CupertinoSwitch(
-                    value: controller.twoFactorAuthentication.value,
-                    onChanged: controller.toggle2FA,
-                    activeColor: yellowColor,
-                    trackColor: Colors.grey.shade300,
-                  ),
-                )),
-              ],
-            ),
-            SizedBox(height: 1.h),
-            customTextFeildM(
-              "Recovery Email",
-              "harry.jonas@xyz.com",
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Row(
+            //       children: [
+            //         Image.asset(
+            //           "assets/png/setting_icon/2fa.png",
+            //           width: 6.w,
+            //         ),
+            //         SizedBox(width: 2.w),
+            //
+            //         customText(
+            //           text: "Two-Factor Verification",
+            //           fontSize: 15.5.sp,
+            //           fontFamily: "Barlow",
+            //           fontWeight: FontWeight.w400,
+            //         ),
+            //       ],
+            //     ),
+            //
+            //     // SWITCH
+            //     Obx(() => Transform.scale(
+            //       scale: 0.7,
+            //       child: CupertinoSwitch(
+            //         value: controller.twoFactorAuthentication.value,
+            //         onChanged: controller.toggle2FA,
+            //         activeColor: yellowColor,
+            //         trackColor: Colors.grey.shade300,
+            //       ),
+            //     )),
+            //   ],
+            // ),
+            // SizedBox(height: 1.h),
+            // customTextFeildM(
+            //   "Recovery Email",
+            //   "harry.jonas@xyz.com",
+            // ),
             SizedBox(height: 3.h),
             buttonWidget("Update", blackColor,height: 5.h,colors: yellowColor,onTap: (){
-              successDialog(
-                context,
-                "Password has been updated successfully.",
-                "Ok",
-                title: "Congratulations!",
-                    () {
-                  Get.back();
-                },
-              );
+              // Check if any password field is empty
+              if (controller.oldPassword.text.trim().isEmpty ||
+                  controller.newPassword.text.trim().isEmpty ||
+                  controller.confirmPassword.text.trim().isEmpty) {
+                Get.snackbar(
+                  "Error",
+                  "Please fill all password fields",
+                  backgroundColor: Colors.redAccent,
+                  colorText: Colors.white,
+                  snackPosition: SnackPosition.BOTTOM,
+                  margin: EdgeInsets.all(10),
+                  duration: const Duration(seconds: 2),
+                );
+                return; // Stop execution if validation fails
+              }
+
+              // Optional: Check if new password matches confirm password
+              if (controller.newPassword.text.trim() !=
+                  controller.confirmPassword.text.trim()) {
+                Get.snackbar(
+                  "Error",
+                  "New password and confirm password do not match",
+                  backgroundColor: Colors.redAccent,
+                  colorText: Colors.white,
+                  snackPosition: SnackPosition.BOTTOM,
+                  margin: EdgeInsets.all(10),
+                  duration: const Duration(seconds: 2),
+                );
+                return; // Stop execution
+              }
+
+              // All checks passed, call the update function
+              controller.updatePassword(context);
             }),
           ],
         ),

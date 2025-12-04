@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/constants/color_constants.dart';
 import 'package:tire_eagle/constants/constants_widgets.dart';
+import 'package:tire_eagle/controllers/auth_controller.dart';
+import 'package:tire_eagle/controllers/setting_controller.dart';
+import 'package:tire_eagle/outh_file/local_db_key.dart';
 import 'package:tire_eagle/utils/helper_functions.dart';
+import 'package:tire_eagle/utils/shared_prefrences_methods.dart';
 
 import '../../controllers/dashboard_controller.dart';
 import '../../widgets/success_dialog.dart';
 
 class SettingScreen extends StatelessWidget {
   SettingScreen({super.key});
+  final AuthController controller = Get.find<AuthController>();
+  final SettingController settingController = Get.find<SettingController>();
 
+  final prefs = SharedPreferencesMethod.storage;
   final List<Map<String, String>> rowOption = [
     {"path": "assets/png/setting_icon/contact.png", "name": "My Details"},
     {
@@ -70,19 +78,73 @@ class SettingScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                 child: Row(
                   children: [
-                    Image.asset("assets/png/profile_pic.png", width: 22.w),
+                    Container(
+                      width: 22.w,
+                      height: 22.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: yellowColor.withAlpha(200),
+                      ),
+                      child: prefs.getString(LocalDBKeys.USERPROFILEPIC) != null
+                          ? ClipOval(
+                        child: Image.network(
+                          prefs.getString(LocalDBKeys.USERPROFILEPIC)!,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            // Show shimmer while image is loading
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(
+                                width: 22.w,
+                                height: 22.w,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey.shade300,
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            // Fallback to first letter if image fails
+                            return Center(
+                              child: Text(
+                                (prefs.getString(LocalDBKeys.USERFULLNAME)?.substring(0, 1) ?? "").toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 12.w,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                          : Center(
+                        child: Text(
+                          (prefs.getString(LocalDBKeys.USERFULLNAME)?.substring(0, 1) ?? "").toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 12.w,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Image.asset(LocalDBKeys.USERPROFILEPIC, width: 22.w),
                     SizedBox(width: 4.w),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         customText(
-                          text: "Harry Jonas",
+                          text: prefs.getString(LocalDBKeys.USERFULLNAME),
                           fontSize: 20.sp,
                           fontFamily: "Barlow",
                           fontWeight: FontWeight.w600,
                         ),
                         customText(
-                          text: "YXU - 5689",
+                          text: prefs.getString(LocalDBKeys.USEREMAIL),
                           fontSize: 15.sp,
                           fontFamily: "Barlow",
                           fontWeight: FontWeight.w400,
@@ -142,6 +204,10 @@ class SettingScreen extends StatelessWidget {
                                     buttonText2: 'Yes',
                                     "No",
                                     isLogout: true,
+                                        onTap2: (){
+                                      Get.back();
+                                        },
+
                                         () {
                                       dashboardController.currentIndex.value = 0;
                                       HelperFunction.clearLocalStorage();
@@ -150,6 +216,11 @@ class SettingScreen extends StatelessWidget {
                                             "You’ve been logged out successfully.",
                                             "Ok",
                                                 () {
+                                              prefs.setBool('isUser', true);
+                                              var isUser = prefs.getBool('isUser');
+                                              controller.isUser.value = true;
+                                              controller.loginUserIndex.value = 1;
+                                              print(isUser);
                                                  Get.offAllNamed("loginscreen");
                                             },
                                           );

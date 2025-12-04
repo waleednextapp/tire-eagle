@@ -5,9 +5,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import '../../outh_file/local_db_key.dart';
 import '../../utils/shared_prefrences_methods.dart';
 import '../../utils/utility.dart';
-import 'apiendpoints.dart';
 
 class BaseService {
   late String baseURL = "http://172.16.25.79:3000";
@@ -15,6 +15,7 @@ class BaseService {
   late String Url = '$baseURL$endPoint';
   late String baseURLStripe = "";
   late String baseS3URL = "";
+  final prefs = SharedPreferencesMethod.storage;
 
   String? token = '';
   String? stripeToken;
@@ -38,7 +39,7 @@ class BaseService {
         maskType: EasyLoadingMaskType.black,
       );
     }
-
+    var bearerToken = await prefs.getString(LocalDBKeys.TOKEN);
     String basic = '';
 
     basic = (isStripe == true)
@@ -56,8 +57,7 @@ class BaseService {
         Uri.parse(isStripe == true ? baseURLStripe : "$baseURL$endPoint"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          if (endPoint !=
-              ApiEndPoints.signupUser) 'Authorization': 'Bearer $basic',
+          'Authorization': 'Bearer $bearerToken',
         },
         body: jsonEncode(body),
       ).timeout(const Duration(seconds: 60));
@@ -107,4 +107,142 @@ class BaseService {
       return {"success": false, "message": "Unexpected error"};
     }
   }
+  Future<Map<String, dynamic>> baseGetAPI(
+      String endPoint, {
+        bool loading = true,
+        bool? isStripe,
+      }) async {
+    if (loading) {
+      // EasyLoading.show(
+      //   status: 'Please wait...',
+      //   maskType: EasyLoadingMaskType.black,
+      // );
+    }
+
+    var bearerToken = await prefs.getString(LocalDBKeys.TOKEN);
+
+    if (!await checkInternetConnection()) {
+      EasyLoading.dismiss();
+      Utils.showToast("Check Internet Connection", true);
+      return {'success': false, 'message': 'Check Internet Connection'};
+    }
+
+    try {
+      final response = await http
+          .get(
+        Uri.parse(isStripe == true ? baseURLStripe : "$baseURL$endPoint"),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $bearerToken',
+        },
+      )
+          .timeout(const Duration(seconds: 60));
+
+      EasyLoading.dismiss();
+
+      print("GET URL: $baseURL$endPoint");
+      print("Status: ${response.statusCode}");
+      print("Response: ${response.body}");
+
+      // ---------- SUCCESS ----------
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        var jsonData = json.decode(response.body);
+        return {"success": true, ...jsonData};
+      }
+
+      // ---------- ERROR ----------
+      if (response.body.isNotEmpty) {
+        var jsonData = json.decode(response.body);
+        Utils.showToast(jsonData["message"] ?? "Something went wrong", true);
+        return {
+          "success": false,
+          "message": jsonData["message"] ?? "Something went wrong",
+          "statusCode": response.statusCode
+        };
+      }
+
+      Utils.showToast("Something went wrong", true);
+      return {"success": false, "message": "Something went wrong"};
+    } on TimeoutException {
+      EasyLoading.dismiss();
+      Utils.showToast("Request timed out", true);
+      return {"success": false, "message": "Request timed out"};
+    } catch (e) {
+      EasyLoading.dismiss();
+      Utils.showToast("Unexpected error", true);
+      return {"success": false, "message": "Unexpected error"};
+    }
+  }
+
+  Future<Map<String, dynamic>> basePutAPI(
+      String endPoint, {
+        required Map<String, dynamic> body,
+        bool loading = true,
+        bool? isStripe,
+      }) async {
+    if (loading) {
+      EasyLoading.show(
+        status: 'Please wait...',
+        maskType: EasyLoadingMaskType.black,
+      );
+    }
+
+    var bearerToken = await prefs.getString(LocalDBKeys.TOKEN);
+
+    if (!await checkInternetConnection()) {
+      EasyLoading.dismiss();
+      Utils.showToast("Check Internet Connection", true);
+      return {'success': false, 'message': 'Check Internet Connection'};
+    }
+
+    try {
+      final response = await http
+          .put(
+        Uri.parse(isStripe == true ? baseURLStripe : "$baseURL$endPoint"),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $bearerToken',
+        },
+        body: json.encode(body),
+      )
+          .timeout(const Duration(seconds: 60));
+
+      EasyLoading.dismiss();
+
+      print("PUT URL: $baseURL$endPoint");
+      print("Body: $body");
+      print("Status: ${response.statusCode}");
+      print("Response: ${response.body}");
+
+      // ---------- SUCCESS ----------
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        var jsonData = json.decode(response.body);
+        return {"success": true, ...jsonData};
+      }
+
+      // ---------- ERROR ----------
+      if (response.body.isNotEmpty) {
+        var jsonData = json.decode(response.body);
+        Utils.showToast(jsonData["message"] ?? "Something went wrong", true);
+        return {
+          "success": false,
+          "message": jsonData["message"] ?? "Something went wrong",
+          "statusCode": response.statusCode
+        };
+      }
+
+      Utils.showToast("Something went wrong", true);
+      return {"success": false, "message": "Something went wrong"};
+    } on TimeoutException {
+      EasyLoading.dismiss();
+      Utils.showToast("Request timed out", true);
+      return {"success": false, "message": "Request timed out"};
+    } catch (e) {
+      EasyLoading.dismiss();
+      Utils.showToast("Unexpected error", true);
+      return {"success": false, "message": "Unexpected error"};
+    }
+  }
+
+
 }

@@ -10,6 +10,7 @@ import 'package:tire_eagle/controllers/dashboard_controller.dart';
 import 'package:tire_eagle/controllers/dismount_controller.dart';
 import 'package:tire_eagle/controllers/forgot_password_controller.dart';
 import 'package:tire_eagle/controllers/setting_controller.dart';
+import 'package:tire_eagle/controllers/total_tire_controller.dart';
 import 'package:tire_eagle/utils/App_Routing.dart';
 import 'package:tire_eagle/utils/init_binding.dart';
 
@@ -23,6 +24,7 @@ Get.put(ForgotPasswordController());
 Get.put(DashboardController());
 Get.put(DismountController());
 Get.put(SettingController());
+Get.put(TotalTireController());
   runApp(const MyApp());
 }
 

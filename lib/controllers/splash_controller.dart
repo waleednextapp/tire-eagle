@@ -7,6 +7,7 @@ class SplashController extends GetxController {
   final String nextRoute;
   final prefs = SharedPreferencesMethod.storage;
 
+
   SplashController(this.nextRoute);
 
   @override
@@ -14,6 +15,7 @@ class SplashController extends GetxController {
     super.onInit();
     Future.delayed(const Duration(seconds: 3), () async{
       var token = await prefs.getString(LocalDBKeys.TOKEN,);
+      var isUser = prefs.getBool('isUser');
       print(token);
       (token == null || token.isEmpty)
           ? Get.offNamed(nextRoute)

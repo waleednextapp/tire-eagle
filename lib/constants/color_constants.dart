@@ -68,6 +68,9 @@ const billingBorderGreyColor = Color(0xFF6B7280);
 const billingYellowColor = Color(0xFF6B7280);
 const billingLightYellowColor = Color(0xFFFEF9C2);
 const billingBorderYellowColor = Color(0xFFFFF085);
+const nearestGreyColor = Color(0xFF494949);
+const invoiceOrangeColor = Color(0xFF894B00);
+const invoiceGreyColor = Color(0xFF6B7280);
 
 final lightYellowWithOpacity = yellowColor.withOpacity(0.15); // 50% opacity
 
