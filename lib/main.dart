@@ -22,9 +22,10 @@ Future<void> main() async {
 Get.put(AuthController());
 Get.put(ForgotPasswordController());
 Get.put(DashboardController());
+Get.put(TotalTireController());
 Get.put(DismountController());
 Get.put(SettingController());
-Get.put(TotalTireController());
+
   runApp(const MyApp());
 }
 

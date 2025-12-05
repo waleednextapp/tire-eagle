@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tire_eagle/controllers/total_tire_controller.dart';
 import 'package:tire_eagle/views/dashboard_screens/select_dismount_reason.dart';
 
 import '../../constants/color_constants.dart';
@@ -11,9 +13,18 @@ import '../../widgets/button_widget.dart';
 
 class AssignStorageLocation extends StatelessWidget {
   AssignStorageLocation({super.key});
- final DismountController controller = Get.find<DismountController>();
+
+  final DismountController controller = Get.find<DismountController>();
+  final TotalTireController totalTireController = Get.find<TotalTireController>();
+
   @override
   Widget build(BuildContext context) {
+    final isWheel = Get.arguments;
+    // Controller ko use karne ke liye, hum Obx ka use karenge
+
+    // Dismount Reason ko yahan fetch kar lete hain
+    final String dismountReason = controller.getSelectedDismountReason();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -38,13 +49,13 @@ class AssignStorageLocation extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 2.h),
-                    child: dismountProgressWidget(containerColor: yellowColor,textColor: blackColor),
+                    child: dismountProgressWidget(containerColor: yellowColor, textColor: blackColor),
                   ),
                   Divider(color: Colors.grey, thickness: 0.3),
                   SizedBox(height: 1.h),
                   Center(
                     child: customText(
-                      text: "Where should this tire be stored after dismount?",
+                      text: isWheel == false? "Where should this tire be stored after dismount?": "Where should this wheel be stored after dismount?",
                       fontSize: 15.sp,
                       fontFamily: "Barlow",
                       fontWeight: FontWeight.w500,
@@ -56,47 +67,46 @@ class AssignStorageLocation extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 4.w),
                     child: Column(
                       children: [
-                        locationTile(
+                        // --- LOCATION TILES MADE SELECTABLE USING OBX ---
+                        Obx(() => locationTile(
                             title: "Main Warehouse",
                             subtitle: "Bay A-12",
                             iconPath: "assets/png/dismount_images/house.png",
-                            // isSelected: controller.selectedIndex == 0,
-                            isSelected: true,
+                            isSelected: controller.selectedWarehouseIndex.value == 0,
                             onTap: () {
-                              controller.selectedIndex.value = 0;
-                            }
-                        ),
+                              controller.selectedWarehouseIndex.value = 0;
+                            })),
                         SizedBox(height: 1.h),
-                        locationTile(
+                        Obx(() => locationTile(
                             title: "Repair Shop",
                             subtitle: "Service Area",
                             iconPath: "assets/png/dismount_images/tool.png",
-                            isSelected: false,
+                            isSelected: controller.selectedWarehouseIndex.value == 1,
                             onTap: () {
-                              controller.selectedIndex.value = 1;
-                            }
-                        ),
+                              controller.selectedWarehouseIndex.value = 1;
+                            })),
                         SizedBox(height: 1.h),
-                        locationTile(
+
+                        Obx(() => locationTile(
                             title: "Recycling Center",
                             subtitle: "Bay A-12",
                             iconPath: "assets/png/dismount_images/recycle.png",
-                            isSelected: false,
+                            isSelected: controller.selectedWarehouseIndex.value == 2,
                             onTap: () {
-                              controller.selectedIndex.value = 2;
-                            }
-                        ),
+                              controller.selectedWarehouseIndex.value = 2;
+                            })),
                         SizedBox(height: 1.h),
-                        locationTile(
-                            title: "Main Warehouse",
+                        Obx(() => locationTile(
+                            title: "Old Warehouse",
                             subtitle: "Bay A-12",
                             iconPath: "assets/png/dismount_images/trolly.png",
-                            isSelected: false,
+                            isSelected: controller.selectedWarehouseIndex.value == 3,
                             onTap: () {
-                              controller.selectedIndex.value = 3;
-                            }
-                        ),
+                              controller.selectedWarehouseIndex.value = 3;
+                            })),
                         SizedBox(height: 1.h),
+
+                        // --- TIRE INFORMATION CONTAINER ---
                         Container(
                           decoration: BoxDecoration(
                             color: lightBlueColor,
@@ -107,21 +117,22 @@ class AssignStorageLocation extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12.sp),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4.w,vertical: 1.h),
+                            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 customText(
-                                  text: "Tire Information",
+                                  text: isWheel == false ? "Tire Information" : "Wheel Information",
                                   fontSize: 15.sp,
                                   fontFamily: "Barlow",
                                   fontWeight: FontWeight.w500,
                                   color: textBrownColor,
                                 ),
                                 SizedBox(height: 0.5.h),
-                                tireInfromation("ID:", "YXU - 5689"),
-                                tireInfromation("Model:", "Michelin XDE2+"),
-                                tireInfromation("Dismount Reason:", "Low Tread")
+                                tireInfromation("ID:", isWheel== false ? totalTireController.getTireByIdModel.value?.data?.vehicalNumber ?? '':totalTireController.getWheelByIdModel.value?.data?.vehicalNumber ?? ''),
+                                tireInfromation(isWheel == false? "Model:" : "Material:", isWheel==false ? totalTireController.getTireByIdModel.value?.data?.brand ?? '':totalTireController.getWheelByIdModel.value?.data?.material ?? ''),
+                                // 💡 Dismount Reason ko switch case function se liya
+                                tireInfromation("Dismount Reason:", dismountReason)
                               ],
                             ),
                           ),
@@ -129,7 +140,6 @@ class AssignStorageLocation extends StatelessWidget {
                       ],
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -142,8 +152,8 @@ class AssignStorageLocation extends StatelessWidget {
               color: whiteColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1), // light shadow
-                  offset: Offset(0, -2), // shadow above the container
+                  color: Colors.black.withOpacity(0.1),
+                  offset: Offset(0, -2),
                   blurRadius: 6,
                   spreadRadius: 0,
                 ),
@@ -156,17 +166,25 @@ class AssignStorageLocation extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: buttonWidget(
-                    "Continue",
-                    whiteColor,
-                    fontsize: 15.sp,
-                    colors: brownColor,
-                    height: 4.7.h,
-                    radius: 12.sp,
-                    fontfaimly: 'Roboto',
-                    fontweight: FontWeight.w600,
-                    onTap: (){
-                      Get.toNamed("assignstoragelocationone");
-                    }
+                      "Continue",
+                      whiteColor,
+                      fontsize: 15.sp,
+                      colors: brownColor,
+                      height: 4.7.h,
+                      radius: 12.sp,
+                      fontfaimly: 'Roboto',
+                      fontweight: FontWeight.w600,
+                      onTap: () {
+                        // 💡 Validation: Check if a location is selected (index != -1)
+                        if (controller.selectedWarehouseIndex.value == -1) {
+                          Get.snackbar("Error", "Please select a storage location.", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+                          return;
+                        }
+                        isWheel== false ?
+                        controller.DismountTire(context,isWheel: isWheel):
+                        controller.DismountWheel(context,isWheel: isWheel);
+                        // Get.toNamed("assignstoragelocationone");
+                      }
                   ),
                 ),
                 SizedBox(height: 1.5.h),
@@ -179,6 +197,7 @@ class AssignStorageLocation extends StatelessWidget {
   }
 }
 
+// NOTE: locationTile and tireInfromation widgets remain the same as provided by you.
 Widget locationTile({
   required String title,
   required String subtitle,
@@ -216,6 +235,8 @@ Widget locationTile({
                 height: 2.h,
                 width: 2.h,
                 fit: BoxFit.contain,
+                color: isSelected ? blueBorderColor : Colors.black,
+
               ),
             ),
           ),

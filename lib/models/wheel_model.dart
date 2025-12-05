@@ -71,7 +71,7 @@ class Wheels {
   String? createdAt;
   String? updatedAt;
   int? v;
-  dynamic retreadInfo;
+  RetreadInfo? retreadInfo;
   DamageInfo? damageInfo;
 
   Wheels({
@@ -112,7 +112,7 @@ class Wheels {
     createdAt = json['createdAt'] as String?;
     updatedAt = json['updatedAt'] as String?;
     v = json['__v'] as int?;
-    retreadInfo = json['retreadInfo'];
+    retreadInfo = (json['retreadInfo'] as Map<String,dynamic>?) != null ? RetreadInfo.fromJson(json['retreadInfo'] as Map<String,dynamic>) : null;
     damageInfo = (json['damageInfo'] as Map<String,dynamic>?) != null ? DamageInfo.fromJson(json['damageInfo'] as Map<String,dynamic>) : null;
   }
 
@@ -134,8 +134,34 @@ class Wheels {
     json['createdAt'] = createdAt;
     json['updatedAt'] = updatedAt;
     json['__v'] = v;
-    json['retreadInfo'] = retreadInfo;
+    json['retreadInfo'] = retreadInfo?.toJson();
     json['damageInfo'] = damageInfo?.toJson();
+    return json;
+  }
+}
+
+class RetreadInfo {
+  String? centerName;
+  int? cost;
+  String? estimatedReturnDate;
+
+  RetreadInfo({
+    this.centerName,
+    this.cost,
+    this.estimatedReturnDate,
+  });
+
+  RetreadInfo.fromJson(Map<String, dynamic> json) {
+    centerName = json['centerName'] as String?;
+    cost = json['cost'] as int?;
+    estimatedReturnDate = json['estimatedReturnDate'] as String?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['centerName'] = centerName;
+    json['cost'] = cost;
+    json['estimatedReturnDate'] = estimatedReturnDate;
     return json;
   }
 }

@@ -29,30 +29,30 @@ class InventoryScreen extends StatelessWidget {
           await totalTireController.GetAllWheelInventory();
         },
         builder: (BuildContext context, Widget child, IndicatorController controller) {
-            return child;
-          },
+          return child;
+        },
 
-          // return Stack(
-          //   children: [
-          //     child, // Your scrollable content
-          //     // Optional: show custom loader only if you want
-          //     if (controller.isLoading || controller.value > 0)
-          //       Positioned(
-          //         top: 16,
-          //         left: 0,
-          //         right: 0,
-          //         child: Opacity(
-          //           opacity: controller.value.clamp(0.0, 1.0),
-          //           // Fade in effect
-          //           child: Container(
-          //             alignment: Alignment.center,
-          //             height: 30,
-          //             child: SizedBox.shrink(), // Hide spinner completely
-          //           ),
-          //         ),
-          //       ),
-          //   ],
-          // );
+        // return Stack(
+        //   children: [
+        //     child, // Your scrollable content
+        //     // Optional: show custom loader only if you want
+        //     if (controller.isLoading || controller.value > 0)
+        //       Positioned(
+        //         top: 16,
+        //         left: 0,
+        //         right: 0,
+        //         child: Opacity(
+        //           opacity: controller.value.clamp(0.0, 1.0),
+        //           // Fade in effect
+        //           child: Container(
+        //             alignment: Alignment.center,
+        //             height: 30,
+        //             child: SizedBox.shrink(), // Hide spinner completely
+        //           ),
+        //         ),
+        //       ),
+        //   ],
+        // );
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(), // Allow pull even if content < screen
           child: Column(
@@ -346,155 +346,170 @@ Widget inventoryWidget(
     ){
   return Container(
     width: 42.w,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(12.sp),
-      ),
+    decoration: BoxDecoration(
+      color: backgroundColor,
+      borderRadius: BorderRadius.circular(12.sp),
+    ),
     child: Padding(
-      padding: EdgeInsets.symmetric(vertical: 1.h),
+      // Reduced vertical padding from 1.h to 0.5.h
+      padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.5.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          imageWidget(path),
+          // Reduced height from 13.h to 12.h
+          imageWidget(path, height: 12.h),
           // CommonImageView(
           //   url: path,
           //   height: 10.h,
           //   fit: BoxFit.contain,
           // ),
           SizedBox(height: 0.4.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  customText(
-                    text: name,
-                    fontSize: 15.sp,
-                    fontFamily: "Roboto",
-                    fontWeight: FontWeight.w600,
-                  ),
+          Padding( // Added horizontal padding for text content
+            padding: EdgeInsets.symmetric(horizontal: 1.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    customText(
+                      text: name,
+                      fontSize: 15.sp,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w600,
+                    ),
 
-                  customText(
-                    text: model,
-                    fontSize: 13.sp,
-                    fontFamily: "Roboto",
-                    fontWeight: FontWeight.w400,
-                  ),
-                ],
-              ),
+                    customText(
+                      text: model,
+                      fontSize: 13.sp,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ],
+                ),
 
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.sp),
-                  color: remainderGreenColor,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 2.w,
-                    vertical: 0.5.h,
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.sp),
+                    color: remainderGreenColor,
                   ),
-                  child: customText(
-                    text: status,
-                    fontSize: 12.sp,
-                    fontFamily: "Roboto",
-                    fontWeight: FontWeight.w400,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 2.w,
+                      vertical: 0.5.h,
+                    ),
+                    child: customText(
+                      text: status,
+                      fontSize: 12.sp,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           SizedBox(height: 1.h),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  customText(
-                    text: "Size",
-                    fontSize: 13.sp,
-                    fontFamily: "Roboto",
-                    fontWeight: FontWeight.w400,
-                  ),
-                  customText(
-                    text: size,
-                    fontSize: 13.sp,
-                    fontFamily: "Barlow",
-                    fontWeight: FontWeight.w400,
-                  ),
-                  SizedBox(height: 1.h),
-                  customText(
-                    text: "Last Date",
-                    fontSize: 13.sp,
-                    fontFamily: "Roboto",
-                    fontWeight: FontWeight.w400,
-                  ),
-                  customText(
-                    fontSize: 13.sp,
-                    text: date,
-                    fontFamily: "Barlow",
-                    fontWeight: FontWeight.w400,
-                  ),
-                ],
-              ),
+          Padding( // Added horizontal padding for text content
+            padding: EdgeInsets.symmetric(horizontal: 1.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    customText(
+                      text: "Size",
+                      fontSize: 13.sp,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w400,
+                    ),
+                    customText(
+                      text: size,
+                      fontSize: 13.sp,
+                      fontFamily: "Barlow",
+                      fontWeight: FontWeight.w400,
+                    ),
+                    SizedBox(height: 1.h),
+                    customText(
+                      text: "Last Date",
+                      fontSize: 13.sp,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w400,
+                    ),
+                    customText(
+                      fontSize: 13.sp,
+                      text: date,
+                      fontFamily: "Barlow",
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ],
+                ),
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  customText(
-                    text: "Position",
-                    fontSize: 13.sp,
-                    fontFamily: "Roboto",
-                    fontWeight: FontWeight.w400,
-                  ),
-                  customText(
-                    text: position,
-                    fontSize: 13.sp,
-                    fontFamily: "Barlow",
-                    fontWeight: FontWeight.w400,
-                  ),
-                  SizedBox(height: 1.h),
-                  customText(
-                    text: "Serial Number",
-                    fontSize: 13.sp,
-                    fontFamily: "Roboto",
-                    fontWeight: FontWeight.w400,
-                  ),
-                  customText(
-                    text: serialNo,
-                    fontSize: 13.sp,
-                    fontFamily: "Barlow",
-                    fontWeight: FontWeight.w400,
-                  ),
-                ],
-              ),
-            ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    customText(
+                      text: "Position",
+                      fontSize: 13.sp,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w400,
+                    ),
+                    customText(
+                      text: position,
+                      fontSize: 13.sp,
+                      fontFamily: "Barlow",
+                      fontWeight: FontWeight.w400,
+                    ),
+                    SizedBox(height: 1.h),
+                    customText(
+                      text: "Serial Number",
+                      fontSize: 13.sp,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w400,
+                    ),
+                    customText(
+                      text: serialNo,
+                      fontSize: 13.sp,
+                      fontFamily: "Barlow",
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 2.h),
-          buttonWidget(
-            "View Detail",
-            blackColor,
-            colors: yellowColor,
-            height: 3.5.h,
-            width: double.infinity,
-            fontsize: 13.sp,
-            onTap: ontap
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 1.w),
+            child: buttonWidget(
+                "View Detail",
+                blackColor,
+                colors: yellowColor,
+                height: 3.5.h,
+                width: double.infinity,
+                fontsize: 13.sp,
+                onTap: ontap
 
+            ),
           ),
           SizedBox(height: 1.h),
-          buttonWidget(
-            "Remove",
-            blackColor,
-            colors: customButtonColor.withOpacity(0.2),
-            height: 3.5.h,
-            width: double.infinity,
-            fontsize: 13.sp,
-            onTap: (){
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 1.w),
+            child: buttonWidget(
+                "Remove",
+                blackColor,
+                colors: customButtonColor.withOpacity(0.2),
+                height: 3.5.h,
+                width: double.infinity,
+                fontsize: 13.sp,
+                onTap: (){
 
-            }
+                }
+
+            ),
           ),
         ],
       ),
@@ -502,16 +517,16 @@ Widget inventoryWidget(
   );
 }
 
-Widget imageWidget(String? path) {
+Widget imageWidget(String? path, {double? height, double? width}) {
   return SizedBox(
-    height: 13.h,
-    width: double.infinity,
+    height: height ?? 13.h,
+    width: width ?? double.infinity,
     child: ClipRRect(
       borderRadius: BorderRadius.circular(10.sp),
       child: path != null && path.isNotEmpty
           ? CachedNetworkImage(
         imageUrl: path,
-        fit: BoxFit.contain,
+        fit: BoxFit.cover,  // IMPORTANT: fills full width & height
         placeholder: (context, url) => Shimmer.fromColors(
           baseColor: Colors.grey.shade300,
           highlightColor: Colors.grey.shade100,
@@ -519,12 +534,12 @@ Widget imageWidget(String? path) {
         ),
         errorWidget: (context, url, error) => Image.asset(
           'assets/png/placeholder.png',
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,  // make placeholder full width too
         ),
       )
           : Image.asset(
         'assets/png/placeholder.png',
-        fit: BoxFit.contain,
+        fit: BoxFit.cover,  // ALWAYS fill full area
       ),
     ),
   );

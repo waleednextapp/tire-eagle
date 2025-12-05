@@ -34,21 +34,25 @@ class TireModel {
 
 class Data {
   List<Tires>? tires;
+  Totals? totals;
   Pagination? pagination;
 
   Data({
     this.tires,
+    this.totals,
     this.pagination,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
     tires = (json['tires'] as List?)?.map((dynamic e) => Tires.fromJson(e as Map<String,dynamic>)).toList();
+    totals = (json['totals'] as Map<String,dynamic>?) != null ? Totals.fromJson(json['totals'] as Map<String,dynamic>) : null;
     pagination = (json['pagination'] as Map<String,dynamic>?) != null ? Pagination.fromJson(json['pagination'] as Map<String,dynamic>) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = <String, dynamic>{};
     json['tires'] = tires?.map((e) => e.toJson()).toList();
+    json['totals'] = totals?.toJson();
     json['pagination'] = pagination?.toJson();
     return json;
   }
@@ -66,13 +70,16 @@ class Tires {
   String? plyRating;
   int? tireHealth;
   String? vehicalNumber;
-  String? mountedPosition;
+  dynamic mountedPosition;
   String? status;
   String? createdAt;
   String? updatedAt;
   int? v;
-  dynamic retreadInfo;
+  Dismount? dismount;
+  RetreadInfo? retreadInfo;
   DamageInfo? damageInfo;
+  PunctureInfo? punctureInfo;
+  int? totalCost;
 
   Tires({
     this.id,
@@ -91,8 +98,11 @@ class Tires {
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.dismount,
     this.retreadInfo,
     this.damageInfo,
+    this.punctureInfo,
+    this.totalCost,
   });
 
   Tires.fromJson(Map<String, dynamic> json) {
@@ -107,13 +117,16 @@ class Tires {
     plyRating = json['plyRating'] as String?;
     tireHealth = json['tireHealth'] as int?;
     vehicalNumber = json['vehicalNumber'] as String?;
-    mountedPosition = json['mountedPosition'] as String?;
+    mountedPosition = json['mountedPosition'];
     status = json['status'] as String?;
     createdAt = json['createdAt'] as String?;
     updatedAt = json['updatedAt'] as String?;
     v = json['__v'] as int?;
-    retreadInfo = json['retreadInfo'];
+    dismount = (json['dismount'] as Map<String,dynamic>?) != null ? Dismount.fromJson(json['dismount'] as Map<String,dynamic>) : null;
+    retreadInfo = (json['retreadInfo'] as Map<String,dynamic>?) != null ? RetreadInfo.fromJson(json['retreadInfo'] as Map<String,dynamic>) : null;
     damageInfo = (json['damageInfo'] as Map<String,dynamic>?) != null ? DamageInfo.fromJson(json['damageInfo'] as Map<String,dynamic>) : null;
+    punctureInfo = (json['punctureInfo'] as Map<String,dynamic>?) != null ? PunctureInfo.fromJson(json['punctureInfo'] as Map<String,dynamic>) : null;
+    totalCost = json['totalCost'] as int?;
   }
 
   Map<String, dynamic> toJson() {
@@ -134,8 +147,59 @@ class Tires {
     json['createdAt'] = createdAt;
     json['updatedAt'] = updatedAt;
     json['__v'] = v;
-    json['retreadInfo'] = retreadInfo;
+    json['dismount'] = dismount?.toJson();
+    json['retreadInfo'] = retreadInfo?.toJson();
     json['damageInfo'] = damageInfo?.toJson();
+    json['punctureInfo'] = punctureInfo?.toJson();
+    json['totalCost'] = totalCost;
+    return json;
+  }
+}
+
+class Dismount {
+  String? reason;
+  String? storageLocation;
+
+  Dismount({
+    this.reason,
+    this.storageLocation,
+  });
+
+  Dismount.fromJson(Map<String, dynamic> json) {
+    reason = json['reason'] as String?;
+    storageLocation = json['storageLocation'] as String?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['reason'] = reason;
+    json['storageLocation'] = storageLocation;
+    return json;
+  }
+}
+
+class RetreadInfo {
+  String? centerName;
+  int? cost;
+  String? estimatedReturnDate;
+
+  RetreadInfo({
+    this.centerName,
+    this.cost,
+    this.estimatedReturnDate,
+  });
+
+  RetreadInfo.fromJson(Map<String, dynamic> json) {
+    centerName = json['centerName'] as String?;
+    cost = json['cost'] as int?;
+    estimatedReturnDate = json['estimatedReturnDate'] as String?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['centerName'] = centerName;
+    json['cost'] = cost;
+    json['estimatedReturnDate'] = estimatedReturnDate;
     return json;
   }
 }
@@ -184,6 +248,58 @@ class DamageType {
     json['puncture'] = puncture;
     json['cut'] = cut;
     json['bulge'] = bulge;
+    return json;
+  }
+}
+
+class PunctureInfo {
+  String? dateOfPuncture;
+  int? cost;
+  String? mountedPosition;
+
+  PunctureInfo({
+    this.dateOfPuncture,
+    this.cost,
+    this.mountedPosition,
+  });
+
+  PunctureInfo.fromJson(Map<String, dynamic> json) {
+    dateOfPuncture = json['dateOfPuncture'] as String?;
+    cost = json['cost'] as int?;
+    mountedPosition = json['mountedPosition'] as String?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['dateOfPuncture'] = dateOfPuncture;
+    json['cost'] = cost;
+    json['mountedPosition'] = mountedPosition;
+    return json;
+  }
+}
+
+class Totals {
+  int? totalRetreadCost;
+  int? totalPunctureCost;
+  int? totalCost;
+
+  Totals({
+    this.totalRetreadCost,
+    this.totalPunctureCost,
+    this.totalCost,
+  });
+
+  Totals.fromJson(Map<String, dynamic> json) {
+    totalRetreadCost = json['totalRetreadCost'] as int?;
+    totalPunctureCost = json['totalPunctureCost'] as int?;
+    totalCost = json['totalCost'] as int?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['totalRetreadCost'] = totalRetreadCost;
+    json['totalPunctureCost'] = totalPunctureCost;
+    json['totalCost'] = totalCost;
     return json;
   }
 }

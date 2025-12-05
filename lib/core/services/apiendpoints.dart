@@ -20,6 +20,10 @@ class ApiEndPoints{
   //Profile
   static const String profileUpdate = '/api/auth/fleet-manager/profile';
   static const String updatePassword = '/api/auth/fleet-manager/change-password';
+  static const String rotateTire = '/api/fleet/tire/rotate';
+  static const String rotateWheel = '/api/fleet/wheel/rotate';
+  static const String dismountTire = '/api/fleet/tire/dismount';
+  static const String dismountWheel = '/api/fleet/wheel/dismount';
 
   static String getTireUrl() {
       return "/api/fleet/assets?type=tire&status=inStorage&search=";
@@ -28,6 +32,15 @@ class ApiEndPoints{
   static String getWheelUrl() {
       return "/api/fleet/assets?type=wheel&status=inStorage&search=";
 
+  }
+
+
+
+  static String getTireId(String id){
+    return '/api/fleet/tire/$id';
+  }
+  static String getWheelId(String id){
+    return '/api/fleet/wheel/$id';
   }
 
 

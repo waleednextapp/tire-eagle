@@ -27,7 +27,7 @@ class TotalWheels extends StatelessWidget {
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: customText(
-            text: "Total Tires",
+            text: "Total Wheels",
             fontSize: 19.sp,
             fontFamily: "Roboto",
             fontWeight: FontWeight.w600,
@@ -78,7 +78,7 @@ class TotalWheels extends StatelessWidget {
                 final wheelsForDate = wheelsByDate[date]!;
                 double height = 40.0;
                 if (wheelsForDate.length > 1) {
-                  height = height - 3;
+                  height = height - 3.8;
                 }
 
                 // Timeline height = number of tires for that date * height constant
@@ -146,13 +146,13 @@ class TotalWheels extends StatelessWidget {
                                 buttoncheaque: false,
                                 inusesize: 13.sp,
                                 damagetype: getDamageType(),
-                                estimatedreturndate: null,
-                                retreadcentername: null,
-                                spend: null,
+                                estimatedreturndate: formatDate(item.retreadInfo?.estimatedReturnDate ?? '-'),
+                                retreadcentername: item.retreadInfo?.centerName ?? '-',
+                                spend: null ?? '0',
                                 damagereport: formatDate(item.dateOfEntry), // formatted date
                                 status: item.status ?? "",
                                 index: wheelIndex,
-                                onNextTap: () => Get.toNamed("tire"),
+                                onNextTap: () => Get.toNamed("wheeldetails", arguments: item.id ?? ""),
                               );
                             },
                           ),

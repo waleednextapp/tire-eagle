@@ -33,7 +33,13 @@ class DashboardController extends GetxController{
   var inventorySelectedIndex = 1.obs;
   PageController? _pageController;
   RxString selectedPosition = ''.obs;
-  List<String> positions = [];
+  List<String> positions = [
+    'F-Left',
+    'F-Right',
+    'R-Left',
+    'R-Right',
+
+  ];
   String? uploadedImageUrl;
   String? isoFormat;
   var profilePicture = Rxn<File>();

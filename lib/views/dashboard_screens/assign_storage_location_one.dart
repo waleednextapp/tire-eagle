@@ -18,6 +18,7 @@ class AssignStorageLocationOne extends StatelessWidget {
   final DismountController controller = Get.find<DismountController>();
   @override
   Widget build(BuildContext context) {
+    final isWheel = Get.arguments;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -90,10 +91,11 @@ class AssignStorageLocationOne extends StatelessWidget {
                             ),
                             SizedBox(height: 1.h),
                             customText(
-                              text: "Success! Tire Sent for Retread",
+                              text: isWheel == false ? "Success! Tire Dismounted Successfully":"Success! Wheel Dismounted Successfully",
                               fontSize: 18.sp,
                               fontFamily: "Barlow",
                               fontWeight: FontWeight.w600,
+                              textAlign: TextAlign.center
                             ),
                             customText(
                               text: "Your request has been processed successfully",
@@ -108,131 +110,131 @@ class AssignStorageLocationOne extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 1.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 1.h),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: lightBlueColor,
-                            border: Border.all(
-                              color: textFeildBorderColor,
-                              width: 0.3.w,
-                            ),
-                            borderRadius: BorderRadius.circular(12.sp),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4.w,vertical: 1.h),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                customText(
-                                  text: "Tire Detail",
-                                  fontSize: 15.sp,
-                                  fontFamily: "Barlow",
-                                  fontWeight: FontWeight.w500,
-                                  color: blackColor,
-                                ),
-                                SizedBox(height: 0.5.h),
-                                tireInfromation("ID:", "YXU - 5689"),
-                                tireInfromation("Model:", "Michelin XDE2+"),
-                                SizedBox(height: 0.5.h),
-                                customText(
-                                  text: "Status Change",
-                                  fontSize: 15.sp,
-                                  fontFamily: "Barlow",
-                                  fontWeight: FontWeight.w500,
-                                  color: blackColor,
-                                ),
-                                SizedBox(height: 0.7.h),
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: 2.h,
-                                      width: 2.h,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: rotationBorderColor
-                                      ),
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    customText(
-                                      text: "In Use",
-                                      fontSize: 15.sp,
-                                      fontFamily: "Barlow",
-                                      fontWeight: FontWeight.w400,
-                                      color: rotateTireGreyColor,
-                                      txtDecoration: TextDecoration.lineThrough
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 1.h),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 2.w),
-                                      child: Container(
-                                        height: 2.2.h,
-                                        width: 0.6.w,
-                                        decoration: BoxDecoration(
-                                          color: blueBorderColor
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 0.2.h),
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: 2.h,
-                                      width: 2.h,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: blueBorderColor
-                                      ),
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    customText(
-                                        text: "In Retread",
-                                        fontSize: 15.sp,
-                                        fontFamily: "Barlow",
-                                        fontWeight: FontWeight.w400,
-                                        color: blueBorderColor,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 0.5.h),
-                                customText(
-                                  text: "Tracking Information",
-                                  fontSize: 15.sp,
-                                  fontFamily: "Barlow",
-                                  fontWeight: FontWeight.w500,
-                                  color: blackColor,
-                                ),
-                                SizedBox(height: 0.5.h),
-                                tireInfromation("Facility:", "Premium Retreaders Inc."),
-                                tireInfromation("Sent Date:", "Today"),
-                                tireInfromation("Expected Return:", "July 24, 2025"),
-                                tireInfromation("Estimated Cost:", "\$210"),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 0.5.h),
-                        Center(
-                          child: customText(
-                            text: "You'll receive notifications about the retread progress.",
-                            fontSize: 15.sp,
-                            fontFamily: "Barlow",
-                            fontWeight: FontWeight.w500,
-                            color: rotateTireGreyColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  //   child: Column(
+                  //     children: [
+                  //       SizedBox(height: 1.h),
+                  //       Container(
+                  //         decoration: BoxDecoration(
+                  //           color: lightBlueColor,
+                  //           border: Border.all(
+                  //             color: textFeildBorderColor,
+                  //             width: 0.3.w,
+                  //           ),
+                  //           borderRadius: BorderRadius.circular(12.sp),
+                  //         ),
+                  //         child: Padding(
+                  //           padding: EdgeInsets.symmetric(horizontal: 4.w,vertical: 1.h),
+                  //           child: Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: [
+                  //               customText(
+                  //                 text: "Tire Detail",
+                  //                 fontSize: 15.sp,
+                  //                 fontFamily: "Barlow",
+                  //                 fontWeight: FontWeight.w500,
+                  //                 color: blackColor,
+                  //               ),
+                  //               SizedBox(height: 0.5.h),
+                  //               tireInfromation("ID:", "YXU - 5689"),
+                  //               tireInfromation("Model:", "Michelin XDE2+"),
+                  //               SizedBox(height: 0.5.h),
+                  //               customText(
+                  //                 text: "Status Change",
+                  //                 fontSize: 15.sp,
+                  //                 fontFamily: "Barlow",
+                  //                 fontWeight: FontWeight.w500,
+                  //                 color: blackColor,
+                  //               ),
+                  //               SizedBox(height: 0.7.h),
+                  //               Row(
+                  //                 children: [
+                  //                   Container(
+                  //                     height: 2.h,
+                  //                     width: 2.h,
+                  //                     decoration: BoxDecoration(
+                  //                       shape: BoxShape.circle,
+                  //                       color: rotationBorderColor
+                  //                     ),
+                  //                   ),
+                  //                   SizedBox(width: 2.w),
+                  //                   customText(
+                  //                     text: "In Use",
+                  //                     fontSize: 15.sp,
+                  //                     fontFamily: "Barlow",
+                  //                     fontWeight: FontWeight.w400,
+                  //                     color: rotateTireGreyColor,
+                  //                     txtDecoration: TextDecoration.lineThrough
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //               SizedBox(height: 1.h),
+                  //               Row(
+                  //                 children: [
+                  //                   Padding(
+                  //                     padding: EdgeInsets.only(left: 2.w),
+                  //                     child: Container(
+                  //                       height: 2.2.h,
+                  //                       width: 0.6.w,
+                  //                       decoration: BoxDecoration(
+                  //                         color: blueBorderColor
+                  //                       ),
+                  //                     ),
+                  //                   )
+                  //                 ],
+                  //               ),
+                  //               SizedBox(height: 0.2.h),
+                  //               Row(
+                  //                 children: [
+                  //                   Container(
+                  //                     height: 2.h,
+                  //                     width: 2.h,
+                  //                     decoration: BoxDecoration(
+                  //                         shape: BoxShape.circle,
+                  //                         color: blueBorderColor
+                  //                     ),
+                  //                   ),
+                  //                   SizedBox(width: 2.w),
+                  //                   customText(
+                  //                       text: "In Retread",
+                  //                       fontSize: 15.sp,
+                  //                       fontFamily: "Barlow",
+                  //                       fontWeight: FontWeight.w400,
+                  //                       color: blueBorderColor,
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //               SizedBox(height: 0.5.h),
+                  //               customText(
+                  //                 text: "Tracking Information",
+                  //                 fontSize: 15.sp,
+                  //                 fontFamily: "Barlow",
+                  //                 fontWeight: FontWeight.w500,
+                  //                 color: blackColor,
+                  //               ),
+                  //               SizedBox(height: 0.5.h),
+                  //               tireInfromation("Facility:", "Premium Retreaders Inc."),
+                  //               tireInfromation("Sent Date:", "Today"),
+                  //               tireInfromation("Expected Return:", "July 24, 2025"),
+                  //               tireInfromation("Estimated Cost:", "\$210"),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       SizedBox(height: 0.5.h),
+                  //       Center(
+                  //         child: customText(
+                  //           text: "You'll receive notifications about the retread progress.",
+                  //           fontSize: 15.sp,
+                  //           fontFamily: "Barlow",
+                  //           fontWeight: FontWeight.w500,
+                  //           color: rotateTireGreyColor,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
 
                 ],
               ),
@@ -274,7 +276,9 @@ class AssignStorageLocationOne extends StatelessWidget {
                       "Your request has been processed successfully",
                       "Ok",
                           () {
-                        Get.offNamed("tire");
+                        isWheel == false ?
+                        Get.toNamed("tire"):
+                        Get.toNamed("wheeldetails");
                       },
                     );
                     }

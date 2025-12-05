@@ -78,7 +78,7 @@ class TotalTires extends StatelessWidget {
                 final tiresForDate = tiresByDate[date]!;
                 double height = 40.0;
                 if (tiresForDate.length > 1) {
-                  height = height - 3;
+                  height = height - 2.8;
                 }
 
                 // Timeline height = number of tires for that date * height constant
@@ -139,7 +139,7 @@ class TotalTires extends StatelessWidget {
                                 item?.tireSize ?? "",
                                 (item?.damageInfo?.damageType?.puncture ?? 0).toString(),
                                 item?.dateOfEntry ?? "",
-                                item?.mountedPosition ?? "",
+                                item?.mountedPosition ?? "-",
                                 item?.serialNumber ?? "",
                                 (item?.tireHealth ?? 0).toString(),
                                 width: 78.w,
@@ -149,13 +149,15 @@ class TotalTires extends StatelessWidget {
                                 buttoncheaque: false,
                                 inusesize: 13.sp,
                                 damagetype: getDamageTypes(),
-                                estimatedreturndate: null,
-                                retreadcentername: null,
-                                spend: null,
+                                estimatedreturndate: formatDate(item?.retreadInfo?.estimatedReturnDate ?? "-"),
+                                retreadcentername: item?.retreadInfo?.centerName ?? "-",
+                                spend: (item?.totalCost ?? '0').toString(),
                                 damagereport: formatDate(item?.dateOfEntry),
                                 status: item?.status ?? "",
                                 index: tireIndex,
-                                onNextTap: () => Get.toNamed("tire"),
+                                onNextTap: () { Get.toNamed("tire",arguments: item?.id ?? "");
+                                  print(item?.id ?? "");
+                                },
                               );
                             },
                           ),

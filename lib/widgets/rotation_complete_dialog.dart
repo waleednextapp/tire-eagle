@@ -7,7 +7,7 @@ import 'package:tire_eagle/widgets/button_widget.dart';
 import '../constants/color_constants.dart';
 import '../constants/constants_widgets.dart';
 
-void showRotationComplete(BuildContext context) {
+void showRotationComplete(BuildContext context,{String? id,String? serialNumber, String? fromPosition, String? toPosition, String? date, String? note, String? time, bool? isWheel = false}) {
   final DashboardController controller = Get.find<DashboardController>();
 
   showDialog(
@@ -46,7 +46,7 @@ void showRotationComplete(BuildContext context) {
                 ),
                 Center(
                   child: customText(
-                    text: "Tire has been successfully rotated",
+                    text: isWheel == false ? "Tire has been successfully rotated": "Wheel has been successfully rotated",
                     fontWeight: FontWeight.w400,
                     fontSize: 15.sp,
                     color: rotateTireGreyColor,
@@ -71,10 +71,11 @@ void showRotationComplete(BuildContext context) {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          rotationRow("Tire ID", "T-10492"),
-                          rotationRow("From Position", "F-Right"),
-                          rotationRow("To Position", "R-Left"),
-                          rotationRow("Date", "24 July 2025"),
+                          rotationRow(isWheel == false ? "Tire ID" : "Wheel ID", serialNumber ?? 'NA'),
+
+                          rotationRow("From Position", fromPosition ?? 'NA'),
+                          rotationRow("To Position", toPosition ?? 'NA'),
+                          rotationRow("Date", date ?? "NA"),
                         ],
                       ),
                     ),
@@ -111,38 +112,72 @@ void showRotationComplete(BuildContext context) {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  customText(
-                                    text: "Rotated from F-Right to R-Left",
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15.sp,
-                                    color: blackColor,
-                                    fontFamily: "Barlow",
+                                  // Rotated from X to Y → ellipsis if too long
+                                  Text(
+                                    "Rotated from ${fromPosition} to ${toPosition}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15.sp,
+                                      color: blackColor,
+                                      fontFamily: "Barlow",
+                                    ),
+                                    overflow: TextOverflow.ellipsis, // ← ellipsis
+                                    maxLines: 1,
                                   ),
+
+                                  SizedBox(height: 0.5.h),
+
+                                  // Date & Time
                                   customText(
-                                    text: "24 July 2025 • 10:23 AM",
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15.sp,
-                                    color: rotationGreyColor1,
-                                    fontFamily: "Barlow",
+
+                                    text: "${date} • 10:23 AM",
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15.sp,
+                                      color: rotationGreyColor1,
+                                      fontFamily: "Barlow",
                                   ),
-                                  customText(
-                                    text: "Technician notes: Regular maintenance\nrotation",
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14.sp,
-                                    color: rotationGreyColor2,
-                                    fontFamily: "Barlow",
+
+                                  SizedBox(height: 0.5.h),
+
+                                  // Technician notes → wrap to next line
+                                  Text(
+                                    "Technician notes: ${note ?? ''}",
+                                    style: TextStyle(
+                                      overflow: TextOverflow.visible,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15.sp,
+                                      color: rotationGreyColor2,
+                                      fontFamily: "Barlow",
+                                    ),
+                                    softWrap: true, // ← ensures wrapping
                                   ),
                                 ],
                               )
+
                             ],
                           ),
                         ),
                       ),
+                      // ... (Code above remains the same)
+
+// ... (Inside the showRotationComplete function)
+
                       SizedBox(height: 2.h),
-                      buttonWidget("Done", whiteColor,colors: brownColor,height: 5.h,fontsize: 15.sp,radius: 12.sp,onTap: (){
-                        Get.back();
-                      }),
+                      buttonWidget(
+                        "Done",
+                        whiteColor,
+                        colors: brownColor,
+                        height: 5.h,
+                        fontsize: 15.sp,
+                        radius: 12.sp,
+                        onTap: () {
+                          Get.back();
+                          Get.back();
+
+                        },
+                      ),
                       SizedBox(height: 1.h),
+// ... (Code below remains the same)
                     ],
                   ),
                 ),

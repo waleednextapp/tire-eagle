@@ -568,7 +568,7 @@ class HomeScreen extends StatelessWidget {
 
                             return Padding(
                               padding: EdgeInsets.only(right: 1.w),
-                              child: tireDetailWidget(item?.serialNumber ?? '',item?.status ?? '', "Last Check 14 - 4 - 2025" ,getTireColor(item?.tireHealth ?? 0),item?.tireHealth ?? 0),
+                              child: tireDetailWidget(item?.serialNumber ?? '',item?.status ?? '', "Last Check 14 - 4 - 2025" ,getTireColor(item?.tireHealth ?? 0),item?.tireHealth ?? 0,id: item?.id),
                             );
                           },
                         ),
@@ -838,7 +838,7 @@ Widget directionWidget() {
   );
 }
 
-Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color color,int tireHealth){
+Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color color,int tireHealth,{String? id}){
   final DashboardController dashboardController = Get.find<DashboardController>();
   return Container(
     width: 88.w,
@@ -1028,7 +1028,7 @@ Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color colo
                     right: 0.5.w,  // adjust as needed
                     child: InkWell(
                       onTap: (){
-                        Get.toNamed("tire");
+                        Get.toNamed("tire",arguments: id);
                       },
                       child: Container(
                         width: 7.w,

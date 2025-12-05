@@ -4,11 +4,15 @@ import 'package:tire_eagle/controllers/dashboard_controller.dart';
 import 'package:tire_eagle/models/get_inventory_tire_model.dart';
 import 'package:tire_eagle/models/tire_model.dart';
 import 'package:tire_eagle/models/wheel_model.dart';
+import 'package:tire_eagle/views/dashboard_screens/wheel_screens/total_wheels.dart';
 
 import '../core/services/apiendpoints.dart';
 import '../core/services/base_services.dart';
 import '../models/get_inventory_wheel_model.dart';
+import '../models/get_tire_by_id_model.dart';
+import '../models/get_wheel_by_id_model.dart';
 import '../utils/utility.dart';
+import '../widgets/rotation_complete_dialog.dart';
 
 class TotalTireController extends GetxController{
   final DashboardController controller = Get.find<DashboardController>();
@@ -19,9 +23,12 @@ class TotalTireController extends GetxController{
   BaseService baseService = BaseService();
   Rx<TireModel?> tireModel = Rx<TireModel?>(null);
   Rx<WheelModel?> wheelModel = Rx<WheelModel?>(null);
+  Rx<GetTireByIdModel?> getTireByIdModel = Rx<GetTireByIdModel?>(null);
+  Rx<GetWheelByIdModel?> getWheelByIdModel = Rx<GetWheelByIdModel?>(null);
   Rx<GetTireInventory?> getTireInventory = Rx<GetTireInventory?>(null);
   Rx<GetWheelInventory?> getWheelInventory = Rx<GetWheelInventory?>(null);
   final TextEditingController searchController = TextEditingController();
+  final TextEditingController technicianNoteController = TextEditingController();
 
 
 
@@ -171,5 +178,143 @@ class TotalTireController extends GetxController{
 
     }
   }
+
+  Future<void> GetTireById(String id) async {
+    try {
+      isLoading.value = true;
+
+      final responseData = await baseService.baseGetAPI(ApiEndPoints.getTireId(id));
+
+      // ❌ API failed
+      if (responseData["success"] != true) {
+        Utils.showToast(responseData["message"] ?? "Something went wrong", true);
+        return;
+      }
+
+      // ✅ Parse JSON into HomeModel
+      getTireByIdModel.value = GetTireByIdModel.fromJson(responseData);
+
+      print("🏠 getTireByIdModel Parsed:");
+      print(getTireByIdModel.value?.toJson());
+
+      // Example usage:
+      print("Total Rethread Count: ${getTireByIdModel.value?.data?.retreadRecords?.length}");
+
+    } catch (e) {
+      print("❌ Home() ERROR: $e");
+      Utils.showToast("Unexpected error occurred", true);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+  Future<void> GetWheelById(String id) async {
+    try {
+      isLoading.value = true;
+
+      final responseData = await baseService.baseGetAPI(ApiEndPoints.getWheelId(id));
+
+      // ❌ API failed
+      if (responseData["success"] != true) {
+        Utils.showToast(responseData["message"] ?? "Something went wrong", true);
+        return;
+      }
+
+      // ✅ Parse JSON into HomeModel
+      getWheelByIdModel.value = GetWheelByIdModel.fromJson(responseData);
+
+      print("🏠 getTireByIdModel Parsed:");
+      print(getWheelByIdModel.value?.toJson());
+
+      // Example usage:
+      print("Total Rethread Count: ${getWheelByIdModel.value?.data?.retreadRecords?.length}");
+
+    } catch (e) {
+      print("❌ Home() ERROR: $e");
+      Utils.showToast("Unexpected error occurred", true);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> updateTireRotation(BuildContext context) async {
+    final body = {
+      "tireId": getTireByIdModel.value?.data?.id.toString(),
+      "mountedPosition": controller.selectedPosition.value,
+      "positionNote": technicianNoteController.text.trim(),
+    };
+
+    print("🔍 BODY SENT TO API:");
+    print("tireId: ${body["tireId"]}");
+    print("mountedPosition: ${body["mountedPosition"]}");
+    print("positionNote: ${body["positionNote"]}");
+
+    final responseMap = await baseService.basePutAPI(
+      ApiEndPoints.rotateTire,
+      body: body,
+      loading: true,
+    );
+
+    if (responseMap["success"] != true) return;
+
+    final data = responseMap["data"];
+    if (data == null) return;
+    updateformClear();
+
+    final date = formatDate(data["updatedAt"]);
+    showRotationComplete(context,id: data["_id"], serialNumber: data["serialNumber"], fromPosition: getTireByIdModel.value?.data?.mountedPosition.toString(), toPosition: data["mountedPosition"], date: date, note: data["positionNote"]);
+    // ✅ Correct
+    print("🎉 ROTATION UPDATE SUCCESS");
+
+  }
+
+
+  Future<void> updateWheelRotation(BuildContext context) async {
+    final body = {
+      // "tireId": getTireByIdModel.value?.data?.id.toString(),
+      // "mountedPosition": controller.selectedPosition,
+      // "positionNote": technicianNoteController.text.trim(),
+      "wheelId": getWheelByIdModel.value?.data?.id.toString(),
+      "mountedPosition": controller.selectedPosition.value,
+      "positionNote": technicianNoteController.text.trim()
+    };
+
+    // 🔥 PRINT THE BODY VALUES
+    print("🔍 BODY SENT TO API:");
+    print("wheelId: ${body["wheelId"]}");
+    print("mountedPosition: ${body["mountedPosition"]}");
+    print("positionNote: ${body["positionNote"]}");
+
+    final responseMap = await baseService.basePutAPI(
+      ApiEndPoints.rotateWheel,
+      body: body,
+      loading: true,
+    );
+
+    if (responseMap["success"] != true) return;
+
+    final data = responseMap["data"];
+    if (data == null) return;
+
+
+    updateformClear();
+    // Show success dialog
+    final date = formatDate(data["updatedAt"]);
+    showRotationComplete(context,id:data["_id"], serialNumber: data["serialNumber"], fromPosition: getWheelByIdModel.value?.data?.mountedPosition.toString(), toPosition: data["mountedPosition"], date: date, note: data["positionNote"], isWheel: true);
+
+    print("🎉 PROFILE UPDATE SUCCESS → ${data["email"]}");
+
+    // Clear fields (if needed)
+  }
+
+  void updateformClear(){
+    controller.selectedPosition.value = "";
+    technicianNoteController.clear();
+  }
+
+
+
+
 
 }

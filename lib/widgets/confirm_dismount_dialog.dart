@@ -7,7 +7,7 @@ import 'package:tire_eagle/widgets/button_widget.dart';
 import '../constants/color_constants.dart';
 import '../constants/constants_widgets.dart';
 
-void confirmDismountDialog(BuildContext context) {
+void confirmDismountDialog(BuildContext context,{bool? iswheel}) {
   final DashboardController controller = Get.find<DashboardController>();
   showDialog(
     context: context,
@@ -69,7 +69,7 @@ void confirmDismountDialog(BuildContext context) {
                         })),
                         SizedBox(width: 3.w),
                         Expanded(child: buttonWidget("Dismount", whiteColor,colors: redColor,radius: 10.sp,height: 4.5.h,fontsize: 15.sp,onTap: (){
-                          Get.toNamed("selectdismountreason");
+                          Get.toNamed("selectdismountreason",arguments: iswheel);
                         }))
                       ],
                     ),

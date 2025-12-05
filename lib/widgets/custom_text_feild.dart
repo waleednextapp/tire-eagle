@@ -20,7 +20,7 @@ Widget customTextFeild(
       void Function(String)? onChanged,
       void Function(String)? onSubmitted,
       Color? color,
-      VoidCallback? onDropDown
+      VoidCallback? onDropDown,
     }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
