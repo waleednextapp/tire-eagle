@@ -33,7 +33,10 @@ void reportDialog(
             Align(
               alignment: Alignment.topRight,
               child: GestureDetector(
-                onTap: () => Get.back(),
+                onTap: () {
+                  Get.back();
+                  Get.back();
+                },
                 child: Icon(Icons.close, size: 20.sp),
               ),
             ),

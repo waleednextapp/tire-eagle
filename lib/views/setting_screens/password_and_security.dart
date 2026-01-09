@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tire_eagle/controllers/auth_controller.dart';
 import 'package:tire_eagle/controllers/setting_controller.dart';
+import 'package:tire_eagle/controllers/total_tire_controller.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/constants_widgets.dart';
@@ -14,6 +16,8 @@ import '../../widgets/success_dialog.dart';
 class PasswordAndSecurity extends StatelessWidget {
   PasswordAndSecurity({super.key});
     final SettingController controller = Get.find<SettingController>();
+    final AuthController authcontroller = Get.find<AuthController>();
+    final TotalTireController totalTireController = Get.find<TotalTireController>();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,7 @@ class PasswordAndSecurity extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 1.h),
-            customTextFeildM("Password", "••••••••",
+            customTextFeildM("Old Password", "••••••••",
                 isPassword: true,
               controller: controller.oldPassword,
               obscureController: controller.isOldPasswordObscure,
@@ -133,9 +137,14 @@ class PasswordAndSecurity extends StatelessWidget {
                 );
                 return; // Stop execution
               }
-
+               if(totalTireController.isUser == true){
+                 controller.updateUserPassword(context);
+               }
+               else{
+                 controller.updatePassword(context);
+               }
               // All checks passed, call the update function
-              controller.updatePassword(context);
+
             }),
           ],
         ),

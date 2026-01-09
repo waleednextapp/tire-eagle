@@ -12,6 +12,7 @@ import '../../controllers/forgot_password_controller.dart';
 class ForgotPassword extends StatelessWidget {
   ForgotPassword({super.key});
   final ForgotPasswordController controller = Get.find<ForgotPasswordController>();
+  final AuthController authController = Get.find<AuthController>();
   GlobalKey<FormState> _forgotKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,15 @@ class ForgotPassword extends StatelessWidget {
                 buttonWidget("Continue", whiteColor,colors: buttonColor,height: 6.h,onTap: () async {
                   // Get.toNamed("emailverification");
                   if(_forgotKey.currentState!.validate()){
-                    await controller.emailVerification();
+                    if(authController.loginUserIndex.value == 1){
+                      print("Iam Here");
+                      await controller.userEmailVerification();
+                    }
+                    else{
+                      await controller.emailVerification();
+                    }
+
+                    print("Iam Here");
                   }
 
                 }),
@@ -77,6 +86,7 @@ class ForgotPassword extends StatelessWidget {
                     InkWell(
                       onTap: (){
                         Get.back();
+
                       },
                       child: customText(
                           text: "Login",

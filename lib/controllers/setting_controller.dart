@@ -17,10 +17,6 @@ class SettingController extends GetxController {
   final prefs = SharedPreferencesMethod.storage;
 
 
-
-
-
-
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -67,6 +63,9 @@ class SettingController extends GetxController {
   BaseService baseService = BaseService();
   RxInt selectedTab = 0.obs;
   var profilePicture = Rxn<File>();
+  void getPicture(){
+    profilePicture.value = controller.profilePicture.value;
+  }
 
   void changeTab(int index) {
     selectedTab.value = index;
@@ -93,7 +92,68 @@ class SettingController extends GetxController {
     // Optional: reset selected country if needed
     // authController.selectedCountry.value = defaultCountry;
   }
+  Future<void> updateUserProfile(BuildContext context) async {
+    final body = {
+      "profilePicture": controller.uploadedImageUrl,
+      "name": nameController.text.trim(),
+      "email": emailController.text.trim(),
+      "phone": '+${authController.selectedCountry.value.phoneCode}${phoneController.text}',
+    };
 
+    final responseMap = await baseService.basePutAPI(
+        ApiEndPoints.userProfileUpdate,
+        body: body,
+        loading: true
+    );
+
+    if (responseMap["success"] != true) return;
+
+    final data = responseMap["data"];
+    if (data == null) return;
+    await prefs.setString(
+      LocalDBKeys.USERFULLNAME,
+      data['name'] ?? '',
+    );
+
+    await prefs.setString(
+      LocalDBKeys.USEREMAIL,
+      data['email'] ?? '',
+    );
+
+    await prefs.setString(
+      LocalDBKeys.PHONENUMBER,
+      data['phone'] ?? '',
+    );
+
+    await prefs.setString(
+      LocalDBKeys.USERPROFILEPIC,
+      data['profilePicture'] ?? '',
+    );
+    // ✅ PRINT TO VERIFY
+    print("✅ SAVED USER FULL NAME: ${data['name']}");
+    print("✅ SAVED USER EMAIL: ${data['email']}");
+    print("✅ SAVED USER PHONE: ${data['phone']}");
+    print("✅ SAVED USER PROFILE PIC: ${data['profilePicture']}");
+    // Show success dialog
+    loadUserData();
+    clearFields();
+
+    successDialog(
+      context,
+      "Profile has been updated successfully.",
+      "Ok",
+      title: "Congratulations!",
+          () {
+        Get.back();
+        Get.back();
+      },
+    );
+
+    print("🎉 PROFILE UPDATE SUCCESS → ${data["email"]}");
+
+    // ✅ Clear all fields after successful update
+
+  }
   Future<void> updateProfile(BuildContext context) async {
     final body = {
       "profilePicture": controller.uploadedImageUrl,
@@ -112,7 +172,30 @@ class SettingController extends GetxController {
 
     final data = responseMap["data"];
     if (data == null) return;
+    await prefs.setString(
+      LocalDBKeys.USERFULLNAME,
+      data['name'] ?? '',
+    );
 
+    await prefs.setString(
+      LocalDBKeys.USEREMAIL,
+      data['email'] ?? '',
+    );
+
+    await prefs.setString(
+      LocalDBKeys.PHONENUMBER,
+      data['phone'] ?? '',
+    );
+
+    await prefs.setString(
+      LocalDBKeys.USERPROFILEPIC,
+      data['profilePicture'] ?? '',
+    );
+    // ✅ PRINT TO VERIFY
+    print("✅ SAVED USER FULL NAME: ${data['name']}");
+    print("✅ SAVED USER EMAIL: ${data['email']}");
+    print("✅ SAVED USER PHONE: ${data['phone']}");
+    print("✅ SAVED USER PROFILE PIC: ${data['profilePicture']}");
     // Show success dialog
     loadUserData();
     clearFields();
@@ -124,6 +207,7 @@ class SettingController extends GetxController {
       title: "Congratulations!",
           () {
         Get.back();
+        Get.back();
       },
     );
 
@@ -132,7 +216,38 @@ class SettingController extends GetxController {
     // ✅ Clear all fields after successful update
 
   }
+  Future<void> updateUserPassword(BuildContext context) async {
+    final body = {
+      "oldPassword": oldPassword.text.trim(),
+      "newPassword": newPassword.text.trim(),
+      "confirmPassword": confirmPassword.text.trim(),
+    };
 
+    final responseMap = await baseService.basePutAPI(
+      ApiEndPoints.userPasswordUpdate,
+      body: body,
+      loading: true,
+    );
+
+    if (responseMap["success"] != true) return;
+
+    // Clear password fields
+    clearPassword();
+
+    // Show success dialog (works even if data is null)
+    successDialog(
+      context,
+      "Password has been updated successfully.",
+      "Ok",
+      title: "Congratulations!",
+          () {
+        Get.back();
+        Get.back();
+      },
+    );
+
+    print("🎉 PASSWORD UPDATE SUCCESS");
+  }
   Future<void> updatePassword(BuildContext context) async {
     final body = {
       "oldPassword": oldPassword.text.trim(),
@@ -158,6 +273,7 @@ class SettingController extends GetxController {
       "Ok",
       title: "Congratulations!",
           () {
+        Get.back();
         Get.back();
       },
     );

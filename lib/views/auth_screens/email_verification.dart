@@ -12,14 +12,21 @@ import '../../controllers/auth_controller.dart';
 class EmailVerification extends StatelessWidget {
   EmailVerification({super.key});
   final ForgotPasswordController controller = Get.find<ForgotPasswordController>();
-  GlobalKey<FormState> _emailVerification = GlobalKey<FormState>();
+  final AuthController authController = Get.find<AuthController>();
+  final GlobalKey<FormState> _emailVerification = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final args = Get.arguments;
     final String email = args["email"] ?? '';
-    // Start 2-minute timer
-    controller.startTimer();
+
+    // ✅ FIX: Start timer safely after the build phase is complete
+    // This prevents the "setState() called during build" error
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (controller.remainingTime.value == 0) {
+        controller.startTimer();
+      }
+    });
 
     return Scaffold(
       body: Padding(
@@ -54,11 +61,11 @@ class EmailVerification extends StatelessWidget {
                 ),
                 SizedBox(height: 3.h),
                 customTextFeild(
-                    "Verification Code",
-                    "Enter verification code",
-                    isPrefix: true,
+                  "Verification Code",
+                  "Enter verification code",
+                  isPrefix: true,
                   controller: controller.otpController,
-                  validator: (value)=> HelperFunction.otpValidator(value)
+                  validator: (value) => HelperFunction.otpValidator(value),
                 ),
                 SizedBox(height: 1.h),
                 Row(
@@ -83,8 +90,11 @@ class EmailVerification extends StatelessWidget {
                         onTap: isActive
                             ? () {
                           controller.startTimer(); // Reset timer
-                          // TODO: Call your resend API here
-                          controller.emailVerification(resentemail: email);
+                          if (authController.loginUserIndex.value == 1) {
+                            controller.userEmailVerification(resentemail: email);
+                          } else {
+                            controller.emailVerification(resentemail: email);
+                          }
                         }
                             : null, // disabled if timer > 0
                         child: customText(
@@ -100,7 +110,6 @@ class EmailVerification extends StatelessWidget {
                     }),
                   ],
                 ),
-
                 SizedBox(height: 3.h),
                 buttonWidget(
                   "Continue",
@@ -108,8 +117,14 @@ class EmailVerification extends StatelessWidget {
                   colors: buttonColor,
                   height: 6.h,
                   onTap: () {
-                    if(_emailVerification.currentState!.validate()){
-                      controller.verifyOtp(email);
+                    if (_emailVerification.currentState!.validate()) {
+                      // Note: Ensure controller.userVerifyOtp and verifyOtp
+                      // are updated to send OTP as a String (no int.parse)
+                      if (authController.loginUserIndex.value == 1) {
+                        controller.userVerifyOtp(email);
+                      } else {
+                        controller.verifyOtp(email);
+                      }
                     }
                   },
                 ),
@@ -127,6 +142,7 @@ class EmailVerification extends StatelessWidget {
                     InkWell(
                       onTap: () {
                         Get.toNamed("loginscreen");
+                        controller.otpController.clear();
                       },
                       child: customText(
                         text: "Login",
@@ -145,4 +161,3 @@ class EmailVerification extends StatelessWidget {
     );
   }
 }
-

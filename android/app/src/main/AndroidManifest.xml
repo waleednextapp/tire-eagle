@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <!-- ✅ Permissions for picking images/files -->
-  <!-- For Android < 13 -->
+  <!-- Internet access for API calls -->
+  <uses-permission android:name="android.permission.INTERNET"/>
+
+  <!-- Permissions for picking images/files -->
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-  <!-- For Android 13+ -->
   <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 
   <application

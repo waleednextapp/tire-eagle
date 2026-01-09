@@ -1,11 +1,11 @@
-class HomeModel {
+class UserHome {
   bool? success;
   String? message;
   Data? data;
   dynamic errors;
   int? statusCode;
 
-  HomeModel({
+  UserHome({
     this.success,
     this.message,
     this.data,
@@ -13,7 +13,7 @@ class HomeModel {
     this.statusCode,
   });
 
-  HomeModel.fromJson(Map<String, dynamic> json) {
+  UserHome.fromJson(Map<String, dynamic> json) {
     success = json['success'] as bool?;
     message = json['message'] as String?;
     data = (json['data'] as Map<String,dynamic>?) != null ? Data.fromJson(json['data'] as Map<String,dynamic>) : null;
@@ -34,21 +34,29 @@ class HomeModel {
 
 class Data {
   Summary? summary;
+  List<dynamic>? brands;
+  List<dynamic>? promotions;
   List<Tires>? tires;
 
   Data({
     this.summary,
+    this.brands,
+    this.promotions,
     this.tires,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
     summary = (json['summary'] as Map<String,dynamic>?) != null ? Summary.fromJson(json['summary'] as Map<String,dynamic>) : null;
+    brands = json['brands'] as List?;
+    promotions = json['promotions'] as List?;
     tires = (json['tires'] as List?)?.map((dynamic e) => Tires.fromJson(e as Map<String,dynamic>)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = <String, dynamic>{};
     json['summary'] = summary?.toJson();
+    json['brands'] = brands;
+    json['promotions'] = promotions;
     json['tires'] = tires?.map((e) => e.toJson()).toList();
     return json;
   }
@@ -83,7 +91,7 @@ class Tires {
   String? tireSize;
   int? tireHealth;
   String? vehicleNumber;
-  dynamic mountedPosition;
+  String? mountedPosition;
   String? status;
   String? imageUrl;
   String? updatedAt;
@@ -108,7 +116,7 @@ class Tires {
     tireSize = json['tireSize'] as String?;
     tireHealth = json['tireHealth'] as int?;
     vehicleNumber = json['vehicleNumber'] as String?;
-    mountedPosition = json['mountedPosition'];
+    mountedPosition = json['mountedPosition'] as String?;
     status = json['status'] as String?;
     imageUrl = json['imageUrl'] as String?;
     updatedAt = json['updatedAt'] as String?;

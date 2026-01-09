@@ -97,6 +97,8 @@ class LoginScreen extends StatelessWidget {
                       controller.loginUserIndex.value = 2;
                       controller.isUser.value = false;
                       prefs.setBool("isUser", controller.isUser.value);
+                      var isUser = prefs.getBool('isUser');
+                      print(isUser);
                       print(controller.isUser.value);
                     },
                     child: Obx(() => Column(
@@ -211,7 +213,8 @@ class LoginScreen extends StatelessWidget {
                     colors: buttonColor,
                     height: 6.h,
                     onTap: () {
-                      Get.offAllNamed('/bottomnavbar');
+                      controller.userLogin();
+                      // Get.offAllNamed('/bottomnavbar');
                     },
                   ),
                   SizedBox(height: 3.h),
@@ -359,7 +362,7 @@ class LoginScreen extends StatelessWidget {
                       height: 6.h,
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          await controller.login();
+                          await controller.fleetLogin();
                         }
                       },
                     ),

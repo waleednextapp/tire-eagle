@@ -139,7 +139,7 @@ class SelectDismountReason extends StatelessWidget {
                             //   hintText: "Enter custom dismount reason",
                             //   height: 4.5.h,
                             // ),
-                            customTextFeild('Specify Reason', 'Tyre got bursted'),
+                            customTextFeild('Specify Reason', 'Tyre got bursted',controller: controller.otherReasonController),
                             SizedBox(height: 1.h),
                           ],
                         ),
@@ -191,6 +191,7 @@ class SelectDismountReason extends StatelessWidget {
                         }
                         if (controller.isOtherSelected && controller.otherReasonController.text.trim().isEmpty) {
                           Get.snackbar("Error", "Please specify the custom reason.", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+                          print(controller.otherReasonController.text.trim());
                           return;
                         }
 

@@ -18,6 +18,7 @@ class AddNewTire extends StatelessWidget {
   final GlobalKey<FormState> _newWheel = GlobalKey<FormState>();
   final DashboardController controller = Get.find<DashboardController>();
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,7 +188,7 @@ class AddNewTire extends StatelessWidget {
                               customTextFeildM(
                                 "Serial Number",
                                 "Enter serial number",
-                                controller: controller.tireSerialNumber,
+                                controller: controller.serialNumberController,
                               ),
                               SizedBox(height: 0.5.h),
                               customTextFeildM(
@@ -208,68 +209,44 @@ class AddNewTire extends StatelessWidget {
                                 fontWeight: FontWeight.w300,
                               ),
                               SizedBox(height: 0.5.h),
-                              Obx(() => customDropdownField<String>(
-                                title: "Select Brand",
-                                hintText: "Bridgestone",
-                                items: controller.brandList,
-                                selectedItem: controller.brandList.contains(controller.selectedBrand.value)
-                                    ? controller.selectedBrand.value
-                                    : null,
-                                onChanged: (value) {
-                                  controller.selectedBrand.value = value ?? "";
-                                },
-                              )),
+                              customTextFeildM(
+                                "Select Brand",
+                                "Bridgestone",
+                                controller: controller.tirebrandField,
+                              ),
                               SizedBox(height: 0.5.h),
                               Row(
                                 children: [
                                   Expanded(
-                                    child: Obx(() => customDropdownField<String>(
-                                      title: "Tire Size",
-                                      hintText: "Select Size",
-                                      items: controller.tireSizeList,
-                                      selectedItem: controller.tireSizeList.contains(controller.selectedTireSize.value)
-                                          ? controller.selectedTireSize.value
-                                          : null,
-                                      onChanged: (value) {
-                                        controller.selectedTireSize.value = value ?? "";
-                                      },
-                                    )),
+                                    child: customTextFeildM(
+                                      "Tire Size",
+                                      "Enter Size",
+                                      controller: controller.tiresizeField,
+                                    ),
                                   ),
                                   SizedBox(width: 4.w),
                                   Expanded(
-                                    child: Obx(() => customDropdownField<String>(
-                                      title: "Ply Rating",
-                                      hintText: "Select Ply",
-                                      items: controller.plyRatingList,
-                                      selectedItem: controller.plyRatingList.contains(controller.selectedPlyRating.value)
-                                          ? controller.selectedPlyRating.value
-                                          : null,
-                                      onChanged: (value) {
-                                        controller.selectedPlyRating.value = value ?? "";
-                                      },
-                                    )),
+                                    child: customTextFeildM(
+                                      "Ply Rating",
+                                      "Select Ply Rating",
+                                      controller: controller.tireplyField,
+                                    ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 0.5.h),
-                              Obx(() => customDropdownField<String>(
-                                title: "Tire Health",
-                                hintText: "12/32 ---- 🟢 (New)",
-                                items: controller.tireHealthList2,
-                                selectedItem: controller.tireHealthList2.contains(controller.tireHealth2.value)
-                                    ? controller.tireHealth2.value
-                                    : null,
-                                onChanged: (value) {
-                                  controller.tireHealth2.value = value ?? "";
-                                },
-                              )),
-                              SizedBox(height: 0.5.h),
-                              customText(
-                                text: "Tire Placement",
-                                fontSize: 15.sp,
-                                fontFamily: "Barlow",
-                                fontWeight: FontWeight.w300,
-                              ),
+                              // SizedBox(height: 0.5.h),
+                              // customTextFeildM(
+                              //   "Tire Health",
+                              //   "60 %",
+                              //   controller: controller.tireHealth,
+                              // ),
+                              // SizedBox(height: 0.5.h),
+                              // customText(
+                              //   text: "Tire Placement",
+                              //   fontSize: 15.sp,
+                              //   fontFamily: "Barlow",
+                              //   fontWeight: FontWeight.w300,
+                              // ),
                               SizedBox(height: 0.5.h),
                               Obx(() => customDropdownField<String>(
                                 title: "Status",
@@ -286,7 +263,7 @@ class AddNewTire extends StatelessWidget {
                               customTextFeildM(
                                 "Vehicle Number Plate",
                                 "YXU - 5689",
-                                controller: controller.wheelSerialNumber,
+                                controller: controller.vehicleNumberController,
                               ),
                               SizedBox(height: 0.5.h),
                               Obx(() => customDropdownField<String>(
@@ -311,14 +288,13 @@ class AddNewTire extends StatelessWidget {
                                         controller.customerEmailController.text.isEmpty ||
                                         controller.serialNumberController.text.isEmpty ||
                                         controller.tiredateController.text.isEmpty ||
-                                        controller.selectedBrand.value.isEmpty ||
-                                        controller.selectedTireSize.value.isEmpty ||
-                                        controller.selectedPlyRating.value.isEmpty ||
-                                        controller.tireHealth2.value.isEmpty ||
+                                        controller.tirebrandField.text.isEmpty ||
+                                        controller.tiresizeField.text.isEmpty ||
+                                        controller.tireplyField.text.isEmpty ||
+                                        // controller.tireHealth.text.isEmpty ||
                                         controller.status.value.isEmpty ||
                                         controller.vehicleNumberController.text.isEmpty ||
                                         controller.mountedPosition2.value.isEmpty) {
-
                                       Get.snackbar(
                                         "Error",
                                         "Please fill all form fields",
@@ -489,41 +465,24 @@ class AddNewTire extends StatelessWidget {
                                 fontWeight: FontWeight.w300,
                               ),
                               SizedBox(height: 0.5.h),
-                              Obx(() => customDropdownField<String>(
-                                title: "Select Material",
-                                hintText: "Aluminum",
-                                items: controller.materialList,
-                                selectedItem: controller.materialList.contains(controller.selectedMaterial.value)
-                                    ? controller.selectedMaterial.value
-                                    : null,
-                                onChanged: (value) {
-                                  controller.selectedMaterial.value = value ?? "";
-                                },
-                              )),
+                              customTextFeildM(
+                                "Select Material",
+                                "Aluminum",
+                                controller: controller.wheelMaterialField,
+                              ),
+
                               SizedBox(height: 0.5.h),
-                              Obx(() => customDropdownField<String>(
-                                title: "Wheel Size",
-                                hintText: "Select Size",
-                                items: controller.wheelSizeList,
-                                selectedItem: controller.wheelSizeList.contains(controller.selectedWheelSize.value)
-                                    ? controller.selectedWheelSize.value
-                                    : null,
-                                onChanged: (value) {
-                                  controller.selectedWheelSize.value = value ?? "";
-                                },
-                              )),
+                              customTextFeildM(
+                                "Wheel Size",
+                                "12.5R20",
+                                controller: controller.wheelSizeField,
+                              ),
                               SizedBox(height: 0.5.h),
-                              Obx(() => customDropdownField<String>(
-                                title: "Wheel Condition  (0/10)",
-                                hintText: "9.8",
-                                items: controller.wheelConditionList,
-                                selectedItem: controller.wheelConditionList.contains(controller.wheelCondition.value)
-                                    ? controller.wheelCondition.value
-                                    : null,
-                                onChanged: (value) {
-                                  controller.wheelCondition.value = value ?? "";
-                                },
-                              )),
+                              customTextFeildM(
+                                "Wheel Condition",
+                                "9.8",
+                                controller: controller.wheelConditionField,
+                              ),
                               SizedBox(height: 0.5.h),
                               customText(
                                 text: "Wheel Placement",
@@ -572,12 +531,14 @@ class AddNewTire extends StatelessWidget {
                                         controller.customerEmailControllerWheel.text.isEmpty ||
                                         controller.serialNumberControllerWheel.text.isEmpty ||
                                         controller.tiredateController2.text.isEmpty ||
-                                        controller.selectedMaterial.value.isEmpty ||
-                                        controller.selectedWheelSize.value.isEmpty ||
-                                        controller.wheelCondition.value.isEmpty ||
+                                        controller.wheelMaterialField.text.isEmpty ||
+                                        controller.wheelSizeField.text.isEmpty ||
+                                        controller.wheelConditionField.text.isEmpty ||
                                         controller.wheelStatus.value.isEmpty ||
                                         controller.vehicleNumberControllerWheel.text.isEmpty ||
                                         controller.mountedPosition3.value.isEmpty) {
+
+
 
                                       Get.snackbar(
                                         "Error",

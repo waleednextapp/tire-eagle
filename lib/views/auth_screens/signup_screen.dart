@@ -102,10 +102,23 @@ class SignupScreen extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: 3.h),
-                buttonWidget("Sign Up", whiteColor,colors: buttonColor,height: 6.h,onTap: () async {
+                buttonWidget("Sign Up", whiteColor, colors: buttonColor, height: 6.h, onTap: () async {
                   if (_signupKey.currentState!.validate()) {
-                    print("api hit");
-                    await controller.signUp();   // ❗ No bool needed
+
+                    // 1. Debugging ke liye value print karwaein taake pta chale asal mein value kya aa rahi hai
+                    print("Selected Role: '${controller.roleSelectedItem.value}'");
+
+                    // 2. Safe check (trim aur lowercase ke saath) taake spelling ya case ka masla na rahe
+                    String selectedRole = controller.roleSelectedItem.value.toString().trim().toLowerCase();
+
+                    if (selectedRole == 'user') {
+                      print("Hitting User API");
+                      await controller.userSignUp();
+                    } else {
+                      print("Hitting Fleet API");
+                      await controller.fleetSignUp();
+                    }
+
                   } else {
                     print("Validation failed. API not hit.");
                   }

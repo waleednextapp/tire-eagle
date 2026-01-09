@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tire_eagle/controllers/billing_and_invoice_controller.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/constants_widgets.dart';
@@ -11,6 +12,7 @@ class BillingAndInvoices extends StatelessWidget {
   BillingAndInvoices({super.key});
 
   final SettingController controller = Get.find<SettingController>();
+  final BillingAndInvoiceController billingcontroller = Get.find<BillingAndInvoiceController>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,37 +39,53 @@ class BillingAndInvoices extends StatelessWidget {
             children: [
               rowBar(controller),
               controller.selectedTab.value == 0
-                  ? Column( // Content for index 0
-                spacing: 1.h,
-                children: [
-                  SizedBox(height: 1.h),
-                  bills(status: true),
-                  bills(status: true),
-                  bills(status: true),
-                  bills(status: false),
-                ],
+
+              /// ---------------- ALL (4) ----------------
+                  ? Expanded(
+                child: ListView.builder(
+                  itemCount: 4,
+                  padding: EdgeInsets.only(top: 1.h),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 1.h),
+                      child: bills(status: index < 3 ? true : false),
+                    );
+                  },
+                ),
               )
+
+              /// ---------------- PENDING (1) ----------------
                   : controller.selectedTab.value == 1
-                  ? Column( // Content for index 1
-                spacing: 1.h,
-                children: [
-                  SizedBox(height: 1.h),
-                  bills(status: true),
-                  bills(status: true),
-                  bills(status: true),
-                ],
+                  ? Expanded(
+                child: ListView.builder(
+                  itemCount: 3,
+                  padding: EdgeInsets.only(top: 1.h),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 1.h),
+                      child: bills(status: true),
+                    );
+                  },
+                ),
               )
+
+              /// ---------------- PAID (3) ----------------
                   : controller.selectedTab.value == 2
-                  ? Column( // Content for index 2
-                spacing: 1.h,
-                children: [
-                  SizedBox(height: 1.h),
-                  // Add specific bills/widgets for index 2 here
-                  bills(status: false),
-                  bills(status: false),
-                ],
+                  ? Expanded(
+                child: ListView.builder(
+                  itemCount: 2,
+                  padding: EdgeInsets.only(top: 1.h),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 1.h),
+                      child: bills(status: false),
+                    );
+                  },
+                ),
               )
-                  : Container(),
+
+                  : Container()
+
             ],
           ), // Default case
         ),
@@ -77,6 +95,7 @@ class BillingAndInvoices extends StatelessWidget {
 }
 
 Widget rowBar(SettingController controller) {
+  final BillingAndInvoiceController billingcontroller = Get.find<BillingAndInvoiceController>();
   return Container(
     color: whiteColor,
     padding: EdgeInsets.only(top: 1.5.h),
@@ -87,7 +106,10 @@ Widget rowBar(SettingController controller) {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               GestureDetector(
-                onTap: () => controller.changeTab(0),
+                onTap: () {
+                  billingcontroller.GetAllBillingAndInvoices("all");
+           controller.changeTab(0);
+  } ,
                 child: customText(
                   text: "All (4)",
                   fontSize: 13.sp,
@@ -96,7 +118,9 @@ Widget rowBar(SettingController controller) {
                 ),
               ),
               GestureDetector(
-                onTap: () => controller.changeTab(1),
+              onTap: () {
+              controller.changeTab(1);
+              },
                 child: customText(
                   text: "Pending (1)",
                   fontSize: 13.sp,
@@ -105,7 +129,9 @@ Widget rowBar(SettingController controller) {
                 ),
               ),
               GestureDetector(
-                onTap: () => controller.changeTab(2),
+  onTap: () {
+  controller.changeTab(2);
+  },
                 child: customText(
                   text: "Paid (3)",
                   fontSize: 13.sp,

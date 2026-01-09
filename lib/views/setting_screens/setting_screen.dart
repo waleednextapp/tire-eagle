@@ -36,8 +36,14 @@ class SettingScreen extends StatelessWidget {
     {"path": "assets/png/setting_icon/logout.png", "name": "Log Out"},
   ];
   final DashboardController dashboardController = Get.find<DashboardController>();
+
   @override
   Widget build(BuildContext context) {
+    // SharedPreferences se values nikal li taaki code saaf rahay
+    String? profilePicUrl = prefs.getString(LocalDBKeys.USERPROFILEPIC);
+    String userName = prefs.getString(LocalDBKeys.USERFULLNAME) ?? "User";
+    String userEmail = prefs.getString(LocalDBKeys.USEREMAIL) ?? "";
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -55,25 +61,9 @@ class SettingScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          // <-- Add scroll
           child: Column(
             children: [
-              // Top Title
-              // Container(
-              //   width: double.infinity,
-              //   color: whiteColor,
-              //   child: Padding(
-              //     padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-              //     child: customText(
-              //       text: "Profile Settings",
-              //       fontSize: 20.sp,
-              //       fontFamily: "Roboto",
-              //       fontWeight: FontWeight.w600,
-              //     ),
-              //   ),
-              // ),
-
-              // User Info
+              // User Info Section
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                 child: Row(
@@ -85,14 +75,14 @@ class SettingScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                         color: yellowColor.withAlpha(200),
                       ),
-                      child: prefs.getString(LocalDBKeys.USERPROFILEPIC) != null
+                      // ⭐ FIXED LOGIC: Null aur Empty string dono check kiye
+                      child: (profilePicUrl != null && profilePicUrl.isNotEmpty)
                           ? ClipOval(
                         child: Image.network(
-                          prefs.getString(LocalDBKeys.USERPROFILEPIC)!,
+                          profilePicUrl,
                           fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
-                            // Show shimmer while image is loading
                             return Shimmer.fromColors(
                               baseColor: Colors.grey.shade300,
                               highlightColor: Colors.grey.shade100,
@@ -107,44 +97,24 @@ class SettingScreen extends StatelessWidget {
                             );
                           },
                           errorBuilder: (context, error, stackTrace) {
-                            // Fallback to first letter if image fails
-                            return Center(
-                              child: Text(
-                                (prefs.getString(LocalDBKeys.USERFULLNAME)?.substring(0, 1) ?? "").toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 12.w,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            );
+                            return _buildInitialLetter(userName);
                           },
                         ),
                       )
-                          : Center(
-                        child: Text(
-                          (prefs.getString(LocalDBKeys.USERFULLNAME)?.substring(0, 1) ?? "").toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 12.w,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                          : _buildInitialLetter(userName),
                     ),
-                    // Image.asset(LocalDBKeys.USERPROFILEPIC, width: 22.w),
                     SizedBox(width: 4.w),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         customText(
-                          text: prefs.getString(LocalDBKeys.USERFULLNAME),
+                          text: userName,
                           fontSize: 20.sp,
                           fontFamily: "Barlow",
                           fontWeight: FontWeight.w600,
                         ),
                         customText(
-                          text: prefs.getString(LocalDBKeys.USEREMAIL),
+                          text: userEmail,
                           fontSize: 15.sp,
                           fontFamily: "Barlow",
                           fontWeight: FontWeight.w400,
@@ -171,7 +141,6 @@ class SettingScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 1.h),
 
-                    // ListView.builder
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -183,7 +152,7 @@ class SettingScreen extends StatelessWidget {
                             rowOption[index]["path"]!,
                             rowOption[index]["name"]!,
                             index,
-                            () {
+                                () {
                               switch (index) {
                                 case 0:
                                   Get.toNamed("mydetails");
@@ -198,34 +167,7 @@ class SettingScreen extends StatelessWidget {
                                   Get.toNamed("password");
                                   break;
                                 case 4:
-                                  successDialog(
-                                    context,
-                                    "Are you sure you want to logout?",
-                                    buttonText2: 'Yes',
-                                    "No",
-                                    isLogout: true,
-                                        onTap2: (){
-                                      Get.back();
-                                        },
-
-                                        () {
-                                      dashboardController.currentIndex.value = 0;
-                                      HelperFunction.clearLocalStorage();
-                                          successDialog(
-                                            context,
-                                            "You’ve been logged out successfully.",
-                                            "Ok",
-                                                () {
-                                              prefs.setBool('isUser', true);
-                                              var isUser = prefs.getBool('isUser');
-                                              controller.isUser.value = true;
-                                              controller.loginUserIndex.value = 1;
-                                              print(isUser);
-                                                 Get.offAllNamed("loginscreen");
-                                            },
-                                          );
-                                    },
-                                  );
+                                  _handleLogout(context);
                                   break;
                               }
                             },
@@ -240,6 +182,48 @@ class SettingScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // --- Helper Widgets Taaki Code Ganda Na Ho ---
+
+  Widget _buildInitialLetter(String name) {
+    return Center(
+      child: Text(
+        name.isNotEmpty ? name.substring(0, 1).toUpperCase() : "U",
+        style: TextStyle(
+          fontSize: 12.w,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  void _handleLogout(BuildContext context) {
+    successDialog(
+      context,
+      "Are you sure you want to logout?",
+      "No",
+      buttonText2: 'Yes',
+      onTap2: () {
+        Get.back();
+      },
+          () {
+        dashboardController.currentIndex.value = 0;
+        HelperFunction.clearLocalStorage();
+        successDialog(
+          context,
+          "You’ve been logged out successfully.",
+          "Ok",
+              () {
+            prefs.setBool('isUser', true);
+            controller.isUser.value = true;
+            controller.loginUserIndex.value = 1;
+            Get.offAllNamed("loginscreen");
+          },
+        );
+      },
     );
   }
 

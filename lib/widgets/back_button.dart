@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-Widget backButton(){
+Widget backButton({VoidCallback? onTap}) {
   return GestureDetector(
-    onTap: (){
+    onTap: onTap ?? () {
       Get.back();
     },
-      child: Icon(Icons.arrow_back)
+    child: Icon(Icons.arrow_back),
   );
 }

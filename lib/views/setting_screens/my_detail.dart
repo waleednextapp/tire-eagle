@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
 import 'package:tire_eagle/controllers/setting_controller.dart';
+import 'package:tire_eagle/controllers/total_tire_controller.dart';
 import 'package:tire_eagle/outh_file/local_db_key.dart';
 
 import '../../constants/color_constants.dart';
@@ -23,6 +24,7 @@ class MyDetail extends StatelessWidget {
   final AuthController controller = Get.find<AuthController>();
   final DashboardController dashboardController = Get.find<DashboardController>();
   final SettingController settingController = Get.find<SettingController>();
+  final TotalTireController totalTireController = Get.find<TotalTireController>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,15 +55,15 @@ class MyDetail extends StatelessWidget {
                   Obx(() {
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(100.sp),
-                      child: dashboardController.profilePicture.value != null
+                      child: settingController.profilePicture.value != null
                           ? Image.file(
-                        dashboardController.profilePicture.value!,
+                        settingController.profilePicture.value!,
                         width: 22.w,
                         height: 22.w,
                         fit: BoxFit.cover,
                       )
-                          : Image.asset(
-                        "assets/png/profile_pic.png",
+                          : Image.network(
+                        "${prefs.getString(LocalDBKeys.USERPROFILEPIC)}",
                         width: 22.w,
                         height: 22.w,
                         fit: BoxFit.cover,
@@ -75,6 +77,7 @@ class MyDetail extends StatelessWidget {
                     right: 0,
                     child: InkWell(
                       onTap: () {
+                        settingController.getPicture();
                         dashboardController.uploadImage(3);
                       },
                       child: Container(
@@ -154,7 +157,13 @@ class MyDetail extends StatelessWidget {
                     return; // Stop execution if validation fails
                   }
                   // All fields filled and picture uploaded, proceed to update
-                  settingController.updateProfile(context);
+                  if(totalTireController.isUser == true){
+                    settingController.updateUserProfile(context);
+                  }
+                  else{
+                    settingController.updateProfile(context);
+                  }
+
                 },
               ),
 

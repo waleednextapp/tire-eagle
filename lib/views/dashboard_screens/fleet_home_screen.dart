@@ -8,6 +8,7 @@ import 'package:tire_eagle/controllers/auth_controller.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
 import 'package:tire_eagle/controllers/total_tire_controller.dart';
 import 'package:tire_eagle/models/home_model.dart';
+import 'package:tire_eagle/views/dashboard_screens/wheel_screens/total_wheels.dart';
 import 'package:tire_eagle/widgets/button_widget.dart';
 import '../../constants/constants_widgets.dart';
 
@@ -429,6 +430,10 @@ class HomeScreen extends StatelessWidget {
                         right: 6.w,
                         child: TextField(
                           cursorColor: yellowColor,
+                          controller: dashboardController.searchController,
+                          onChanged: (value) {
+                            dashboardController.searchTire(value);
+                          },
                           style: TextStyle(fontSize: 15.sp, fontFamily: "Barlow",fontWeight: FontWeight.w500),
                           decoration: InputDecoration(
                             isDense: true,
@@ -543,34 +548,28 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ):
                       SizedBox(
-                        height: 22.h, // adjust according to your tireDetailWidget height
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          padding: EdgeInsets.symmetric(horizontal: 6.w),
-                          itemCount: dashboardController.homeModel.value?.data?.tires?.length, // replace with your dynamic tire list length if available
-                          itemBuilder: (context, index) {
-                            // // You can replace these with dynamic data from your model
-                            // String serialNumber;
-                            // String lastCheck;
-                            // Color color;
-                            final item = dashboardController.homeModel.value?.data?.tires?[index];
-                            Color getTireColor(int health) {
-                              if (health >= 40 && health <= 60) {
-                                return Colors.red;
-                              } else if (health > 60 && health <= 80) {
-                                return Colors.yellow;
-                              } else if (health > 80) {
-                                return Colors.green;
-                              } else {
-                                return Colors.red; // fallback for very low health
-                              }
-                            }
+                        height: 22.h,
+                        child: Obx(
+                              () => ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            padding: EdgeInsets.symmetric(horizontal: 6.w),
+                            itemCount: dashboardController.filteredTires.length,
+                            itemBuilder: (context, index) {
+                              final item = dashboardController.filteredTires[index];
 
-                            return Padding(
-                              padding: EdgeInsets.only(right: 1.w),
-                              child: tireDetailWidget(item?.serialNumber ?? '',item?.status ?? '', "Last Check 14 - 4 - 2025" ,getTireColor(item?.tireHealth ?? 0),item?.tireHealth ?? 0,id: item?.id),
-                            );
-                          },
+                              return Padding(
+                                padding: EdgeInsets.only(right: 1.w),
+                                child: tireDetailWidget(
+                                  item.serialNumber ?? '',
+                                  item.status ?? '',
+                                  "Last Check: ${formatDate(item.updatedAt)}",
+                                  getTireColor(item.tireHealth ?? 0),
+                                  item.tireHealth ?? 0,
+                                  id: item.id,
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
 
@@ -838,8 +837,8 @@ Widget directionWidget() {
   );
 }
 
-Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color color,int tireHealth,{String? id}){
-  final DashboardController dashboardController = Get.find<DashboardController>();
+Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color color,int tireHealth,{String? id,bool? isHome = true}){
+  final TotalTireController tireController = Get.find<TotalTireController>();
   return Container(
     width: 88.w,
     decoration: BoxDecoration(
@@ -1028,7 +1027,14 @@ Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color colo
                     right: 0.5.w,  // adjust as needed
                     child: InkWell(
                       onTap: (){
-                        Get.toNamed("tire",arguments: id);
+                        if(tireController.isUser == false){
+                          Get.toNamed("tire", arguments: [id, isHome]); // List me do values
+
+                        }
+                        else{
+                          Get.toNamed("usergettirebyid",arguments: [id, isHome]);
+                        }
+
                       },
                       child: Container(
                         width: 7.w,
@@ -1053,4 +1059,15 @@ Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color colo
       ),
     ),
   );
+}
+Color getTireColor(int health) {
+  if (health >= 40 && health <= 60) {
+    return Colors.red;
+  } else if (health > 60 && health <= 80) {
+    return Colors.yellow;
+  } else if (health > 80) {
+    return Colors.green;
+  } else {
+    return Colors.red; // fallback for very low health
+  }
 }

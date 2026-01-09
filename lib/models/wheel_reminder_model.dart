@@ -1,22 +1,25 @@
-class WheelModel {
+class WheelReminderModel {
   bool? success;
   String? message;
-  Data? data;
+  List<Data>? data;
+  Pagination? pagination;
   dynamic errors;
   int? statusCode;
 
-  WheelModel({
+  WheelReminderModel({
     this.success,
     this.message,
     this.data,
+    this.pagination,
     this.errors,
     this.statusCode,
   });
 
-  WheelModel.fromJson(Map<String, dynamic> json) {
+  WheelReminderModel.fromJson(Map<String, dynamic> json) {
     success = json['success'] as bool?;
     message = json['message'] as String?;
-    data = (json['data'] as Map<String,dynamic>?) != null ? Data.fromJson(json['data'] as Map<String,dynamic>) : null;
+    data = (json['data'] as List?)?.map((dynamic e) => Data.fromJson(e as Map<String,dynamic>)).toList();
+    pagination = (json['pagination'] as Map<String,dynamic>?) != null ? Pagination.fromJson(json['pagination'] as Map<String,dynamic>) : null;
     errors = json['errors'];
     statusCode = json['statusCode'] as int?;
   }
@@ -25,7 +28,8 @@ class WheelModel {
     final Map<String, dynamic> json = <String, dynamic>{};
     json['success'] = success;
     json['message'] = message;
-    json['data'] = data?.toJson();
+    json['data'] = data?.map((e) => e.toJson()).toList();
+    json['pagination'] = pagination?.toJson();
     json['errors'] = errors;
     json['statusCode'] = statusCode;
     return json;
@@ -33,28 +37,6 @@ class WheelModel {
 }
 
 class Data {
-  List<Wheels>? wheels;
-  Pagination? pagination;
-
-  Data({
-    this.wheels,
-    this.pagination,
-  });
-
-  Data.fromJson(Map<String, dynamic> json) {
-    wheels = (json['wheels'] as List?)?.map((dynamic e) => Wheels.fromJson(e as Map<String,dynamic>)).toList();
-    pagination = (json['pagination'] as Map<String,dynamic>?) != null ? Pagination.fromJson(json['pagination'] as Map<String,dynamic>) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> json = <String, dynamic>{};
-    json['wheels'] = wheels?.map((e) => e.toJson()).toList();
-    json['pagination'] = pagination?.toJson();
-    return json;
-  }
-}
-
-class Wheels {
   String? id;
   String? userId;
   String? fleetManagerId;
@@ -66,17 +48,15 @@ class Wheels {
   int? wheelHealth;
   String? wheelCondition;
   String? vehicalNumber;
-  dynamic mountedPosition;
+  String? mountedPosition;
   String? status;
   String? createdAt;
   String? updatedAt;
   int? v;
   String? positionNote;
-  Dismount? dismount;
-  RetreadInfo? retreadInfo;
-  DamageInfo? damageInfo;
+  LatestDamage? latestDamage;
 
-  Wheels({
+  Data({
     this.id,
     this.userId,
     this.fleetManagerId,
@@ -94,12 +74,10 @@ class Wheels {
     this.updatedAt,
     this.v,
     this.positionNote,
-    this.dismount,
-    this.retreadInfo,
-    this.damageInfo,
+    this.latestDamage,
   });
 
-  Wheels.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['_id'] as String?;
     userId = json['userId'] as String?;
     fleetManagerId = json['fleetManagerId'] as String?;
@@ -111,15 +89,13 @@ class Wheels {
     wheelHealth = json['wheelHealth'] as int?;
     wheelCondition = json['wheelCondition'] as String?;
     vehicalNumber = json['vehicalNumber'] as String?;
-    mountedPosition = json['mountedPosition'];
+    mountedPosition = json['mountedPosition'] as String?;
     status = json['status'] as String?;
     createdAt = json['createdAt'] as String?;
     updatedAt = json['updatedAt'] as String?;
     v = json['__v'] as int?;
     positionNote = json['positionNote'] as String?;
-    dismount = (json['dismount'] as Map<String,dynamic>?) != null ? Dismount.fromJson(json['dismount'] as Map<String,dynamic>) : null;
-    retreadInfo = (json['retreadInfo'] as Map<String,dynamic>?) != null ? RetreadInfo.fromJson(json['retreadInfo'] as Map<String,dynamic>) : null;
-    damageInfo = (json['damageInfo'] as Map<String,dynamic>?) != null ? DamageInfo.fromJson(json['damageInfo'] as Map<String,dynamic>) : null;
+    latestDamage = (json['latestDamage'] as Map<String,dynamic>?) != null ? LatestDamage.fromJson(json['latestDamage'] as Map<String,dynamic>) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -141,79 +117,65 @@ class Wheels {
     json['updatedAt'] = updatedAt;
     json['__v'] = v;
     json['positionNote'] = positionNote;
-    json['dismount'] = dismount?.toJson();
-    json['retreadInfo'] = retreadInfo?.toJson();
-    json['damageInfo'] = damageInfo?.toJson();
+    json['latestDamage'] = latestDamage?.toJson();
     return json;
   }
 }
 
-class Dismount {
-  String? reason;
-  String? storageLocation;
-
-  Dismount({
-    this.reason,
-    this.storageLocation,
-  });
-
-  Dismount.fromJson(Map<String, dynamic> json) {
-    reason = json['reason'] as String?;
-    storageLocation = json['storageLocation'] as String?;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> json = <String, dynamic>{};
-    json['reason'] = reason;
-    json['storageLocation'] = storageLocation;
-    return json;
-  }
-}
-
-class RetreadInfo {
-  String? centerName;
-  int? cost;
-  String? estimatedReturnDate;
-
-  RetreadInfo({
-    this.centerName,
-    this.cost,
-    this.estimatedReturnDate,
-  });
-
-  RetreadInfo.fromJson(Map<String, dynamic> json) {
-    centerName = json['centerName'] as String?;
-    cost = json['cost'] as int?;
-    estimatedReturnDate = json['estimatedReturnDate'] as String?;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> json = <String, dynamic>{};
-    json['centerName'] = centerName;
-    json['cost'] = cost;
-    json['estimatedReturnDate'] = estimatedReturnDate;
-    return json;
-  }
-}
-
-class DamageInfo {
-  String? createdAt;
+class LatestDamage {
+  String? id;
+  String? fleetManagerId;
+  String? wheelId;
+  String? location;
   DamageType? damageType;
+  String? severity;
+  String? dateOfEntry;
+  String? note;
+  String? createdAt;
+  String? updatedAt;
+  int? v;
 
-  DamageInfo({
-    this.createdAt,
+  LatestDamage({
+    this.id,
+    this.fleetManagerId,
+    this.wheelId,
+    this.location,
     this.damageType,
+    this.severity,
+    this.dateOfEntry,
+    this.note,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
   });
 
-  DamageInfo.fromJson(Map<String, dynamic> json) {
-    createdAt = json['createdAt'] as String?;
+  LatestDamage.fromJson(Map<String, dynamic> json) {
+    id = json['_id'] as String?;
+    fleetManagerId = json['fleetManagerId'] as String?;
+    wheelId = json['wheelId'] as String?;
+    location = json['location'] as String?;
     damageType = (json['damageType'] as Map<String,dynamic>?) != null ? DamageType.fromJson(json['damageType'] as Map<String,dynamic>) : null;
+    severity = json['severity'] as String?;
+    dateOfEntry = json['dateOfEntry'] as String?;
+    note = json['note'] as String?;
+    createdAt = json['createdAt'] as String?;
+    updatedAt = json['updatedAt'] as String?;
+    v = json['__v'] as int?;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = <String, dynamic>{};
-    json['createdAt'] = createdAt;
+    json['_id'] = id;
+    json['fleetManagerId'] = fleetManagerId;
+    json['wheelId'] = wheelId;
+    json['location'] = location;
     json['damageType'] = damageType?.toJson();
+    json['severity'] = severity;
+    json['dateOfEntry'] = dateOfEntry;
+    json['note'] = note;
+    json['createdAt'] = createdAt;
+    json['updatedAt'] = updatedAt;
+    json['__v'] = v;
     return json;
   }
 }
@@ -241,37 +203,37 @@ class DamageType {
 }
 
 class Pagination {
-  int? currentPage;
+  int? total;
+  int? page;
+  int? limit;
   int? totalPages;
-  int? totalItems;
-  int? itemsPerPage;
   bool? hasNextPage;
   bool? hasPrevPage;
 
   Pagination({
-    this.currentPage,
+    this.total,
+    this.page,
+    this.limit,
     this.totalPages,
-    this.totalItems,
-    this.itemsPerPage,
     this.hasNextPage,
     this.hasPrevPage,
   });
 
   Pagination.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'] as int?;
+    total = json['total'] as int?;
+    page = json['page'] as int?;
+    limit = json['limit'] as int?;
     totalPages = json['totalPages'] as int?;
-    totalItems = json['totalItems'] as int?;
-    itemsPerPage = json['itemsPerPage'] as int?;
     hasNextPage = json['hasNextPage'] as bool?;
     hasPrevPage = json['hasPrevPage'] as bool?;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = <String, dynamic>{};
-    json['currentPage'] = currentPage;
+    json['total'] = total;
+    json['page'] = page;
+    json['limit'] = limit;
     json['totalPages'] = totalPages;
-    json['totalItems'] = totalItems;
-    json['itemsPerPage'] = itemsPerPage;
     json['hasNextPage'] = hasNextPage;
     json['hasPrevPage'] = hasPrevPage;
     return json;

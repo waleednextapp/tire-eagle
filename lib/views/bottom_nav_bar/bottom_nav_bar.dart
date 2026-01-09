@@ -5,6 +5,8 @@ import 'package:tire_eagle/constants/color_constants.dart';
 import 'package:tire_eagle/controllers/auth_controller.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
 import 'package:tire_eagle/controllers/total_tire_controller.dart';
+import 'package:tire_eagle/controllers/user_dashboard_controller.dart';
+import 'package:tire_eagle/controllers/user_tire_wheel_controller.dart';
 import 'package:tire_eagle/views/dashboard_screens/fleet_home_screen.dart';
 import 'package:tire_eagle/views/dashboard_screens/inventory_screen.dart';
 import 'package:tire_eagle/views/dashboard_screens/report_damage_screens/report_screen.dart';
@@ -27,6 +29,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final DashboardController controller = Get.find<DashboardController>();
   final AuthController authController = Get.find<AuthController>();
   final TotalTireController totalTireController = Get.find<TotalTireController>();
+  final UserDashboardController userDashboardController = Get.find<UserDashboardController>();
+  final UserTireWheelController userTireWheelController = Get.find<UserTireWheelController>();
   late PageController _pageController;
   final prefs = SharedPreferencesMethod.storage;
   bool? isUser;
@@ -35,19 +39,30 @@ class _BottomNavBarState extends State<BottomNavBar> {
   // });
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState(); // Always call super first
     isUser = prefs.getBool('isUser') ?? false;
-    super.initState();
-    if(isUser == false){
-      controller.home();
-      totalTireController.GetAllTireInventory();
-      totalTireController.GetAllWheelInventory();
-    }
+
+    // Move API calls here to prevent "setState() during build"
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (isUser == false) {
+        controller.home();
+        totalTireController.GetAllTireInventory();
+        totalTireController.GetAllWheelInventory();
+        controller.GetHistoryAndReport(quickRange: "lastWeek");
+      } else {
+        userTireWheelController.GetAllWheel();
+        userTireWheelController.GetAllTire();
+        userDashboardController.GetUserHome();
+      }
+    });
 
     _pageController = PageController(
       initialPage: controller.currentIndex.value,
     );
+
     controller.setPageController(_pageController);
+
+    // Listen for index changes
     controller.currentIndex.listen((index) {
       if (_pageController.hasClients) {
         _pageController.jumpToPage(index);

@@ -45,17 +45,20 @@ class SendForRethread extends StatelessWidget {
                controller: controller.rethreadSerialNo
               ),
               SizedBox(height: 0.5.h,),
-              customDropdownField<String>(
-                title: "Mounted Position",
-                hintText: "F-Right",
-                items: controller.mountedPositionList7,
-                selectedItem: controller.mountedPositionList7.contains(controller.mountedPosition6.value)
-                    ? controller.mountedPosition7.value
-                    : null,
-                onChanged: (value) {
-                  controller.mountedPosition7.value = value ?? "";
-                },
+              Obx(
+                    () => customDropdownField<String>(
+                  title: "Mounted Position",
+                  hintText: "F-Right",
+                  items: controller.mountedPositionList7,
+                  selectedItem: controller.mountedPositionList7.contains(controller.mountedPosition7.value)
+                      ? controller.mountedPosition7.value
+                      : null,
+                  onChanged: (value) {
+                    controller.mountedPosition7.value = value ?? "";
+                  },
+                ),
               ),
+
               SizedBox(height: 0.5.h,),
 
               // Mounted Position Dropdown
@@ -155,6 +158,7 @@ class SendForRethread extends StatelessWidget {
                 colors: yellowColor,
                 onTap: () async {
                   if (controller.rethreadSerialNo.text.isEmpty ||
+                      controller.mountedPosition7.value.isEmpty || // ✅ Added
                       controller.rethreadCenterName.text.isEmpty ||
                       controller.rethreadAvgCost.text.isEmpty ||
                       controller.rethreadPickupLogistics.text.isEmpty ||

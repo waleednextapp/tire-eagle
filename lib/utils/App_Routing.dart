@@ -8,6 +8,7 @@ import 'package:tire_eagle/views/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:tire_eagle/views/dashboard_screens/invoice_detail_screen.dart';
 import 'package:tire_eagle/views/dashboard_screens/nearest_supplier.dart';
 import 'package:tire_eagle/views/dashboard_screens/tire_screens/add_new_tire.dart';
+import 'package:tire_eagle/views/dashboard_screens/tire_screens/user_tire_detail.dart';
 import 'package:tire_eagle/views/dashboard_screens/wheel_screens/add_new_wheel.dart';
 import 'package:tire_eagle/views/dashboard_screens/disposed_history.dart';
 import 'package:tire_eagle/views/dashboard_screens/inventory_screen.dart';
@@ -32,6 +33,7 @@ import 'package:tire_eagle/views/splash_screens/splash_two.dart';
 import '../views/dashboard_screens/assign_storage_location.dart';
 import '../views/dashboard_screens/assign_storage_location_one.dart';
 import '../views/dashboard_screens/select_dismount_reason.dart';
+import '../views/dashboard_screens/wheel_screens/user_wheel_detail.dart';
 class AppRoutes {
   static List<GetPage<dynamic>> routes = [
     GetPage(name: '/', page: () => SplashOne()),
@@ -65,6 +67,8 @@ class AppRoutes {
     GetPage(name: '/selectdismountreason', page: () => SelectDismountReason()),
     GetPage(name: '/assignstoragelocation', page: () => AssignStorageLocation()),
     GetPage(name: '/assignstoragelocationone', page: () => AssignStorageLocationOne()),
+    GetPage(name: '/usergettirebyid', page: () => UserTireDetail()),
+    GetPage(name: '/usergetwheelbyid', page: () => UserWheelDetail()),
 
     //
   ];

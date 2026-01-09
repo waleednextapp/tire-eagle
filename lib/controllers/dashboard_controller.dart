@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tire_eagle/controllers/setting_controller.dart';
 import 'package:tire_eagle/core/services/apiendpoints.dart';
 import 'package:tire_eagle/core/services/base_services.dart';
+import 'package:tire_eagle/models/historyandreportmodel.dart';
 import 'package:tire_eagle/models/home_model.dart';
 import 'package:tire_eagle/views/dashboard_screens/wheel_screens/total_wheels.dart';
 
@@ -28,11 +29,81 @@ class DashboardController extends GetxController{
   var reportDamageTab = 0.obs;
   BaseService baseService = BaseService();
   Rx<HomeModel?> homeModel = Rx<HomeModel?>(null);
+  Rx<HistoryAndReportModel?> historyModel = Rx<HistoryAndReportModel?>(null);
   RxBool isLoading = true.obs;
   String? selectedValue;
   var inventorySelectedIndex = 1.obs;
   PageController? _pageController;
   RxString selectedPosition = ''.obs;
+  RxInt selectedHistoryIndex = 0.obs;
+  // DashboardController ke andar
+  RxString imageUrl = "".obs; // Ye line add karein
+
+  final historySearchController = TextEditingController();
+  // --- ADD THESE REACTIVE PROPERTIES ---
+  final historySearchQuery = "".obs;
+  final historyFilteredTires = <Tiresfull>[].obs;
+  final historyFilteredWheels = <Wheels>[].obs;
+
+  // --- ADD THE searchHistory FUNCTION ---
+  void searchHistory(int index, String query) {
+    final lowerQuery = query.toLowerCase();
+
+    // 1. If query is empty, clear the filtered lists to show full history (handled by ListView logic)
+    if (query.isEmpty) {
+      historyFilteredTires.clear();
+      historyFilteredWheels.clear();
+      return;
+    }
+
+    // 2. Access the main history list from the reactive model
+    // Note: We access entries directly from the historyModel
+    final entries = historyModel.value?.data?.entries ?? [];
+
+    if (index == 0) { // Tire Tab selected
+      // Expand all nested tires into a single flat list and filter them by serial number
+      final List<Tiresfull> filteredTiresList = entries
+          .expand<Tiresfull>((e) => e.tires ?? [])
+          .where((t) => (t.serialNumber ?? "").toLowerCase().contains(lowerQuery))
+          .toList();
+
+      // Update the OBSERVED list using .value = to trigger the UI rebuild
+      historyFilteredTires.value = filteredTiresList;
+      historyFilteredWheels.clear(); // Clear the other list
+    } else { // Wheel Tab selected
+      // Expand all nested wheels into a single flat list and filter them by serial number
+      final List<Wheels> filteredWheelsList = entries
+          .expand<Wheels>((e) => e.wheels ?? [])
+          .where((w) => (w.serialNumber ?? "").toLowerCase().contains(lowerQuery))
+          .toList();
+
+      // Update the OBSERVED list using .value = to trigger the UI rebuild
+      historyFilteredWheels.value = filteredWheelsList;
+      historyFilteredTires.clear(); // Clear the other list
+    }
+
+    print("Filtered counts → Tires: ${historyFilteredTires.length}, Wheels: ${historyFilteredWheels.length}");
+  }
+
+  TextEditingController searchController = TextEditingController();
+  RxList<Tires> filteredTires = <Tires>[].obs;
+
+  void searchTire(String query) {
+    if (query.isEmpty) {
+      filteredTires.value = homeModel.value?.data?.tires ?? [];
+      return;
+    }
+
+    filteredTires.value = homeModel.value!.data!.tires!
+        .where((tire) =>
+        (tire.serialNumber ?? "")
+            .toLowerCase()
+            .contains(query.toLowerCase()))
+        .toList();
+  }
+
+  // Pagination
+  var currentPage = 1.obs;
   List<String> positions = [
     'F-Left',
     'F-Right',
@@ -46,17 +117,30 @@ class DashboardController extends GetxController{
   var selectedImage1 = Rxn<File>();
   var selectedImage2 = Rxn<File>();
 
+  // 💡 Pagination State Variables for TotalTires Screen (Kept for UI logic/API response parsing)
+  RxInt currentHistoryPage = 1.obs;
+  RxBool hasNextHistoryPage = false.obs;
+  RxInt totalHistoryPages = 1.obs;
+
+
   /// Add Wheel Controller
   TextEditingController tiredateController2 = TextEditingController();
   TextEditingController customerEmailControllerWheel = TextEditingController();
   TextEditingController serialNumberControllerWheel = TextEditingController();
   TextEditingController vehicleNumberControllerWheel = TextEditingController();
+  TextEditingController wheelMaterialField = TextEditingController();
+  TextEditingController wheelSizeField = TextEditingController();
+  TextEditingController wheelConditionField = TextEditingController();
 
 /// Add Tire Controller
   TextEditingController tiredateController = TextEditingController();
   TextEditingController customerEmailController = TextEditingController();
   TextEditingController serialNumberController = TextEditingController();
   TextEditingController vehicleNumberController = TextEditingController();
+  TextEditingController tirebrandField = TextEditingController();
+  TextEditingController tireplyField = TextEditingController();
+  TextEditingController tiresizeField = TextEditingController();
+  TextEditingController tireHealth = TextEditingController();
 
 
   /// Report Damage Controller
@@ -83,6 +167,10 @@ class DashboardController extends GetxController{
   TextEditingController rethreadDateofDamage = TextEditingController();
   TextEditingController rethreadReturnDate = TextEditingController();
   TextEditingController rethreadMountedPosition = TextEditingController();
+
+  TextEditingController startDate = TextEditingController();
+  TextEditingController endDate = TextEditingController();
+
 
 
   void changePage(int index) {
@@ -143,7 +231,7 @@ class DashboardController extends GetxController{
       // Note: selectedImage1 aur selectedImage2 aapke project mein define hone chahiye.
 
       // 2. Request setup karein
-      var uri = Uri.parse('http://172.16.25.79:3000/api/upload/single');
+      var uri = Uri.parse('http://app.yourwebsitemockup.net/tire-eagle/api/upload/single');
       var request = http.MultipartRequest('POST', uri);
 
       // 3. File ko Bytes mein padhein aur MIME type determine karein (Robust Logic)
@@ -185,6 +273,11 @@ class DashboardController extends GetxController{
       if (response.statusCode == 200) {
         var jsonResp = jsonDecode(respStr);
         uploadedImageUrl = jsonResp['data']['url'];
+        print('✅ Upload success: ${jsonResp['data']['url']}');
+
+        // ⭐ Ye line add karein taaki MyDetail screen update ho sake
+        imageUrl.value = jsonResp['data']['url'] ?? "";
+
         print('✅ Upload success: ${jsonResp['data']['url']}');
       } else {
         print('❌ Upload failed with status ${response.statusCode}');
@@ -247,7 +340,7 @@ class DashboardController extends GetxController{
 
   // For Tire Details
   RxString selectedBrand = "".obs;
-  List<String> brandList = ["Bridgestone", "Michelin", "Goodyear"];
+  //List<String> brandList = ["Bridgestone", "Michelin", "Goodyear"];
 
   RxString selectedTireSize = "".obs;
   List<String> tireSizeList = ["12.5R20", "11R22.5", "10R20"];
@@ -295,21 +388,11 @@ class DashboardController extends GetxController{
 
 
 
-  // For Wheel Details
-  RxString selectedMaterial = "".obs;
-  List<String> materialList = ["Aluminum", "Steel", "Alloy"];
-
-  RxString selectedWheelSize = "".obs;
-  List<String> wheelSizeList = ["12.5R20", "11R22.5", "10R20"];
-
-  RxString wheelCondition = "".obs;
-  List<String> wheelConditionList = ["10", "9.8", "8"];
-
   RxString wheelStatus = "".obs;
   List<String> wheelStatusList = ["inUse", "inStorage","inRepair","inReplacement","disposed"];
 
   RxString mountedPosition3 = "".obs;
-  List<String> mountedPositionList3 = ["On Vehicle", "In Storage"];
+  List<String> mountedPositionList3 = ["F-Right", "F-Left","R-Left","R-Right"];
 
 //Rethread
   RxString mountedPosition7 = "".obs;
@@ -331,6 +414,9 @@ class DashboardController extends GetxController{
 
   void selectInventoryValue(int index) {
     inventoryIndexTab.value = index;
+  }
+  void selectHistoryValue(int index) {
+    selectedHistoryIndex.value = index;
   }
   void reportValuetoggle(int index) {
     reportIndexTab.value = index;
@@ -361,9 +447,14 @@ class DashboardController extends GetxController{
     "Disposed",
   ];
 
+  final List<String> historyTabs = [
+    "Tire",
+    "Wheel",
+  ];
   final List<String> reportTabs = [
     "Last Week",
     "Last Month",
+    "Last 3 Months",
     "Filter",
   ];
 
@@ -389,6 +480,9 @@ class DashboardController extends GetxController{
       // ✅ Parse JSON into HomeModel
       homeModel.value = HomeModel.fromJson(responseData);
 
+// Default full list
+      filteredTires.value = homeModel.value?.data?.tires ?? [];
+
       print("🏠 HomeModel Parsed:");
       print(homeModel.value?.toJson());
 
@@ -406,14 +500,28 @@ class DashboardController extends GetxController{
 
   // ADD New Api Call
   Future<void> addNewTire() async {
+
+    print("================= TIRE FORM VALUES =================");
+    print("Customer Email      : ${customerEmailController.text}");
+    print("Image URL           : $uploadedImageUrl");
+    print("Serial Number       : ${serialNumberController.text}");
+    print("Date Of Entry       : $isoFormat");
+    print("Brand               : ${tirebrandField.text}");
+    print("Tire Size           : ${tiresizeField.text}");
+    print("Ply Rating          : ${tireplyField.text}");
+    print("Vehicle Number      : ${vehicleNumberController.text}");
+    print("Mounted Position    : ${mountedPosition2.value}");
+    print("Status              : ${status.value}");
+    print("=====================================================");
+
     final body = {
       'userEmail': customerEmailController.text.trim(),
       'imageUrl': uploadedImageUrl,
       'serialNumber': serialNumberController.text.trim(),
       'dateOfEntry': isoFormat,
-      'brand': selectedBrand.value.trim(),
-      'tireSize': selectedTireSize.trim(),
-      'plyRating': selectedPlyRating.value.trim(),
+      'brand': tirebrandField.text.trim(),
+      'tireSize': tiresizeField.text.trim(),
+      'plyRating': tireplyField.text.trim(),
       'vehicalNumber': vehicleNumberController.text.trim(),
       'mountedPosition': mountedPosition2.value.trim(),
       'status': status.value.trim(),
@@ -425,33 +533,36 @@ class DashboardController extends GetxController{
       loading: true,
     );
 
-    // 👉 SABSE IMPORTANT CHECK
-    if (responseMap["success"] != true) {
-      // ❗Toast pehle BaseService mein show ho chuka hai
-      return;
-    }
+    if (responseMap["success"] != true) return;
 
-    // 👉 YAHAN TAK KA MATLAB API SUCCESS THI
-    // ---------------------------------------
-
-    final data = responseMap["data"];  // user object
-    if (data == null) return;          // Safety guard
-
-    // 🚀 AB DASHBOARD PE JAO
     clearTireForm();
     Get.offAllNamed('/bottomnavbar');
     home();
-    print("🎉 SIGNUP SUCCESS → ${data["email"]}");
   }
+
   Future<void> addNewWheel() async {
+
+    print("================= WHEEL FORM VALUES =================");
+    print("Customer Email      : ${customerEmailControllerWheel.text}");
+    print("Image URL           : $uploadedImageUrl");
+    print("Serial Number       : ${serialNumberControllerWheel.text}");
+    print("Date Of Entry       : $isoFormat");
+    print("Material            : ${wheelMaterialField.text}");
+    print("Wheel Size          : ${wheelSizeField.text}");
+    print("Wheel Condition     : ${wheelConditionField.text}");
+    print("Vehicle Number      : ${vehicleNumberControllerWheel.text}");
+    print("Mounted Position    : ${mountedPosition3.value}");
+    print("Status              : ${wheelStatus.value}");
+    print("=====================================================");
+
     final body = {
       'userEmail': customerEmailControllerWheel.text.trim(),
       'imageUrl': uploadedImageUrl,
       'serialNumber': serialNumberControllerWheel.text.trim(),
       'dateOfEntry': isoFormat,
-      'material': selectedMaterial.value.trim(),
-      'wheelSize': selectedWheelSize.trim(),
-      'wheelCondition': wheelCondition.value.trim(),
+      'material': wheelMaterialField.text.trim(),
+      'wheelSize': wheelSizeField.text.trim(),
+      'wheelCondition': wheelConditionField.text.trim(),
       'vehicalNumber': vehicleNumberControllerWheel.text.trim(),
       'mountedPosition': mountedPosition3.value.trim(),
       'status': wheelStatus.value.trim(),
@@ -463,25 +574,13 @@ class DashboardController extends GetxController{
       loading: true,
     );
 
-    // 👉 SABSE IMPORTANT CHECK
-    if (responseMap["success"] != true) {
-      // ❗Toast pehle BaseService mein show ho chuka hai
-      return;
-    }
+    if (responseMap["success"] != true) return;
 
-    // 👉 YAHAN TAK KA MATLAB API SUCCESS THI
-    // ---------------------------------------
-
-    final data = responseMap["data"];  // user object
-    if (data == null) return;          // Safety guard
-
-    // 🚀 AB DASHBOARD PE JAO
-    clearTireForm();
+    clearWheelForm();
     Get.offAllNamed('/bottomnavbar');
     home();
-    print("🎉 SIGNUP SUCCESS → ${data["email"]}");
+  }
 
-}
 
   Future<void> addPuncture(BuildContext context) async {
     final body = {
@@ -716,6 +815,74 @@ class DashboardController extends GetxController{
       print("Error reporting wheel damage: $e");
     }
   }
+
+
+// 💡 Updated History and Report Get Api
+  Future<void> GetHistoryAndReport({int page = 1,String? quickRange,String? startDate, String? endDate}) async {
+    try {
+      isLoading.value = true;
+      currentHistoryPage.value = page;
+
+      final responseData = await baseService.baseGetAPI(
+        ApiEndPoints.getHistoryAndReportUrl(
+          page: page,
+          limit: 10,
+          quickRange: quickRange,
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      );
+
+      if (responseData["success"] != true) {
+        Utils.showToast(responseData["message"] ?? "Something went wrong", true);
+        return;
+      }
+
+      historyModel.value = HistoryAndReportModel.fromJson(responseData);
+
+      // --- ✅ Correct Pagination Variable Update ---
+
+      // 1. Access the 'data' object first
+      final data = responseData["data"] ?? {};
+
+      // 2. Access 'pagination' object from within 'data'
+      final meta = data["pagination"] ?? {};
+
+      print("I-------am here $meta"); // This should now print the pagination data
+
+      // 3. Update variables using the API's key names
+      totalHistoryPages.value = meta["totalPages"] ?? 1;
+      // API uses 'page' key for current page
+      currentHistoryPage.value = meta["page"] ?? page;
+      // API provides 'hasNextPage' directly
+      hasNextHistoryPage.value = meta["hasNextPage"] ?? (currentHistoryPage.value < totalHistoryPages.value);
+
+    } catch (e) {
+      print("❌ History() ERROR: $e");
+      Utils.showToast("Unexpected error occurred", true);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+// 💡 Pagination methods still call GetAllTire, using the page argument for state management
+// 💡 History/Report Pagination methods
+  void loadNextHistoryPage() {
+    if (hasNextHistoryPage.value) {
+      GetHistoryAndReport(page: currentHistoryPage.value + 1);
+    }
+  }
+
+  void loadPrevHistoryPage() {
+    if (currentHistoryPage.value > 1) {
+      GetHistoryAndReport(page: currentHistoryPage.value - 1);
+    }
+  }
+
+
+
+
+
   void clearPunctureForm() {
     punctureSerialController.clear();
     mountedPosition4.value = "";
@@ -752,6 +919,10 @@ class DashboardController extends GetxController{
     status.value = "";
     vehicleNumberController.clear();
     mountedPosition2.value = "";
+    tirebrandField.clear();
+    tireplyField.clear();
+    tiresizeField.clear();
+    tireHealth.clear();
   }
   void clearWheelForm() {
     // Image
@@ -764,9 +935,9 @@ class DashboardController extends GetxController{
     vehicleNumberControllerWheel.clear();
 
     // Dropdowns / Rx values
-    selectedMaterial.value = "";
-    selectedWheelSize.value = "";
-    wheelCondition.value = "";
+    wheelConditionField.clear();
+    wheelSizeField.clear();
+    wheelMaterialField.clear();
     mountedPosition3.value = "";
     wheelStatus.value = "";
 
@@ -781,6 +952,7 @@ class DashboardController extends GetxController{
     tiredateController3.clear();
     mountedPosition5.value = "";
     severity.value = "";
+    noOfDamage.value = 0;
     damageType.value = "";
     isoFormat = "";
   }
@@ -790,6 +962,7 @@ class DashboardController extends GetxController{
     wheelNoteController.clear();
     mountedPosition6.value = "";
     severity1.value = "";
+    noOfDamage1.value = 0;
     damageType1.value = "";
     isoFormat = "";
   }

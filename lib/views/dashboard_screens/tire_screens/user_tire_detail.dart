@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/controllers/auth_controller.dart';
+import 'package:tire_eagle/controllers/dashboard_controller.dart';
 import 'package:tire_eagle/controllers/total_tire_controller.dart';
 import 'package:tire_eagle/utils/shared_prefrences_methods.dart';
 // Removed unused imports:
@@ -14,9 +15,7 @@ import 'package:tire_eagle/widgets/rotate_tire_dialog.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../constants/constants_widgets.dart';
-import '../../../controllers/dashboard_controller.dart';
 import '../../../controllers/user_tire_wheel_controller.dart';
-import '../../../utils/utility.dart';
 import '../../../widgets/back_button.dart';
 import '../../../widgets/button_widget.dart';
 import '../inventory_screen.dart';
@@ -25,15 +24,14 @@ import '../wheel_screens/total_wheels.dart';
 import '../wheel_screens/wheel_detail.dart';
 
 // --- MAIN CLASS ---
-class TireDetail extends StatelessWidget {
-  TireDetail({super.key});
+class UserTireDetail extends StatelessWidget {
+  UserTireDetail({super.key});
 
   // Controllers and Utilities
   final AuthController controller = Get.find<AuthController>();
   final TotalTireController totalTireController = Get.find<TotalTireController>();
   final UserTireWheelController userTireWheelController = Get.find<UserTireWheelController>();
   final DashboardController dashboardController = Get.find<DashboardController>();
-
   final prefs = SharedPreferencesMethod.storage;
   final bool iswheel = false;
 
@@ -50,21 +48,20 @@ class TireDetail extends StatelessWidget {
     final bool isHome = (args is List && args.length > 1 && args[1] != null)
         ? args[1] as bool
         : false;
-
     // Fetch data when the widget is first built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (tireId != null && tireId.isNotEmpty) {
-        totalTireController.GetTireById(tireId);
+        userTireWheelController.GetTireById(tireId);
       }
     });
 
     // Use Obx to rebuild the widget when the data model changes,
     // ensuring item is always up-to-date.
     return Obx(() {
-      final item = totalTireController.getTireByIdModel.value?.data;
+      final item = userTireWheelController.getTireByIdModel.value?.data;
       var isUser = prefs.getBool('isUser');
 
-
+      print('iam here ${item?.status}');
 
       // Helper functions defined here as they rely on the reactive 'item'
       double puncture() => (item?.totalDamage?.puncture ?? 0) / 20;
@@ -108,9 +105,9 @@ class TireDetail extends StatelessWidget {
                   Get.toNamed("totaltires");
                 }
 
-          }),
+              }),
         ),
-        body: totalTireController.isLoading.value == true ?
+        body: userTireWheelController.isLoading.value == true ?
         Center(child: CircularProgressIndicator(color: yellowColor)):
         SizedBox.expand(
           child: Column(
@@ -133,7 +130,7 @@ class TireDetail extends StatelessWidget {
 
                       // 4. Retread/Damage History Timeline
                       _RetreadHistoryTimeline(
-                        totalTireController: totalTireController,
+                        userTireWheelController: userTireWheelController,
                       ),
                     ],
                   ),
@@ -159,7 +156,7 @@ class TireDetail extends StatelessWidget {
         SizedBox(height: 2.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 5.w),
-          child: imageWidget(totalTireController.getTireByIdModel.value?.data?.imageUrl ?? '', height: 28.h),
+          child: imageWidget(userTireWheelController.getTireByIdModel.value?.data?.imageUrl ?? '', height: 28.h),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
@@ -272,9 +269,7 @@ class TireDetail extends StatelessWidget {
   }
 
   Widget _buildBottomActions(BuildContext context) {
-    final data = totalTireController.getTireByIdModel.value?.data;
-    final bool isDismounted = data?.status == "dismounted"; // ✅ moved outside Row
-
+    final data = userTireWheelController.getTireByIdModel.value?.data;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
       decoration: BoxDecoration(
@@ -299,12 +294,7 @@ class TireDetail extends StatelessWidget {
                   fontweight: FontWeight.w600,
                   path: "assets/png/wheel_detail/rotate.png",
                   onTap: () {
-                    showRotateTireDialog(
-                      context,
-                      vehicleNo: data?.vehicalNumber,
-                      position: data?.mountedPosition,
-                      tireType: data?.brand,
-                    );
+                    showRotateTireDialog(context, vehicleNo: data?.vehicalNumber, position: data?.mountedPosition, tireType: data?.brand);
                   },
                 ),
               ),
@@ -314,18 +304,14 @@ class TireDetail extends StatelessWidget {
                   "Dismount",
                   whiteColor,
                   fontsize: 14.sp,
-                  colors: isDismounted ? Colors.grey : buttonRedColor, // gray if disabled
+                  colors: buttonRedColor,
                   height: 4.7.h,
                   radius: 12.sp,
                   fontfaimly: 'Roboto',
                   fontweight: FontWeight.w600,
                   path: "assets/png/wheel_detail/dismount.png",
                   onTap: () {
-                    if (isDismounted) {
-                      Utils.showToast("Tire already dismounted", true);
-                    } else {
-                      confirmDismountDialog(context, iswheel: iswheel);
-                    }
+                    confirmDismountDialog(context,iswheel: iswheel);
                   },
                 ),
               ),
@@ -356,16 +342,14 @@ class TireDetail extends StatelessWidget {
       ),
     );
   }
-
-
 }
 
 // --- EXTRACTED TIMELINE WIDGET ---
 // This widget is complex and benefits most from extraction.
 class _RetreadHistoryTimeline extends StatelessWidget {
-  final TotalTireController totalTireController;
+  final UserTireWheelController userTireWheelController;
 
-  const _RetreadHistoryTimeline({required this.totalTireController});
+  const _RetreadHistoryTimeline({required this.userTireWheelController});
 
   // Helper function to group RETHREAD records by date (using dateOfDamage)
   Map<String, List<dynamic>> _groupRecordsRetread(List<dynamic>? records) {
@@ -411,8 +395,8 @@ class _RetreadHistoryTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get both records lists
-    final recordsReportDamage = totalTireController.getTireByIdModel.value?.data?.reportDamages;
-    final recordsRetread = totalTireController.getTireByIdModel.value?.data?.retreadRecords;
+    final recordsReportDamage = userTireWheelController.getTireByIdModel.value?.data?.reportDamages;
+    final recordsRetread = userTireWheelController.getTireByIdModel.value?.data?.retreadRecords;
 
     // Grouping
     final damagesByDate = _groupRecordsDamage(recordsReportDamage);
@@ -423,7 +407,7 @@ class _RetreadHistoryTimeline extends StatelessWidget {
 
     final hasRecords = damageDateKeys.isNotEmpty || retreadDateKeys.isNotEmpty;
 
-    if (totalTireController.isLoading.value) {
+    if (userTireWheelController.isLoading.value) {
       return const Center(child: CircularProgressIndicator(color: yellowColor));
     }
 
@@ -511,7 +495,7 @@ class _RetreadHistoryTimeline extends StatelessWidget {
                                 itemCount: recordsForDate.length,
                                 itemBuilder: (context, recordIndex) {
                                   final item = recordsForDate[recordIndex];
-                                  final sameData = totalTireController.getTireByIdModel.value?.data;
+                                  final sameData = userTireWheelController.getTireByIdModel.value?.data;
 
                                   return reminderWidget(
                                     sameData?.vehicalNumber ?? "-",
@@ -619,7 +603,7 @@ class _RetreadHistoryTimeline extends StatelessWidget {
                                 itemCount: tiresForDate.length,
                                 itemBuilder: (context, tireIndex) {
                                   final item = tiresForDate[tireIndex];
-                                  final sameData = totalTireController.getTireByIdModel.value?.data;
+                                  final sameData = userTireWheelController.getTireByIdModel.value?.data;
 
                                   return reminderWidget(
                                     sameData?.vehicalNumber ?? "",

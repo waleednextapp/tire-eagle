@@ -17,6 +17,7 @@ class SetPassword extends StatelessWidget {
   SetPassword({super.key});
 
   final ForgotPasswordController controller = Get.find<ForgotPasswordController>();
+  final AuthController authController = Get.find<AuthController>();
   GlobalKey<FormState> _resetPassword =  GlobalKey<FormState>();
 
   @override
@@ -88,7 +89,14 @@ class SetPassword extends StatelessWidget {
                   height: 6.h,
                   onTap: () async {
                     if(_resetPassword.currentState!.validate()){
-                      await controller.resetPassword(resetToken,email,context);
+                      if(authController.loginUserIndex.value == 1){
+                        await controller.resetUserPassword(resetToken,email,context);
+
+                      }
+                      else{
+                        await controller.resetPassword(resetToken,email,context);
+                      }
+
                     }
 
                     // successDialog(

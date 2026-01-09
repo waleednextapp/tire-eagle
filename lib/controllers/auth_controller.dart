@@ -71,8 +71,7 @@ class AuthController extends GetxController {
     loginEmailController.clear();
     loginPasswordController.clear();
   }
-
-  Future<void> signUp() async {
+  Future<void> userSignUp() async {
     final body = {
       'name': nameController.text.trim(),
       'email': signupEmailController.text.trim().toLowerCase(),
@@ -106,7 +105,108 @@ class AuthController extends GetxController {
   }
 
 
-  Future<void> login() async {
+  Future<void> fleetSignUp() async {
+    final body = {
+      'name': nameController.text.trim(),
+      'email': signupEmailController.text.trim().toLowerCase(),
+      'password': signupPasswordController.text.trim(),
+    };
+
+    final responseMap = await baseService.basePostAPI(
+      ApiEndPoints.signupFleet,
+      body,
+      loading: true,
+    );
+
+    // 👉 SABSE IMPORTANT CHECK
+    if (responseMap["success"] != true) {
+      // ❗Toast pehle BaseService mein show ho chuka hai
+      return;
+    }
+
+    // 👉 YAHAN TAK KA MATLAB API SUCCESS THI
+    // ---------------------------------------
+
+    final data = responseMap["data"];  // user object
+    if (data == null) return; // Safety guard
+    final prefs = SharedPreferencesMethod.storage;
+    await prefs.setString(LocalDBKeys.USERFULLNAME, nameController.text);
+    // 🚀 AB DASHBOARD PE JAO
+    Get.offAllNamed('/loginscreen');
+    clearSignupValues();
+
+    print("🎉 SIGNUP SUCCESS → ${data["email"]}");
+  }
+
+  Future<void> userLogin() async {
+    final body = {
+      'email': loginEmailController.text.trim().toLowerCase(),
+      'password': loginPasswordController.text.trim(),
+    };
+
+    try {
+      // 🔹 Call API
+      var a = await baseService.basePostAPI(
+        ApiEndPoints.loginUser,
+        body,
+        loading: true,
+      );
+
+      // 🔹 Check network issue
+      if (a == false) {
+        Utils.showToast('Check Internet Connection', true);
+        return;
+      }
+
+      // 🔹 Ensure response is Map
+      if (a is! Map<String, dynamic>) {
+        Utils.showToast(a.toString(), true);
+        return;
+      }
+
+      // 🔹 FIXED: Check for 'user' instead of 'fleetManager'
+      // Response mein "user" key aa rahi hai, isliye hum usey hi check karenge
+      if (a['data'] == null ||
+          a['data']['user'] == null ||
+          a['data']['token'] == null) {
+        Utils.showToast(a['message'] ?? 'Invalid email or password', true);
+        return;
+      }
+
+      // 🔹 Extract user & token
+      final user = a['data']['user']; // Changed from fleetManager to user
+      final token = a['data']['token'];
+
+      // 🔹 Save user data in SharedPreferences
+      final prefs = SharedPreferencesMethod.storage;
+
+      // Yahan hum save kar rahe hain taake app ko pata rahe user kaun hai
+      await prefs.setString(LocalDBKeys.USERDETAIL, jsonEncode(user));
+      await prefs.setString(LocalDBKeys.KHANTAR, loginPasswordController.text);
+      await prefs.setString(LocalDBKeys.USERFULLNAME, user['name'] ?? "");
+      await prefs.setString(LocalDBKeys.USEREMAIL, user['email'] ?? "");
+      await prefs.setString(LocalDBKeys.TOKEN, token ?? "");
+
+      // Note: Response mein phone aur profilePicture nahi hai, isliye empty string save hogi
+      await prefs.setString(LocalDBKeys.PHONENUMBER, user['phone'] ?? "");
+      await prefs.setString(LocalDBKeys.USERPROFILEPIC, user['profilePicture'] ?? "");
+
+      // 🔹 Show success message (false means green/success toast in your logic)
+      Utils.showToast(a['message'] ?? 'Login successful', false);
+
+      print('✅ Login Successful: ${user['email']}');
+
+      // 🔹 Ab ye dashboard par lazmi jayega
+      Get.offAllNamed('/bottomnavbar');
+
+      clearLoginValues();
+
+    } catch (e) {
+      Utils.showToast('Something went wrong. Please try again.', true);
+      print('❌ Login Error: $e');
+    }
+  }
+  Future<void> fleetLogin() async {
     final body = {
       'email': loginEmailController.text.trim().toLowerCase(),
       'password': loginPasswordController.text.trim(),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tire_eagle/widgets/button_widget.dart';
 import '../../constants/color_constants.dart';
 import '../constants/constants_widgets.dart';
 
@@ -73,6 +75,13 @@ void showDamageAlertDialog(BuildContext context) {
               color: Colors.black87,
               textAlign: TextAlign.center,
             ),
+            SizedBox(height: 1.5.h),
+            InkWell(
+              onTap: (){
+                Get.back();
+                Get.back();
+              },
+                child: buttonWidget("Ok", whiteColor,colors: yellowColor))
           ],
         ),
       ),

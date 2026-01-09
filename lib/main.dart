@@ -8,11 +8,18 @@ import 'package:tire_eagle/constants/color_constants.dart';
 import 'package:tire_eagle/controllers/auth_controller.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
 import 'package:tire_eagle/controllers/dismount_controller.dart';
+import 'package:tire_eagle/controllers/dispose_controller.dart';
 import 'package:tire_eagle/controllers/forgot_password_controller.dart';
 import 'package:tire_eagle/controllers/setting_controller.dart';
 import 'package:tire_eagle/controllers/total_tire_controller.dart';
+import 'package:tire_eagle/models/user_get_all_tire_model.dart';
 import 'package:tire_eagle/utils/App_Routing.dart';
 import 'package:tire_eagle/utils/init_binding.dart';
+
+import 'controllers/billing_and_invoice_controller.dart';
+import 'controllers/reminder_controller.dart';
+import 'controllers/user_dashboard_controller.dart';
+import 'controllers/user_tire_wheel_controller.dart';
 
 Future<void> main() async {
 
@@ -25,6 +32,11 @@ Get.put(DashboardController());
 Get.put(TotalTireController());
 Get.put(DismountController());
 Get.put(SettingController());
+Get.put(DisposeController());
+Get.put(BillingAndInvoiceController());
+Get.put(ReminderController());
+Get.put(UserDashboardController());
+Get.put(UserTireWheelController());
 
   runApp(const MyApp());
 }
@@ -44,6 +56,7 @@ class MyApp extends StatelessWidget {
             builder: EasyLoading.init(),
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
+            // showPerformanceOverlay: true,
             theme: ThemeData(
               scaffoldBackgroundColor: backgroundColor,
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

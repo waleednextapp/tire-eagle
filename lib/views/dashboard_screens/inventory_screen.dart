@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tire_eagle/components/common_image_view.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
 import 'package:tire_eagle/controllers/total_tire_controller.dart';
 import 'package:tire_eagle/views/dashboard_screens/wheel_screens/total_wheels.dart';
@@ -13,7 +12,6 @@ import '../../constants/color_constants.dart';
 import '../../constants/constants_widgets.dart';
 import '../../widgets/button_widget.dart';
 import '../../widgets/header_widget.dart';
-import 'fleet_home_screen.dart';
 
 class InventoryScreen extends StatelessWidget {
   InventoryScreen({super.key});
@@ -25,40 +23,20 @@ class InventoryScreen extends StatelessWidget {
     return Scaffold(
       body: CustomRefreshIndicator(
         onRefresh: () async {
-          await totalTireController.GetAllTireInventory();
-          await totalTireController.GetAllWheelInventory();
+          // Both list ko first page se reload karein
+          await totalTireController.GetAllTireInventory(page: 1);
+          await totalTireController.GetAllWheelInventory(page: 1);
         },
-        builder: (BuildContext context, Widget child, IndicatorController controller) {
+        // Pull-to-refresh builder is simple, as required.
+        builder: (BuildContext context, Widget child, IndicatorController indicatorController) {
           return child;
         },
-
-        // return Stack(
-        //   children: [
-        //     child, // Your scrollable content
-        //     // Optional: show custom loader only if you want
-        //     if (controller.isLoading || controller.value > 0)
-        //       Positioned(
-        //         top: 16,
-        //         left: 0,
-        //         right: 0,
-        //         child: Opacity(
-        //           opacity: controller.value.clamp(0.0, 1.0),
-        //           // Fade in effect
-        //           child: Container(
-        //             alignment: Alignment.center,
-        //             height: 30,
-        //             child: SizedBox.shrink(), // Hide spinner completely
-        //           ),
-        //         ),
-        //       ),
-        //   ],
-        // );
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(), // Allow pull even if content < screen
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ---------------- Your existing widgets ----------------
+              // ---------------- Header and Search ----------------
               Container(
                 color: whiteColor,
                 child: Padding(
@@ -75,33 +53,19 @@ class InventoryScreen extends StatelessWidget {
                     controller: totalTireController.searchController,
                     onChanged: (value) async {
                       if(controller.inventorySelectedIndex.value == 1) {
-                        if (value
-                            .trim()
-                            .isEmpty) {
-                          // agar empty hai to full list reload
-                          await totalTireController.GetAllTireInventory();
-                        } else {
-                          // filter by search value
-                          await totalTireController.GetAllTireInventory(
-                              search: value.trim());
-                        }
+                        // Tire Search Logic (Always starts from page 1)
+                        await totalTireController.GetAllTireInventory(search: value.trim(), page: 1);
                       }
                       else{
-                        if (value
-                            .trim()
-                            .isEmpty) {
-                          // agar empty hai to full list reload
-                          await totalTireController.GetAllWheelInventory();
-                        } else {
-                          // filter by search value
-                          await totalTireController.GetAllWheelInventory(
-                              search: value.trim());
-                        }
+                        // Wheel Search Logic (Always starts from page 1)
+                        await totalTireController.GetAllWheelInventory(search: value.trim(), page: 1);
                       }
                     },
                   ),
                 ),
               ),
+
+              // ---------------- Tab Selection (Tires/Wheels) ----------------
               Row(
                 children: [
                   Padding(
@@ -109,6 +73,10 @@ class InventoryScreen extends StatelessWidget {
                     child: InkWell(
                       onTap: () async {
                         controller.inventorySelectedIndex.value = 1;
+                        // Hamesha page 1 se load karein jab tab switch ho
+                        if (totalTireController.getTireInventory.value?.data?.items?.isEmpty ?? true) {
+                          await totalTireController.GetAllTireInventory(page: 1);
+                        }
                       },
                       child: Obx(() => Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,6 +107,10 @@ class InventoryScreen extends StatelessWidget {
                     child: InkWell(
                       onTap: () async {
                         controller.inventorySelectedIndex.value = 2;
+                        // Hamesha page 1 se load karein jab tab switch ho
+                        if (totalTireController.getWheelInventory.value?.data?.items?.isEmpty ?? true) {
+                          await totalTireController.GetAllWheelInventory(page: 1);
+                        }
                       },
                       child: Obx(() => Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -167,7 +139,7 @@ class InventoryScreen extends StatelessWidget {
               ),
               SizedBox(height: 2.h),
 
-              // ---------------- Tabs & Grid content ----------------
+              // ---------------- Secondary Tabs ----------------
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 6.w),
                 child: Obx(
@@ -211,128 +183,250 @@ class InventoryScreen extends StatelessWidget {
               ),
 
               SizedBox(height: 2.h),
+
+              // ---------------- Grid Content (Tire/Wheel) ----------------
               Obx(() {
                 if (controller.inventorySelectedIndex.value == 1) {
-                  // ---------- TIRE GRID ----------
+                  // ---------- TIRE GRID (Fixed List) ----------
+                  final items = totalTireController.getTireInventory.value?.data?.items ?? [];
+
+                  // 💡 NEW LOGIC: Show Centered Loader OR Empty State OR Grid View
                   if (totalTireController.isLoadingTireInventory.value) {
-                    return SizedBox(
-                      height: 60.h,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Center(
-                              child: CircularProgressIndicator(color: yellowColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    return _buildLoadingIndicator(); // Full-screen centered loader
                   }
 
-                  return totalTireController.getTireInventory.value?.data?.items?.isEmpty ?? true
-                      ? Center(
-                    child: customText(
-                      text: "No Tires In Inventory",
-                      fontSize: 15.sp,
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.w500,
-                    ),
-                  )
-                      : Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 6.w),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: totalTireController.getTireInventory.value?.data?.items?.length ?? 0,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 3.w,
-                        childAspectRatio: 0.5,
-                      ),
-                      itemBuilder: (context, index) {
-                        final item = totalTireController.getTireInventory.value?.data?.items?[index];
-                        return inventoryWidget(
-                          item?.imageUrl ?? '',
-                          item?.vehicalNumber ?? '',
-                          item?.brand ?? '',
-                          item?.tireSize ?? '',
-                          formatDate(item?.updatedAt ?? ''),
-                          item?.mountedPosition ?? '',
-                          item?.serialNumber ?? '',
-                          item?.status ?? '',
-                              () {
-                            Get.toNamed("tire");
+                  // Empty State (If loading is complete and list is empty)
+                  if (items.isEmpty) {
+                    return _buildEmptyState("No Tires Found In Inventory");
+                  }
+
+                  // Display Grid View
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6.w),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          physics: NeverScrollableScrollPhysics(), // Handled by SingleChildScrollView
+                          itemCount: items.length,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 3.w,
+                            childAspectRatio: 0.5,
+                          ),
+                          itemBuilder: (context, index) {
+                            final item = items[index];
+                            return inventoryWidget(
+                                item.imageUrl ?? '',
+                                item.vehicalNumber ?? '',
+                                item.brand ?? '',
+                                item.tireSize ?? '',
+                                formatDate(item.updatedAt),
+                                item.mountedPosition ?? '',
+                                item.serialNumber ?? '',
+                                item.status ?? '',
+                                    () {
+                                  Get.toNamed("tire");
+                                },
+                                ontapTwice: (){
+                                  totalTireController.deleteTire(item.serialNumber ?? '');
+                                }
+                            );
                           },
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+
+                      // 💡 PAGINATION CONTROLS FOR TIRE
+                      _buildPaginationControls(
+                        currentPage: totalTireController.currentTirePage.value,
+                        totalPages: totalTireController.totalTirePages.value,
+                        hasPrevPage: totalTireController.currentTirePage.value > 1,
+                        hasNextPage: totalTireController.hasNextTirePage.value,
+                        onPrev: totalTireController.loadPrevTirePage,
+                        onNext: totalTireController.loadNextTirePage,
+                        isLoading: totalTireController.isLoadingTireInventory.value,
+                      ),
+                    ],
                   );
                 } else {
-                  // ---------- WHEEL GRID ----------
+                  // ---------- WHEEL GRID (Fixed List) ----------
+                  final items = totalTireController.getWheelInventory.value?.data?.items ?? [];
+
+                  // 💡 NEW LOGIC: Show Centered Loader OR Empty State OR Grid View
                   if (totalTireController.isLoadingWheelInventory.value) {
-                    return SizedBox(
-                      height: 60.h,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Center(
-                              child: CircularProgressIndicator(color: yellowColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    return _buildLoadingIndicator(); // Full-screen centered loader
                   }
 
-                  return totalTireController.getWheelInventory.value?.data?.items?.isEmpty ?? true
-                      ? Center(
-                    child: customText(
-                      text: "No Wheel In Inventory",
-                      fontSize: 15.sp,
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.w500,
-                    ),
-                  )
-                      : Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 6.w),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: totalTireController.getWheelInventory.value?.data?.items?.length ?? 0,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 3.w,
-                        childAspectRatio: 0.5,
-                      ),
-                      itemBuilder: (context, index) {
-                        final item = totalTireController.getWheelInventory.value?.data?.items?[index];
-                        return inventoryWidget(
-                          item?.imageUrl ?? '',
-                          item?.vehicalNumber ?? '',
-                          item?.material ?? '',
-                          item?.wheelSize ?? '',
-                          formatDate(item?.updatedAt ?? ''),
-                          item?.mountedPosition ?? '',
-                          item?.serialNumber ?? '',
-                          item?.status ?? '',
-                              () {
-                            Get.toNamed("wheeldetails");
+                  // Empty State
+                  if (items.isEmpty) {
+                    return _buildEmptyState("No Wheels Found In Inventory");
+                  }
+
+                  // Display Grid View
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6.w),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: items.length,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 3.w,
+                            childAspectRatio: 0.5,
+                          ),
+                          itemBuilder: (context, index) {
+                            final item = items[index];
+                            return inventoryWidget(
+                                item.imageUrl ?? '',
+                                item.vehicalNumber ?? '',
+                                item.material ?? '',
+                                item.wheelSize ?? '',
+                                formatDate(item.updatedAt),
+                                item.mountedPosition ?? '',
+                                item.serialNumber ?? '',
+                                item.status ?? '',
+                                    () {
+                                  Get.toNamed("wheeldetails");
+                                },
+                                ontapTwice: (){
+                                  totalTireController.deleteWheel(item.serialNumber ?? '');
+                                }
+                            );
                           },
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+
+                      // 💡 PAGINATION CONTROLS FOR WHEEL
+                      _buildPaginationControls(
+                        currentPage: totalTireController.currentWheelPage.value,
+                        totalPages: totalTireController.totalWheelPages.value,
+                        hasPrevPage: totalTireController.currentWheelPage.value > 1,
+                        hasNextPage: totalTireController.hasNextWheelPage.value,
+                        onPrev: totalTireController.loadPrevWheelPage,
+                        onNext: totalTireController.loadNextWheelPage,
+                        isLoading: totalTireController.isLoadingWheelInventory.value,
+                      ),
+                    ],
                   );
                 }
               }),
+              SizedBox(height: 5.h), // Extra space at the bottom of the scroll view
             ],
           ),
         ),
       ),
     );
   }
+
+  // ---------------- HELPER WIDGETS FOR PAGINATION AND STATE ----------------
+
+  Widget _buildLoadingIndicator() {
+    // This is the centered loader for initial/empty state
+    return SizedBox(
+      height: 60.h,
+      child: Center(
+        child: CircularProgressIndicator(color: yellowColor),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(String text) {
+    return SizedBox(
+      height: 60.h, // Ensure it takes up enough space to be visible clearly
+      child: Center(
+        child: customText(
+          text: text,
+          fontSize: 15.sp,
+          fontFamily: "Roboto",
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaginationControls({
+    required int currentPage,
+    required int totalPages,
+    required bool hasPrevPage,
+    required bool hasNextPage,
+    required VoidCallback onPrev,
+    required VoidCallback onNext,
+    required bool isLoading,
+  }) {
+    // Agar sirf ek page hai ya koi data nahi hai toh controls nahi dikhayenge
+    if (totalPages <= 1) {
+      return SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 6.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Previous Button
+          InkWell(
+            onTap: isLoading || !hasPrevPage ? null : onPrev,
+            child: Container(
+              padding: EdgeInsets.all(3.w),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: hasPrevPage && !isLoading ? yellowColor : Colors.grey.shade300,
+              ),
+              child: Icon(
+                Icons.arrow_back_ios_new,
+                size: 3.w,
+                color: hasPrevPage && !isLoading ? blackColor : Colors.grey.shade600,
+              ),
+            ),
+          ),
+
+          SizedBox(width: 4.w),
+
+          // Page Status / Loader (This is the loader you wanted to keep for pagination)
+          isLoading
+              ? SizedBox(
+              width: 5.w,
+              height: 5.w,
+              child: CircularProgressIndicator(strokeWidth: 2, color: yellowColor)
+          )
+              : customText(
+            text: "Page $currentPage of $totalPages",
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            color: blackColor,
+          ),
+
+          SizedBox(width: 4.w),
+
+          // Next Button
+          InkWell(
+            onTap: isLoading || !hasNextPage ? null : onNext,
+            child: Container(
+              padding: EdgeInsets.all(3.w),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: hasNextPage && !isLoading ? yellowColor : Colors.grey.shade300,
+              ),
+              child: Icon(
+                Icons.arrow_forward_ios,
+                size: 3.w,
+                color: hasNextPage && !isLoading ? blackColor : Colors.grey.shade600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+// --
+// The rest of the helper widgets (`inventoryWidget` and `imageWidget`) remain unchanged.
+
 Widget inventoryWidget(
     String path,
     String name,
@@ -343,6 +437,7 @@ Widget inventoryWidget(
     String serialNo,
     String status,
     VoidCallback ontap,
+    {VoidCallback? ontapTwice}
     ){
   return Container(
     width: 42.w,
@@ -505,9 +600,7 @@ Widget inventoryWidget(
                 height: 3.5.h,
                 width: double.infinity,
                 fontsize: 13.sp,
-                onTap: (){
-
-                }
+                onTap: ontapTwice
 
             ),
           ),

@@ -193,14 +193,18 @@ void showRotateTireDialog(BuildContext context, {String? vehicleNo, String? posi
                         items: controller.positions.map((position) {
                           return DropdownMenuItem<String>(
                             value: position,
-                            child: customText(
-                              text: position,
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "Barlow",
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 12.0), // <-- add left padding here
+                              child: customText(
+                                text: position,
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: "Barlow",
+                              ),
                             ),
                           );
                         }).toList(),
+
                       ),
                     ),
                   ),
