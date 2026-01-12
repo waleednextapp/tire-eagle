@@ -65,7 +65,7 @@ class AppRoutes {
     GetPage(name: '/invoice', page: () => InvoiceDetailScreen()),
     GetPage(name: '/rethread', page: () => SendForRethread()),
     GetPage(name: '/selectdismountreason', page: () => SelectDismountReason()),
-    GetPage(name: '/assignstoragelocation', page: () => AssignStorageLocation()),
+    // GetPage(name: '/assignstoragelocation', page: () => AssignStorageLocation()),
     GetPage(name: '/assignstoragelocationone', page: () => AssignStorageLocationOne()),
     GetPage(name: '/usergettirebyid', page: () => UserTireDetail()),
     GetPage(name: '/usergetwheelbyid', page: () => UserWheelDetail()),

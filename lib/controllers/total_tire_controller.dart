@@ -23,6 +23,7 @@ class TotalTireController extends GetxController{
   RxBool isLoadingWheelInventory = true.obs;
   final prefs = SharedPreferencesMethod.storage;
   bool? isUser;
+  RxBool? isHome= false.obs;
   BaseService baseService = BaseService();
   Rx<TireModel?> tireModel = Rx<TireModel?>(null);
   Rx<WheelModel?> wheelModel = Rx<WheelModel?>(null);
@@ -32,7 +33,7 @@ class TotalTireController extends GetxController{
   Rx<GetWheelInventory?> getWheelInventory = Rx<GetWheelInventory?>(null);
   final TextEditingController searchController = TextEditingController();
   final TextEditingController technicianNoteController = TextEditingController();
-
+  final TextEditingController serialController = TextEditingController();
   // 💡 Pagination State Variables for Tires (Inventory) - REQUIRED FOR INVENTORY SCREEN
   RxInt currentTirePage = 1.obs;
   RxBool hasNextTirePage = false.obs;

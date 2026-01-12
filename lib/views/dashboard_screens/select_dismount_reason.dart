@@ -194,8 +194,11 @@ class SelectDismountReason extends StatelessWidget {
                           print(controller.otherReasonController.text.trim());
                           return;
                         }
-
-                        Get.toNamed("assignstoragelocation",arguments: isWheel);
+                        isWheel== false ?
+                        controller.DismountTire(context,isWheel: isWheel):
+                        controller.DismountWheel(context,isWheel: isWheel);
+                        // Get.toNamed("assignstoragelocation",arguments: isWheel);
+                        Get.toNamed("assignstoragelocationone",arguments: isWheel);
                       }
                   ),
                 ),
@@ -291,10 +294,10 @@ Widget dismountProgressWidget({Color? containerColor,Color? textColor, Color? co
       dashContainer(yellowColor),
       SizedBox(width: 4.w),
       progressContainerWidget(2, textColor ?? dismountGreyColor, containerColor ?? rotateTireTextFeildColor),
-      SizedBox(width: 4.w),
-      dashContainer(centerContainerColor ?? rotateTireTextFeildColor),
-      SizedBox(width: 4.w),
-      progressContainerWidget(3, textColor3 ?? dismountGreyColor, containerColor3 ?? rotateTireTextFeildColor),
+      // SizedBox(width: 4.w),
+      // dashContainer(centerContainerColor ?? rotateTireTextFeildColor),
+      // SizedBox(width: 4.w),
+      // progressContainerWidget(3, textColor3 ?? dismountGreyColor, containerColor3 ?? rotateTireTextFeildColor),
     ],
   );
 }
@@ -320,7 +323,7 @@ Widget progressContainerWidget(int num, Color color, Color containerColor) {
 
 Widget dashContainer(Color color) {
   return Container(
-    width: 10.w,
+    width: 15.w,
     height: 0.5.h,
     decoration: BoxDecoration(color: color),
   );

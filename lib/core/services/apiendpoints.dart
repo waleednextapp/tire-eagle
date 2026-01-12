@@ -70,12 +70,12 @@ static String returnDisposedUrl(String type){
     // Construct the URL with required 'type' and optional 'page' and 'limit' parameters.
     return '/api/fleet/reminder/all-items?type=$type&page=$page&limit=$limit';
   }
-  static String getHistoryAndReportUrl({int? page,int? limit,String? quickRange,String? startDate,String? endDate}){
-    if(startDate !=null || endDate != null){
-      return '/api/fleet/history?page=$page&limit=$limit&startDate=$startDate&endDate=$endDate';
-    }
-    else{
-      return '/api/fleet/history?page=1&limit=10&quickRange=$quickRange';
+  static String getHistoryAndReportUrl({int? page, int? limit, String? quickRange, String? startDate, String? endDate, String? search}) {
+    if (startDate != null || endDate != null) {
+      return '/api/fleet/history?page=$page&limit=$limit&startDate=$startDate&endDate=$endDate&search=${search ?? ""}';
+    } else {
+      // Exact pattern: ?page=1&limit=10&quickRange=lastMonth&search=SN-020342
+      return '/api/fleet/history?page=$page&limit=$limit&quickRange=$quickRange&search=${search ?? ""}';
     }
   }
 

@@ -27,6 +27,7 @@ class DashboardController extends GetxController{
   var reportIndexTab = 0.obs;
   var addNewTab = 0.obs;
   var reportDamageTab = 0.obs;
+  var isTire = false.obs;
   BaseService baseService = BaseService();
   Rx<HomeModel?> homeModel = Rx<HomeModel?>(null);
   Rx<HistoryAndReportModel?> historyModel = Rx<HistoryAndReportModel?>(null);
@@ -46,44 +47,44 @@ class DashboardController extends GetxController{
   final historyFilteredWheels = <Wheels>[].obs;
 
   // --- ADD THE searchHistory FUNCTION ---
-  void searchHistory(int index, String query) {
-    final lowerQuery = query.toLowerCase();
-
-    // 1. If query is empty, clear the filtered lists to show full history (handled by ListView logic)
-    if (query.isEmpty) {
-      historyFilteredTires.clear();
-      historyFilteredWheels.clear();
-      return;
-    }
-
-    // 2. Access the main history list from the reactive model
-    // Note: We access entries directly from the historyModel
-    final entries = historyModel.value?.data?.entries ?? [];
-
-    if (index == 0) { // Tire Tab selected
-      // Expand all nested tires into a single flat list and filter them by serial number
-      final List<Tiresfull> filteredTiresList = entries
-          .expand<Tiresfull>((e) => e.tires ?? [])
-          .where((t) => (t.serialNumber ?? "").toLowerCase().contains(lowerQuery))
-          .toList();
-
-      // Update the OBSERVED list using .value = to trigger the UI rebuild
-      historyFilteredTires.value = filteredTiresList;
-      historyFilteredWheels.clear(); // Clear the other list
-    } else { // Wheel Tab selected
-      // Expand all nested wheels into a single flat list and filter them by serial number
-      final List<Wheels> filteredWheelsList = entries
-          .expand<Wheels>((e) => e.wheels ?? [])
-          .where((w) => (w.serialNumber ?? "").toLowerCase().contains(lowerQuery))
-          .toList();
-
-      // Update the OBSERVED list using .value = to trigger the UI rebuild
-      historyFilteredWheels.value = filteredWheelsList;
-      historyFilteredTires.clear(); // Clear the other list
-    }
-
-    print("Filtered counts → Tires: ${historyFilteredTires.length}, Wheels: ${historyFilteredWheels.length}");
-  }
+  // void searchHistory(int index, String query) {
+  //   final lowerQuery = query.toLowerCase();
+  //
+  //   // 1. If query is empty, clear the filtered lists to show full history (handled by ListView logic)
+  //   if (query.isEmpty) {
+  //     historyFilteredTires.clear();
+  //     historyFilteredWheels.clear();
+  //     return;
+  //   }
+  //
+  //   // 2. Access the main history list from the reactive model
+  //   // Note: We access entries directly from the historyModel
+  //   final entries = historyModel.value?.data?.entries ?? [];
+  //
+  //   if (index == 0) { // Tire Tab selected
+  //     // Expand all nested tires into a single flat list and filter them by serial number
+  //     final List<Tiresfull> filteredTiresList = entries
+  //         .expand<Tiresfull>((e) => e.tires ?? [])
+  //         .where((t) => (t.serialNumber ?? "").toLowerCase().contains(lowerQuery))
+  //         .toList();
+  //
+  //     // Update the OBSERVED list using .value = to trigger the UI rebuild
+  //     historyFilteredTires.value = filteredTiresList;
+  //     historyFilteredWheels.clear(); // Clear the other list
+  //   } else { // Wheel Tab selected
+  //     // Expand all nested wheels into a single flat list and filter them by serial number
+  //     final List<Wheels> filteredWheelsList = entries
+  //         .expand<Wheels>((e) => e.wheels ?? [])
+  //         .where((w) => (w.serialNumber ?? "").toLowerCase().contains(lowerQuery))
+  //         .toList();
+  //
+  //     // Update the OBSERVED list using .value = to trigger the UI rebuild
+  //     historyFilteredWheels.value = filteredWheelsList;
+  //     historyFilteredTires.clear(); // Clear the other list
+  //   }
+  //
+  //   print("Filtered counts → Tires: ${historyFilteredTires.length}, Wheels: ${historyFilteredWheels.length}");
+  // }
 
   TextEditingController searchController = TextEditingController();
   RxList<Tires> filteredTires = <Tires>[].obs;
@@ -525,6 +526,8 @@ class DashboardController extends GetxController{
       'vehicalNumber': vehicleNumberController.text.trim(),
       'mountedPosition': mountedPosition2.value.trim(),
       'status': status.value.trim(),
+      'tireHealth': tireHealth.text.trim(),
+
     };
 
     final responseMap = await baseService.basePostAPI(
@@ -817,8 +820,8 @@ class DashboardController extends GetxController{
   }
 
 
-// 💡 Updated History and Report Get Api
-  Future<void> GetHistoryAndReport({int page = 1,String? quickRange,String? startDate, String? endDate}) async {
+// API Function mein searchQuery parameter add kiya
+  Future<void> GetHistoryAndReport({int page = 1, String? quickRange, String? startDate, String? endDate, String? searchQuery}) async {
     try {
       isLoading.value = true;
       currentHistoryPage.value = page;
@@ -830,6 +833,7 @@ class DashboardController extends GetxController{
           quickRange: quickRange,
           startDate: startDate,
           endDate: endDate,
+          search: searchQuery, // 👈 Ye link zaroori tha
         ),
       );
 
@@ -840,31 +844,60 @@ class DashboardController extends GetxController{
 
       historyModel.value = HistoryAndReportModel.fromJson(responseData);
 
-      // --- ✅ Correct Pagination Variable Update ---
-
-      // 1. Access the 'data' object first
+      // Pagination Logic
       final data = responseData["data"] ?? {};
-
-      // 2. Access 'pagination' object from within 'data'
       final meta = data["pagination"] ?? {};
-
-      print("I-------am here $meta"); // This should now print the pagination data
-
-      // 3. Update variables using the API's key names
       totalHistoryPages.value = meta["totalPages"] ?? 1;
-      // API uses 'page' key for current page
       currentHistoryPage.value = meta["page"] ?? page;
-      // API provides 'hasNextPage' directly
       hasNextHistoryPage.value = meta["hasNextPage"] ?? (currentHistoryPage.value < totalHistoryPages.value);
 
     } catch (e) {
-      print("❌ History() ERROR: $e");
-      Utils.showToast("Unexpected error occurred", true);
+      print("❌ History API ERROR: $e");
     } finally {
       isLoading.value = false;
     }
   }
 
+// Search Function mein API Hit add ki
+  void searchHistory(int index, String query) {
+    final lowerQuery = query.toLowerCase();
+
+    // 1. Agar search khali hai to current selected tab ki range ke sath wapas data lao
+    if (query.isEmpty) {
+      historyFilteredTires.clear();
+      historyFilteredWheels.clear();
+
+      String? currentRange;
+      if (reportIndexTab.value == 0) currentRange = "lastWeek";
+      else if (reportIndexTab.value == 1) currentRange = "lastMonth";
+      else if (reportIndexTab.value == 2) currentRange = "last3Months";
+
+      GetHistoryAndReport(quickRange: currentRange);
+      return;
+    }
+
+    // 2. Local Filtering (Instant UI update ke liye jo aapne likha tha)
+    final entries = historyModel.value?.data?.entries ?? [];
+    if (index == 0) {
+      historyFilteredTires.value = entries.expand<Tiresfull>((e) => e.tires ?? [])
+          .where((t) => (t.serialNumber ?? "").toLowerCase().contains(lowerQuery)).toList();
+    } else {
+      historyFilteredWheels.value = entries.expand<Wheels>((e) => e.wheels ?? [])
+          .where((w) => (w.serialNumber ?? "").toLowerCase().contains(lowerQuery)).toList();
+    }
+
+    // 3. ✅ API HIT FIX: Current selected range ko dhundo aur search ke sath bhejo
+    String? activeRange;
+    if (reportIndexTab.value == 0) activeRange = "lastWeek";
+    else if (reportIndexTab.value == 1) activeRange = "lastMonth";
+    else if (reportIndexTab.value == 2) activeRange = "last3Months";
+
+    // Ab search hit karo range ke sath taake URL mein null na jaye
+    GetHistoryAndReport(
+        searchQuery: query,
+        quickRange: activeRange
+    );
+  }
 // 💡 Pagination methods still call GetAllTire, using the page argument for state management
 // 💡 History/Report Pagination methods
   void loadNextHistoryPage() {

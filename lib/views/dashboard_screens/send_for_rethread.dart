@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tire_eagle/controllers/dashboard_controller.dart';
+import 'package:tire_eagle/controllers/total_tire_controller.dart';
 import 'package:tire_eagle/widgets/button_widget.dart';
 import 'package:tire_eagle/widgets/customTextFeild.dart';
 import 'package:tire_eagle/widgets/report_rethread_dialog.dart';
@@ -14,9 +15,11 @@ class SendForRethread extends StatelessWidget {
   SendForRethread({super.key});
 
   final DashboardController controller = Get.find<DashboardController>();
+  final TotalTireController tireController = Get.find<TotalTireController>();
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -31,7 +34,10 @@ class SendForRethread extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        leading: backButton(),
+        leading: backButton(onTap: (){
+          Get.back();
+          controller.isTire.value = false;
+        }),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -39,11 +45,26 @@ class SendForRethread extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              customTextFeildM(
-                "Serial Number",
-                "Enter serial number",
-               controller: controller.rethreadSerialNo
-              ),
+              Obx(() {
+                if (controller.isTire.value) {
+                  // Prefill with tire serial number
+                  tireController.serialController.text = tireController.getTireByIdModel.value?.data?.serialNumber ?? "";
+                  return customTextFeildM(
+                    "Serial Number",
+                    "Enter serial number",
+                    readonly: true,
+                    controller: tireController.serialController,
+                  );
+                } else {
+                  // Clear the controller when isTire is false
+                  tireController.serialController.clear();
+                  return customTextFeildM(
+                    "Serial Number",
+                    "Enter serial number",
+                    controller: controller.rethreadSerialNo,
+                  );
+                }
+              }),
               SizedBox(height: 0.5.h,),
               Obx(
                     () => customDropdownField<String>(
@@ -157,27 +178,63 @@ class SendForRethread extends StatelessWidget {
                 blackColor,
                 colors: yellowColor,
                 onTap: () async {
-                  if (controller.rethreadSerialNo.text.isEmpty ||
-                      controller.mountedPosition7.value.isEmpty || // ✅ Added
-                      controller.rethreadCenterName.text.isEmpty ||
-                      controller.rethreadAvgCost.text.isEmpty ||
-                      controller.rethreadPickupLogistics.text.isEmpty ||
-                      controller.rethreadDateofDamage.text.isEmpty ||
-                      controller.rethreadReturnDate.text.isEmpty) {
+                  // If isTire is false, use user input controller
+                  if (controller.isTire.value == false) {
+                    if (
+                    controller.rethreadSerialNo.text.isEmpty ||
+                        controller.mountedPosition7.value.isEmpty ||
+                        controller.rethreadCenterName.text.isEmpty ||
+                        controller.rethreadAvgCost.text.isEmpty ||
+                        controller.rethreadPickupLogistics.text.isEmpty ||
+                        controller.rethreadDateofDamage.text.isEmpty ||
+                        controller.rethreadReturnDate.text.isEmpty
+                    ) {
+                      Get.snackbar(
+                        "Error",
+                        "Please fill all form fields",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.redAccent,
+                        colorText: whiteColor,
+                      );
+                      return;
+                    }
+                  }
+                  // If isTire is true, use the tire's serial number from controller
+                  else {
+                    // Pre-fill the serial number only if the field is empty
+                    if (controller.rethreadSerialNo.text.isEmpty) {
+                      controller.rethreadSerialNo.text = tireController.getTireByIdModel.value?.data?.serialNumber ?? "";
+                    }
 
-                    Get.snackbar(
-                      "Error",
-                      "Please fill all form fields",
-                      snackPosition: SnackPosition.BOTTOM,
-                      backgroundColor: Colors.redAccent,
-                      colorText: Colors.white,
-                    );
-                    return;
+                    if (
+                    controller.mountedPosition7.value.isEmpty ||
+                        controller.rethreadCenterName.text.isEmpty ||
+                        controller.rethreadAvgCost.text.isEmpty ||
+                        controller.rethreadPickupLogistics.text.isEmpty ||
+                        controller.rethreadDateofDamage.text.isEmpty ||
+                        controller.rethreadReturnDate.text.isEmpty
+                    ) {
+                      Get.snackbar(
+                        "Error",
+                        "Please fill all form fields",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.redAccent,
+                        colorText: whiteColor,
+                      );
+
+                      // Clear the serial number if you want to reset after error
+                      controller.rethreadSerialNo.clear();
+                      return;
+                    }
+                    controller.isTire.value = false;
                   }
 
+print("hi iam here ${controller.isTire.value}");
+                  // Finally, call the send method
                   await controller.sendForRethread(context);
                 },
               ),
+
 
               SizedBox(height: 5.h),
             ],

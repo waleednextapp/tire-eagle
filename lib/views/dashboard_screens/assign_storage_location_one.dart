@@ -8,6 +8,7 @@ import '../../constants/color_constants.dart';
 import '../../constants/constants_widgets.dart';
 import '../../controllers/dashboard_controller.dart';
 import '../../controllers/dismount_controller.dart';
+import '../../controllers/total_tire_controller.dart';
 import '../../widgets/back_button.dart';
 import '../../widgets/button_widget.dart';
 import '../../widgets/success_dialog.dart';
@@ -16,8 +17,12 @@ import 'assign_storage_location.dart';
 class AssignStorageLocationOne extends StatelessWidget {
   AssignStorageLocationOne({super.key});
   final DismountController controller = Get.find<DismountController>();
+  final TotalTireController totalTireController = Get.find<TotalTireController>();
   @override
   Widget build(BuildContext context) {
+    // Dismount Reason ko yahan fetch kar lete hain
+    final String dismountReason = controller.getSelectedDismountReason();
+
     final isWheel = Get.arguments;
     return Scaffold(
       appBar: AppBar(
@@ -235,7 +240,40 @@ class AssignStorageLocationOne extends StatelessWidget {
                   //     ],
                   //   ),
                   // ),
-
+// --- TIRE INFORMATION CONTAINER ---
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: lightBlueColor,
+                        border: Border.all(
+                          color: textFeildBorderColor,
+                          width: 0.3.w,
+                        ),
+                        borderRadius: BorderRadius.circular(12.sp),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            customText(
+                              text: isWheel == false ? "Tire Information" : "Wheel Information",
+                              fontSize: 15.sp,
+                              fontFamily: "Barlow",
+                              fontWeight: FontWeight.w500,
+                              color: textBrownColor,
+                            ),
+                            SizedBox(height: 0.5.h),
+                            tireInfromation("ID:", isWheel== false ? totalTireController.getTireByIdModel.value?.data?.vehicalNumber ?? '':totalTireController.getWheelByIdModel.value?.data?.vehicalNumber ?? ''),
+                            tireInfromation(isWheel == false? "Model:" : "Material:", isWheel==false ? totalTireController.getTireByIdModel.value?.data?.brand ?? '':totalTireController.getWheelByIdModel.value?.data?.material ?? ''),
+                            // 💡 Dismount Reason ko switch case function se liya
+                            tireInfromation("Dismount Reason:", dismountReason)
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -277,8 +315,8 @@ class AssignStorageLocationOne extends StatelessWidget {
                       "Ok",
                           () {
                         isWheel == false ?
-                        Get.toNamed("tire"):
-                        Get.toNamed("wheeldetails");
+                        Get.offNamed("bottomnavbar"):
+                        Get.offNamed("bottomnavbar");
                       },
                     );
                     }

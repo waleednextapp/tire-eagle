@@ -566,6 +566,8 @@ class HomeScreen extends StatelessWidget {
                                   getTireColor(item.tireHealth ?? 0),
                                   item.tireHealth ?? 0,
                                   id: item.id,
+                                  distance: (item.remainingDistance ?? 0).toString(),
+
                                 ),
                               );
                             },
@@ -837,7 +839,7 @@ Widget directionWidget() {
   );
 }
 
-Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color color,int tireHealth,{String? id,bool? isHome = true}){
+Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color color,int tireHealth,{String? id,bool? isHome = true,String? distance}){
   final TotalTireController tireController = Get.find<TotalTireController>();
   return Container(
     width: 88.w,
@@ -936,11 +938,11 @@ Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color colo
                                   borderRadius: BorderRadius.circular(12.sp),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 4.w,vertical: 0.5.h),
+                                  padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 0.5.h),
                                   child: Column(
                                     children: [
                                       customText(
-                                          text: "44",
+                                          text: "${distance}",
                                           fontSize: 14.sp,
                                           fontFamily: "Roboto",
                                           fontWeight: FontWeight.w600,
@@ -1028,11 +1030,12 @@ Widget tireDetailWidget(String tno,String status,String lastcheckdate,Color colo
                     child: InkWell(
                       onTap: (){
                         if(tireController.isUser == false){
-                          Get.toNamed("tire", arguments: [id, isHome]); // List me do values
-
+                          Get.toNamed("tire", arguments: id); // List me do values
+                            tireController.isHome?.value = true;
                         }
                         else{
-                          Get.toNamed("usergettirebyid",arguments: [id, isHome]);
+                          Get.toNamed("usergettirebyid",arguments: id);
+                          tireController.isHome?.value = true;
                         }
 
                       },

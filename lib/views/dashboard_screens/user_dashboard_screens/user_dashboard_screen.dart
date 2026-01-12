@@ -281,6 +281,7 @@ class UserDashboardScreen extends StatelessWidget {
                                   getTireColor(item.tireHealth ?? 0),
                                   item.tireHealth ?? 0,
                                   id: item.id,
+                                  distance: (item.remainingDistance ?? 0).toString(),
                                 ),
                               );
                             },

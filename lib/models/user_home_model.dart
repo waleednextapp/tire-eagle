@@ -90,6 +90,7 @@ class Tires {
   String? brand;
   String? tireSize;
   int? tireHealth;
+  int? remainingDistance;
   String? vehicleNumber;
   String? mountedPosition;
   String? status;
@@ -102,6 +103,7 @@ class Tires {
     this.brand,
     this.tireSize,
     this.tireHealth,
+    this.remainingDistance,
     this.vehicleNumber,
     this.mountedPosition,
     this.status,
@@ -115,6 +117,7 @@ class Tires {
     brand = json['brand'] as String?;
     tireSize = json['tireSize'] as String?;
     tireHealth = json['tireHealth'] as int?;
+    remainingDistance = json['remainingDistance'] as int?;
     vehicleNumber = json['vehicleNumber'] as String?;
     mountedPosition = json['mountedPosition'] as String?;
     status = json['status'] as String?;
@@ -129,6 +132,7 @@ class Tires {
     json['brand'] = brand;
     json['tireSize'] = tireSize;
     json['tireHealth'] = tireHealth;
+    json['remainingDistance'] = remainingDistance;
     json['vehicleNumber'] = vehicleNumber;
     json['mountedPosition'] = mountedPosition;
     json['status'] = status;

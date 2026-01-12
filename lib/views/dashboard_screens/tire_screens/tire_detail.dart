@@ -39,17 +39,7 @@ class TireDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = Get.arguments;
-
-// Safe way to get id
-    final String tireId = (args is List && args.isNotEmpty && args[0] != null)
-        ? args[0].toString()
-        : (args != null ? args.toString() : "");
-
-// Optional second param (bool or whatever)
-    final bool isHome = (args is List && args.length > 1 && args[1] != null)
-        ? args[1] as bool
-        : false;
+    final String tireId = Get.arguments?.toString() ?? "";
 
     // Fetch data when the widget is first built
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -97,15 +87,16 @@ class TireDetail extends StatelessWidget {
           ),
           leading: backButton(
               onTap: (){
-                if(isHome == true){
+                if(totalTireController.isHome == true){
                   // 1. Update the controller state first
                   dashboardController.currentIndex.value = 0;
 
                   // 2. Then perform the navigation
                   Get.offAllNamed('/bottomnavbar');
+                  totalTireController.isHome?.value = false;
                 }
                 else{
-                  Get.toNamed("totaltires");
+                  Get.back();
                 }
 
           }),
@@ -347,7 +338,11 @@ class TireDetail extends StatelessWidget {
               fontweight: FontWeight.w600,
               path: "assets/png/wheel_detail/rethread.png",
               onTap: () {
-                Get.toNamed("rethread");
+                dashboardController.isTire.value = true;
+                print(dashboardController.isTire.value);
+                Get.toNamed(
+                  "rethread",
+                );
               },
             ),
           ),

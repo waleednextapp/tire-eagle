@@ -234,19 +234,19 @@ class AddNewTire extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              // SizedBox(height: 0.5.h),
-                              // customTextFeildM(
-                              //   "Tire Health",
-                              //   "60 %",
-                              //   controller: controller.tireHealth,
-                              // ),
-                              // SizedBox(height: 0.5.h),
-                              // customText(
-                              //   text: "Tire Placement",
-                              //   fontSize: 15.sp,
-                              //   fontFamily: "Barlow",
-                              //   fontWeight: FontWeight.w300,
-                              // ),
+                              SizedBox(height: 0.5.h),
+                              customTextFeildM(
+                                "Tire Health",
+                                "60 %",
+                                controller: controller.tireHealth,
+                              ),
+                              SizedBox(height: 0.5.h),
+                              customText(
+                                text: "Tire Placement",
+                                fontSize: 15.sp,
+                                fontFamily: "Barlow",
+                                fontWeight: FontWeight.w300,
+                              ),
                               SizedBox(height: 0.5.h),
                               Obx(() => customDropdownField<String>(
                                 title: "Status",
@@ -291,7 +291,7 @@ class AddNewTire extends StatelessWidget {
                                         controller.tirebrandField.text.isEmpty ||
                                         controller.tiresizeField.text.isEmpty ||
                                         controller.tireplyField.text.isEmpty ||
-                                        // controller.tireHealth.text.isEmpty ||
+                                        controller.tireHealth.text.isEmpty ||
                                         controller.status.value.isEmpty ||
                                         controller.vehicleNumberController.text.isEmpty ||
                                         controller.mountedPosition2.value.isEmpty) {
