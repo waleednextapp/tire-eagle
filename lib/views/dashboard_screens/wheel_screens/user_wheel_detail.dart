@@ -495,7 +495,7 @@ class _RetreadHistoryTimeline extends StatelessWidget {
                                 status: sameData?.status ?? "-",
                                 index: recordIndex,
                                 onNextTap: () {
-                                  Get.toNamed("tire", arguments: item?.id ?? "");
+                                  // Get.toNamed("tire", arguments: item?.id ?? "");
                                   print("Damage Report ID: ${item?.id ?? ""}");
                                 },
                               );

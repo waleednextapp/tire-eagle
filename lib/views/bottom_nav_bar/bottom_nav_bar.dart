@@ -27,24 +27,23 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   final DashboardController controller = Get.find<DashboardController>();
-  final AuthController authController = Get.find<AuthController>();
   final TotalTireController totalTireController = Get.find<TotalTireController>();
   final UserDashboardController userDashboardController = Get.find<UserDashboardController>();
   final UserTireWheelController userTireWheelController = Get.find<UserTireWheelController>();
   late PageController _pageController;
   final prefs = SharedPreferencesMethod.storage;
-  bool? isUser;
-  // WidgetsBinding.instance.addPostFrameCallback((_) {
-  // dashboardController.home();
-  // });
+
   @override
   void initState() {
-    super.initState(); // Always call super first
-    isUser = prefs.getBool('isUser') ?? false;
+    super.initState();
 
-    // Move API calls here to prevent "setState() during build"
+    // 💡 Har dafa fresh value check karein
+    bool currentStatus = prefs.getBool('isUser') ?? false;
+    totalTireController.isUser.value = currentStatus;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (isUser == false) {
+      print("API TRIGGERED FOR ISUSER: $currentStatus");
+      if (currentStatus == false) {
         controller.home();
         totalTireController.GetAllTireInventory();
         totalTireController.GetAllWheelInventory();
@@ -56,13 +55,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
       }
     });
 
-    _pageController = PageController(
-      initialPage: controller.currentIndex.value,
-    );
-
+    _pageController = PageController(initialPage: controller.currentIndex.value);
     controller.setPageController(_pageController);
 
-    // Listen for index changes
     controller.currentIndex.listen((index) {
       if (_pageController.hasClients) {
         _pageController.jumpToPage(index);
@@ -71,86 +66,72 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-
-
-
-  List<Widget> get pages => [
-    isUser == true ? UserDashboardScreen() : HomeScreen(),
-    InventoryScreen(),
-    ReportScreen(),
-    SettingScreen(),
-    StoreScreen(),
-  ];
-
-
-  @override
   Widget build(BuildContext context) {
-print(isUser);
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: pages,
-      ),
-      bottomNavigationBar: Container(
-        height: 10.h,
-        color: whiteColor,
-        child: Obx(() =>
-            isUser == false ?
-            Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            navItem("assets/png/dashboard_icon/home.png", 0, 'Home'),
-            // navItem("assets/png/dashboard_icon/store.png", 1, 'Store'),
-            navItem("assets/png/dashboard_icon/inventory.png", 1, 'Inventory'),
-            navItem("assets/png/dashboard_icon/report.png", 2, 'Report'),
-            navItem("assets/png/dashboard_icon/setting.png", 3, 'Setting'),
-          ],
-        ):
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                navItem("assets/png/dashboard_icon/home.png", 0, 'Home'),
-                navItem("assets/png/dashboard_icon/store.png", 4, 'Store'),
-                navItem("assets/png/dashboard_icon/setting.png", 3, 'Setting'),
-              ],
-            )
-        ),
-      ),
-    );
-  }
-  Widget navItem(String iconPath, int index, String label) {
-    bool isSelected = controller.currentIndex.value == index;
-    return GestureDetector(
-      onTap: () => controller.changePage(index),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 0.8.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.sp),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(iconPath, height: 20.sp, color: isSelected ? yellowColor : navBarColor),
-            SizedBox(height: 0.5.h),
-            customText(
-              text: label,
-              fontSize: 13.sp,
-              fontFamily: "Barlow",
-              fontWeight: FontWeight.w600,
-              color: isSelected ? yellowColor : navBarColor
+    return Obx(() {
+      // 💡 Controller se reactive value lein
+      bool isUserAccount = totalTireController.isUser.value;
 
-            ),
+      return Scaffold(
+        body: PageView(
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            isUserAccount ? UserDashboardScreen() : HomeScreen(),
+            InventoryScreen(),
+            ReportScreen(),
+            SettingScreen(),
+            StoreScreen(),
           ],
         ),
-      ),
-    );
+        bottomNavigationBar: Container(
+          height: 10.h,
+          color: whiteColor,
+          child: isUserAccount == false
+              ? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              navItem("assets/png/dashboard_icon/home.png", 0, 'Home'),
+              navItem("assets/png/dashboard_icon/inventory.png", 1, 'Inventory'),
+              navItem("assets/png/dashboard_icon/report.png", 2, 'Report'),
+              navItem("assets/png/dashboard_icon/setting.png", 3, 'Setting'),
+            ],
+          )
+              : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              navItem("assets/png/dashboard_icon/home.png", 0, 'Home'),
+              navItem("assets/png/dashboard_icon/store.png", 4, 'Store'),
+              navItem("assets/png/dashboard_icon/setting.png", 3, 'Setting'),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget navItem(String iconPath, int index, String label) {
+    return Obx(() {
+      bool isSelected = controller.currentIndex.value == index;
+      return GestureDetector(
+        onTap: () => controller.changePage(index),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 0.8.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(iconPath, height: 20.sp, color: isSelected ? yellowColor : navBarColor),
+              SizedBox(height: 0.5.h),
+              customText(
+                text: label,
+                fontSize: 13.sp,
+                color: isSelected ? yellowColor : navBarColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }
 

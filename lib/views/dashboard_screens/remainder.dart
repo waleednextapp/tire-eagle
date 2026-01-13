@@ -500,6 +500,7 @@ SizedBox(width: sizedBoxWidth ?? 10.w,),
                               fontFamily: "Barlow",
                               fontWeight: FontWeight.w400,
                             ),
+
                             customText(
                               fontSize: tirewidgetfontsize ?? 14.sp,
                               text: "${spend} \$",

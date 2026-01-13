@@ -152,12 +152,22 @@ class TotalWheels extends StatelessWidget {
                                     final item = wheelsForDate[wheelIndex];
 
                                     String getDamageType() {
-                                      final cut = item.damageInfo?.damageType?.cut ?? 0;
-                                      final bulge = item.damageInfo?.damageType?.bulge ?? 0;
+                                      final damageInfo = item.damageInfo;
+
+                                      if (damageInfo == null) return "-";
+
+                                      final damageType = damageInfo.damageType;
+                                      if (damageType == null) return "-";
+
+                                      final int cut = damageType.cut ?? 0;
+                                      final int bulge = damageType.bulge ?? 0;
+
                                       if (cut > 0) return "Cut";
                                       if (bulge > 0) return "Bulge";
+
                                       return "-";
                                     }
+
 
                                     return reminderWidget(
                                       item.vehicalNumber ?? "-",
@@ -348,12 +358,22 @@ class TotalWheels extends StatelessWidget {
                                       final item = wheelsForDate[wheelIndex];
 
                                       String getDamageType() {
-                                        final cut = item.damageInfo?.damageType?.cut ?? 0;
-                                        final bulge = item.damageInfo?.damageType?.bulge ?? 0;
+                                        final damageInfo = item.damageInfo;
+
+                                        if (damageInfo == null) return "-";
+
+                                        final damageType = damageInfo.damageType;
+                                        if (damageType == null) return "-";
+
+                                        final int cut = damageType.cut ?? 0;
+                                        final int bulge = damageType.bulge ?? 0;
+
                                         if (cut > 0) return "Cut";
                                         if (bulge > 0) return "Bulge";
+
                                         return "-";
                                       }
+
 
                                       return reminderWidget(
                                         item.vehicalNumber ?? "-",

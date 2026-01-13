@@ -22,7 +22,7 @@ class TotalTireController extends GetxController{
   RxBool isLoadingTireInventory = true.obs;
   RxBool isLoadingWheelInventory = true.obs;
   final prefs = SharedPreferencesMethod.storage;
-  bool? isUser;
+  RxBool isUser = false.obs;
   RxBool? isHome= false.obs;
   BaseService baseService = BaseService();
   Rx<TireModel?> tireModel = Rx<TireModel?>(null);
@@ -58,7 +58,8 @@ class TotalTireController extends GetxController{
   @override
   void onInit() {
     super.onInit();
-    isUser = prefs.getBool('isUser') ?? false;
+// Fresh value uthayein
+    isUser.value = prefs.getBool('isUser') ?? false;
     searchController.addListener(_onSearchChanged);
   }
 

@@ -531,8 +531,8 @@ class _RetreadHistoryTimeline extends StatelessWidget {
                                     status: sameData?.status ?? "-",
                                     index: recordIndex,
                                     onNextTap: () {
-                                      // Navigate to tire detail with report ID if needed
-                                      Get.toNamed("tire", arguments: item?.id ?? "");
+                                      // // Navigate to tire detail with report ID if needed
+                                      // Get.toNamed("tire", arguments: item?.id ?? "");
                                       print("Damage Report ID: ${item?.id ?? ""}");
                                     },
                                   );
@@ -553,6 +553,7 @@ class _RetreadHistoryTimeline extends StatelessWidget {
         // --- 2. RETHREAD RECORDS TIMELINE (Existing Code with minor cleanup) ---
         if (retreadDateKeys.isNotEmpty)
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 5.w,),
@@ -634,12 +635,12 @@ class _RetreadHistoryTimeline extends StatelessWidget {
                                     damagetype: "Retread",
                                     estimatedreturndate: formatDate(item?.estimatedReturnDate ?? ""),
                                     retreadcentername: item?.centerName,
-                                    spend: "${item?.averageCost ?? 0} \$",
+                                    spend: "${item?.averageCost ?? 0}",
                                     damagereport: formatDate(item?.dateOfDamage),
                                     status: sameData?.status ?? "",
                                     index: tireIndex,
                                     onNextTap: () {
-                                      Get.toNamed("tire", arguments: item?.id ?? "");
+                                      // Get.toNamed("tire", arguments: item?.id ?? "");
                                       print("Retread Record ID: ${item?.id ?? ""}");
                                     },
                                   );

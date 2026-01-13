@@ -201,6 +201,7 @@ class UserDashboardScreen extends StatelessWidget {
                             InkWell(
                                 onTap:(){
                                   userDashboardController.GetUserHome();
+                                  userTireWheelController.GetAllTire();
                                   // tireController.GetAllTire();
                                   Get.toNamed("totaltires");
                                 },
@@ -215,6 +216,7 @@ class UserDashboardScreen extends StatelessWidget {
                             InkWell(
                               onTap: (){
                                 // tireController.GetAllWheel();
+                                userTireWheelController.GetAllWheel();
                                 Get.toNamed("totalwheel");
                                 print(userDashboardController.userHomeModel.value?.data?.tires?.length);
                               },

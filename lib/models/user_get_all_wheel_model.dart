@@ -66,14 +66,15 @@ class UserWheels {
   int? wheelHealth;
   String? wheelCondition;
   String? vehicalNumber;
-  String? mountedPosition;
+  dynamic mountedPosition;
   String? status;
   String? positionNote;
   String? createdAt;
   String? updatedAt;
   int? v;
+  Dismount? dismount;
   dynamic retreadInfo;
-  dynamic damageInfo;
+  DamageInfo? damageInfo;
 
   UserWheels({
     this.id,
@@ -93,6 +94,7 @@ class UserWheels {
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.dismount,
     this.retreadInfo,
     this.damageInfo,
   });
@@ -109,14 +111,15 @@ class UserWheels {
     wheelHealth = json['wheelHealth'] as int?;
     wheelCondition = json['wheelCondition'] as String?;
     vehicalNumber = json['vehicalNumber'] as String?;
-    mountedPosition = json['mountedPosition'] as String?;
+    mountedPosition = json['mountedPosition'];
     status = json['status'] as String?;
     positionNote = json['positionNote'] as String?;
     createdAt = json['createdAt'] as String?;
     updatedAt = json['updatedAt'] as String?;
     v = json['__v'] as int?;
+    dismount = (json['dismount'] as Map<String,dynamic>?) != null ? Dismount.fromJson(json['dismount'] as Map<String,dynamic>) : null;
     retreadInfo = json['retreadInfo'];
-    damageInfo = json['damageInfo'];
+    damageInfo = (json['damageInfo'] as Map<String,dynamic>?) != null ? DamageInfo.fromJson(json['damageInfo'] as Map<String,dynamic>) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -138,8 +141,75 @@ class UserWheels {
     json['createdAt'] = createdAt;
     json['updatedAt'] = updatedAt;
     json['__v'] = v;
+    json['dismount'] = dismount?.toJson();
     json['retreadInfo'] = retreadInfo;
-    json['damageInfo'] = damageInfo;
+    json['damageInfo'] = damageInfo?.toJson();
+    return json;
+  }
+}
+
+class Dismount {
+  String? reason;
+  String? storageLocation;
+
+  Dismount({
+    this.reason,
+    this.storageLocation,
+  });
+
+  Dismount.fromJson(Map<String, dynamic> json) {
+    reason = json['reason'] as String?;
+    storageLocation = json['storageLocation'] as String?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['reason'] = reason;
+    json['storageLocation'] = storageLocation;
+    return json;
+  }
+}
+
+class DamageInfo {
+  String? createdAt;
+  DamageType? damageType;
+
+  DamageInfo({
+    this.createdAt,
+    this.damageType,
+  });
+
+  DamageInfo.fromJson(Map<String, dynamic> json) {
+    createdAt = json['createdAt'] as String?;
+    damageType = (json['damageType'] as Map<String,dynamic>?) != null ? DamageType.fromJson(json['damageType'] as Map<String,dynamic>) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['createdAt'] = createdAt;
+    json['damageType'] = damageType?.toJson();
+    return json;
+  }
+}
+
+class DamageType {
+  int? cut;
+  int? bulge;
+
+  DamageType({
+    this.cut,
+    this.bulge,
+  });
+
+  DamageType.fromJson(Map<String, dynamic> json) {
+    cut = json['cut'] as int?;
+    bulge = json['bulge'] as int?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['cut'] = cut;
+    json['bulge'] = bulge;
     return json;
   }
 }

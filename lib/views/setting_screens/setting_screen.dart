@@ -204,7 +204,7 @@ class SettingScreen extends StatelessWidget {
     successDialog(
       context,
       "Are you sure you want to logout?",
-      "No",
+      "Yes",
       buttonText2: 'Yes',
       onTap2: () {
         Get.back();

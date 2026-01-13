@@ -9,6 +9,7 @@ import '../../../constants/constants_widgets.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/total_tire_controller.dart';
 import '../../../utils/shared_prefrences_methods.dart';
+import '../../../utils/utility.dart';
 import '../../../widgets/back_button.dart';
 import '../../../widgets/confirm_dismount_dialog.dart';
 import '../../../widgets/rotate_tire_dialog.dart';
@@ -250,6 +251,7 @@ class WheelDetail extends StatelessWidget {
 
   Widget _buildBottomActions(BuildContext context) {
     final data = totalTireController.getWheelByIdModel.value?.data;
+    final bool isDismounted = data?.status == "dismounted";
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
@@ -285,14 +287,18 @@ class WheelDetail extends StatelessWidget {
                   "Dismount",
                   whiteColor,
                   fontsize: 14.sp,
-                  colors: buttonRedColor,
+                  colors: isDismounted ? Colors.grey : buttonRedColor, // gray if disabled
                   height: 4.7.h,
                   radius: 12.sp,
                   fontfaimly: 'Roboto',
                   fontweight: FontWeight.w600,
                   path: "assets/png/wheel_detail/dismount.png",
                   onTap: () {
-                    confirmDismountDialog(context);
+                    if (isDismounted) {
+                      Utils.showToast("Wheel already dismounted", true);
+                    } else {
+                      confirmDismountDialog(context);
+                    }
                   },
                 ),
               ),
@@ -496,7 +502,7 @@ class _RetreadHistoryTimeline extends StatelessWidget {
                                 status: sameData?.status ?? "-",
                                 index: recordIndex,
                                 onNextTap: () {
-                                  Get.toNamed("tire", arguments: item?.id ?? "");
+                                  // Get.toNamed("tire", arguments: item?.id ?? "");
                                   print("Damage Report ID: ${item?.id ?? ""}");
                                 },
                               );
